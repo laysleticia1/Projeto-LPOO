@@ -1,10 +1,25 @@
 public class Criatura {
-    private String nome;
-    private String tipo;
-    private int nivelPerigo;
-    private int vida;
-    private int dano;
-    private int velocidade;
-    private String habitat;
-    private boolean hostil;
+    private String tipoDeCriatura;
+    private String nivelDePerigo;
+    private String opcoesDeAcao;
+
+    String getTipoDeCriatura() {
+        return tipoDeCriatura;
+    }
+    void setTipoDeCritura(String tipoDeCriatura) {
+        this.tipoDeCriatura = tipoDeCriatura;
+    }
+    String getNivelDePerigo() {
+        return nivelDePerigo;
+    }
+    void setNivelDePerigo(String nivelDePerigo){
+        this.nivelDePerigo = nivelDePerigo;
+    }
+    String getOpcoesDeAcao() {
+        return opcoesDeAcao;
+    }
+    void setOpcoesDeACao(String opcoesDeAcao) {
+        this.opcoesDeAcao = opcoesDeAcao;
+    }
 }
+
