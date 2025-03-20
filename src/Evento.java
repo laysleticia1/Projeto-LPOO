@@ -44,11 +44,6 @@ public class Evento {
     private int duracao;
     private String efeitoNoAmbiente;
 
-    // Subclasse EventoCriatura
-    private String tipoDeCriatura;
-    private String nivelDePerigo;
-    private String opcoesDeAcao;
-
     // Subclasse EventoDescoberta
     private String tipoDeDescoberta;
     private String recursosEncontrados;
