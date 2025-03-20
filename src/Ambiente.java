@@ -2,19 +2,10 @@ public abstract class Ambiente {
     private String nome;
     private String descricao;
     private int dificuldadeExploracao;
-    private String[] recursosDisponiveis;
+    private String [] recursosDisponiveis;
     private double probabilidadeEventos;
     private String condicaoClimatica;
 
-    void explorar(){
-
-    }
-    void gerarEvento(){
-
-    }
-    void modificarClima(){
-
-    }
     String getNome(){
         return nome;
     }
@@ -50,5 +41,12 @@ public abstract class Ambiente {
     }
     void setCondicaoClimatica(String condicao){
         this.condicaoClimatica = condicao;
+    }
+
+    void explorar(Personagem jogador){
+    }
+    void gerarEvento(){
+    }
+    void modificarClima(){
     }
 }
