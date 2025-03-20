@@ -3,45 +3,67 @@ public class Item {
     private double peso;
     private int durabilidade;
 
-    // Classe Alimento ()
+    // Subclasse Alimento ()
+    private int valorNutricional;
+    private String[] tipoAlimento;
+    private int validade;
+
     void consumir() {
     }
 
-    // Classe Água ()
+    // Subclasse Água ()
+    private String pureza;
+    private double volume;
+
     void beber() {
     }
 
-    // Classe Material (Material outroMaterial)
+    // Subclasse Material (Material outroMaterial)
+    private String[] tipoMaterial;
+    private int resistencia;
+
     void combinar() {
     }
 
-    // Classe Ferramenta ()
+    // Subclasse Ferramenta ()
+    private String[] tipoFerramenta;
+    private int eficiencia;
+
     void usar() {
     }
 
-    // Classe Ferramenta ()
+    // Subclasse Arma ()
+    private String[] tipoArma;
+    private int dano;
+    private int alcance;
+
     void atacar(Alvo inimigo) {
     }
 
-    // Classe Remédio ()
+    // Subclasse Remédio ()
+    private String[] tipoRemedio;
+    private String[] efeito;
+
     void usar() {
     }
-}
+
 
     // Relacionamento entre Itens e Personagens
-    // Classe Inventário ()
-    private String [] listaDeItem;
+    // Subclasse Inventário ()
+    private String[] listaDeItem;
     private double pesoTotal;
     private double espacoDisponivel;
 
-    void adicionarItem (Item item) {
+    void adicionarItem(Item item) {
     }
+
     void removerItem(String nomeItem) {
     }
+
     void usarItem(String nomeItem) {
     }
 
-
+}
 
 
 }
