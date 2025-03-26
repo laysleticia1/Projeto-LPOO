@@ -1,5 +1,7 @@
 package Personagem;
 
+import Ambiente.Ambiente;
+
 public class Personagem {
     private String nome;
     private String classe;
@@ -95,8 +97,18 @@ public class Personagem {
     void mover() {
         if (getEnergia () == 0) {
         System.out.println ("Jogador não poderá se mover");
+        }
     }
+    void moverAmbiente (Ambiente novoAmbiente) {
+    if (getEnergia () >= 10) {
+        this.localizacao = novoAmbiente.getNome ();
+        this.energia -= 10;
     }
+    else {
+        System.out.println ("Jogador não poderá mover ambientes");
+        }
+    }
+
     void usarItem () {
     }
     void curar () {
