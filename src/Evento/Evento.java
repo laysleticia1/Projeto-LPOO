@@ -1,3 +1,8 @@
+package Evento;
+
+import Ambiente.Ambiente;
+import Personagem.Personagem;
+
 public class Evento {
     private String nomeEvento;
     private String descricao;

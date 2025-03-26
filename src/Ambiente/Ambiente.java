@@ -1,3 +1,7 @@
+package Ambiente;
+
+import Personagem.Personagem;
+
 public abstract class Ambiente {
     private String nome;
     private String descricao;
