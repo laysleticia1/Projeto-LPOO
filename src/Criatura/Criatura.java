@@ -1,3 +1,5 @@
+package Criatura;
+
 public class Criatura {
     private String tipoDeCriatura;
     private String nivelDePerigo;
