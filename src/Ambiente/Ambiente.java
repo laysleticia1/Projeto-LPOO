@@ -10,7 +10,7 @@ public abstract class Ambiente {
     private double probabilidadeEventos;
     private String condicaoClimatica;
 
-    String getNome(){
+    public String getNome(){
         return nome;
     }
     void setNome(String nomeAmbiente){

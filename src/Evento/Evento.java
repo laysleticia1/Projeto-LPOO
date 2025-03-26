@@ -56,12 +56,12 @@ public class Evento {
 
     // Subclasse EventoDoencaFerimento
     private String tipoDeCondicao;
-    private String impacto;
+    private String impacto2;
     private String curaDisponivel;
 
     // Classe GerenciadorDeEventos
     private String [] listaDeEventosPossiveis;
-    private double probabilidadeDeOcorrencia;
+    private double probabilidadeDeOcorrencia2;
     private String historicoDeEventos;
 
     void sortearEvento (Ambiente local) {
