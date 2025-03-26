@@ -1,3 +1,5 @@
+package item;
+
 public class Item {
     private String nomeItem;
     private double peso;

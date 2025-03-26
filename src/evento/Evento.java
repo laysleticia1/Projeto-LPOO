@@ -1,3 +1,7 @@
+package evento;
+import personagem.Personagem;
+import ambiente.Ambiente;
+
 public class Evento {
     private String nomeEvento;
     private String descricao;
