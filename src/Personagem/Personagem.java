@@ -13,109 +13,195 @@ public class Personagem {
     private int sanidade;
     private String [] inventario;
     private String [] localizacao;
+    private int x, y; // Coordenadas
+    private int velocidade;
 
-    String getNome () {
+    public Personagem (String nomeUsuario, String classeUsuario) { // Construtor
+        this.nome = nomeUsuario;
+        this.classe = classeUsuario;
+        nivel = 1;
+        vida = 100;
+        fome = 100;
+        sede = 100;
+        energia = 100;
+        sanidade = 100;
+        x = 0;
+        y = 0;
+        velocidade = 10;
+    }
+    public String getNome () {
         return nome;
     }
-    void setNome (String nomeUsuario) {
+    public void setNome (String nomeUsuario) {
         this.nome = nomeUsuario;
     }
-    String getClasse () {
-        return classe;
-    }
-    void setClasse (String classeUsuario) {
+    public String getClasse () {
+        return classe;}
+    public void setClasse (String classeUsuario) {
         this.classe = classeUsuario;
     }
-    int getNivel () {
+    public int getNivel () {
         return nivel;
     }
-    void setNivel (int nivelUsuario) {
+    public void setNivel (int nivelUsuario) {
         this.nivel = nivelUsuario;
     }
-    int getVida () {
+    public int getVida () {
         return vida;
     }
-    void setVida (int vidaUsuario) {
+    public void setVida (int vidaUsuario) {
         this.vida = vidaUsuario;
     }
-    int getFome () {
+    public int getFome () {
         return fome;
     }
-    void setFome (int fomeUsuario) {
+    public void setFome (int fomeUsuario) {
         this.fome = fomeUsuario;
     }
-    int getSede () {
+    public int getSede () {
         return sede;
     }
-    void setSede (int sedeUsuario) {
+    public void setSede (int sedeUsuario) {
         this.sede = sedeUsuario;
     }
-    int getEnergia () {
+    public int getEnergia () {
         return energia;
     }
-    void setEnergia (int energiaUsuario) {
+    public void setEnergia (int energiaUsuario) {
         this.energia = energiaUsuario;
     }
-    int getSanidade () {
+    public int getSanidade () {
         return sanidade;
     }
-    void setSanidade (int sanidadeUsuario) {
+    public void setSanidade (int sanidadeUsuario) {
         this.sanidade = sanidadeUsuario;
     }
-    String [] getInventario () {
+    public String [] getInventario () {
         return inventario;
     }
-    void setInventario (String [] inventarioUsuario) {
+    public void setInventario (String [] inventarioUsuario) {
         this.inventario = inventarioUsuario;
     }
-    String [] getLocalizacao () {
+    public String [] getLocalizacao () {
         return localizacao;
     }
-    void setLocalizacao (String [] localizacaoUsuario) {
+    public void setLocalizacao (String [] localizacaoUsuario) {
         this.localizacao = localizacaoUsuario;
     }
-    void atacar() {
-        if (getEnergia () == 0) {
+    public int getVelocidade() {
+        return velocidade;
+    }
+    public void setVelocidade(int velocidade) {
+        this.velocidade = velocidade;
+    }
+    public int getX() {
+        return x;
+    }
+    public void setX(int x) {
+        this.x = x;
+    }
+    public int getY() {
+        return y;
+    }
+    public void setY(int y) {
+        this.y = y;
+    }
+    public void atacar() {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está atacando");
+        }
+        else {
             System.out.println ("Jogador não poderá atacar");
         }
     }
-    void defender() {
-        if (getEnergia () == 0) {
+    public void defender() {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está defendendo");
+        }
+        else {
             System.out.println ("Jogador não poderá defender");
         }
     }
-    void correr() {
-        if (getEnergia () == 0) {
+    public void correr() {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está correndo");
+        }
+        else {
             System.out.println ("Jogador não poderá correr");
         }
     }
-    void agachar() {
-        if (getEnergia () == 0) {
+    public void agachar() {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está agachado");
+        }
+        else {
             System.out.println ("Jogador não poderá agachar");
         }
     }
-    void mover() {
-        if (getEnergia () == 0) {
-        System.out.println ("Jogador não poderá se mover");
+    public void moverDireita() {
+        if (getEnergia () > 0) {
+        x++;
+        System.out.println ("Jogador se moveu para a direita");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
         }
     }
-    void moverAmbiente (Ambiente novoAmbiente) {
-    if (getEnergia () >= 10) {
-        this.localizacao = novoAmbiente.getNome ();
-        this.energia -= 10;
+    public void moverEsquerda() {
+        if (getEnergia () > 0) {
+            x--;
+            System.out.println ("Jogador se moveu para a esquerda");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverCima() {
+        if (getEnergia () > 0) {
+            y++;
+            System.out.println ("Jogador se moveu para cima");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverBaixo() {
+        if (getEnergia () > 0) {
+            y--;
+            System.out.println ("Jogador se moveu para baixo");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverAmbiente (Ambiente novoAmbiente) {
+    if (getEnergia () >= 5) {
+
+        this.energia -= 5;
     }
     else {
         System.out.println ("Jogador não poderá mover ambientes");
         }
     }
-
-    void usarItem () {
+    public void usarItem () {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está usando item");
+        }
+        else {
+            System.out.println ("Jogador não poderá usar item");
+        }
     }
-    void curar () {
+    public void curar () {
+        if (getEnergia() >= 0) {
+            System.out.println("Jogador está se curando");
+        }
     }
-    void descansar () {
+    public void descansar () {
+            if (getEnergia() >= 0) {
+                System.out.println ("Jogador está descansando");
+            }
     }
-    void habilidadeEspecial(String classe) {
+    public void habilidadeEspecial(String classe) {
         if (classe.equals("Rastreador")) {
         } else if (classe.equals("Mecânico")) {
         } else if (classe.equals("Médico")) {

@@ -39,14 +39,14 @@ public class Item {
     private int dano;
     private int alcance;
 
-    void atacar(Alvo inimigo) {
+    void atacar() {
     }
 
     // Subclasse Remédio ()
     private String[] tipoRemedio;
     private String[] efeito;
 
-    void usar() {
+    void usar2() {
     }
 
 
