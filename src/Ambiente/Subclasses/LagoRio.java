@@ -5,4 +5,8 @@ public class LagoRio {
     private String pesca;
     private String terreno;
 
+    //Construtor
+    public LagoRio () {
+
+    }
 }

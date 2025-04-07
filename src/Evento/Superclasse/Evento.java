@@ -19,10 +19,10 @@ public class Evento {
     }
 
     public String getNomeEvento () {
-        return nomeEvento;
+        return nome;
     }
     public void setNomeEvento (String nomeEvento) {
-        this.nomeEvento = nomeEvento;
+        this.nome = nomeEvento;
     }
     public String getDescricao () {
         return descricao;
