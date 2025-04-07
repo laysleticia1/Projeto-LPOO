@@ -1,6 +1,6 @@
-package Personagem;
+package Personagem.Superclasse;
 
-import Ambiente.Ambiente;
+import Ambiente.Superclasse.Ambiente;
 
 public class Personagem {
     private String nome;
