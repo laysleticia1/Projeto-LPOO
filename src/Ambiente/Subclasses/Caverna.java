@@ -6,4 +6,6 @@ public class Caverna {
     private String hidratacao;
 
     //Construtor
+    public Caverna () {
+    }
 }

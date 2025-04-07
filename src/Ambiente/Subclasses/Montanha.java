@@ -6,4 +6,7 @@ public class Montanha {
     private String vegetacao;
 
     //Construtor
+    public Montanha () {
+
+    }
 }

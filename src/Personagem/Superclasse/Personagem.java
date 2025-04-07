@@ -180,7 +180,7 @@ public class Personagem {
         this.energia -= 5;
     }
     else {
-        System.out.println ("Jogador não poderá mover ambientes");
+        System.out.println ("Jogador não poderá mover de ambiente");
         }
     }
     public void usarItem () {
@@ -200,6 +200,12 @@ public class Personagem {
             if (getEnergia() >= 0) {
                 System.out.println ("Jogador está descansando");
             }
+    }
+    public void receberDano (int dano) {
+        this.vida -= dano;
+        if (vida < 0) {
+            vida = 0;
+        }
     }
     public void habilidadeEspecial(String classe) {
         if (classe.equals("Rastreador")) {
