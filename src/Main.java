@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import Personagem.Superclasse.Personagem;
+import Criatura.Subclasses.Cobra;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,7 +23,22 @@ public class Main {
             escolha = scanner.nextInt();
         }
 
+        String classe = "";
+        switch (escolha) {
+            case 1 -> classe = "Rastreador";
+            case 2 -> classe = "Mecânico";
+            case 3 -> classe = "Médico";
+            case 4 -> classe = "Sobrevivente Nato";
+        }
 
+        Personagem jogador = new Personagem(nome, classe);
+
+        System.out.println("Vida inicial do seu personagem: " + jogador.getVida());
+
+        Cobra cobra = new Cobra();
+        cobra.envenenar(jogador);
+
+        System.out.println("Vida após envenenamento: " + jogador.getVida());
     }
 }
 
