@@ -1,4 +1,4 @@
-package Criatura;
+package Criatura.Superclasse;
 
 public class Criatura {
     private String tipoDeCriatura;
@@ -8,19 +8,19 @@ public class Criatura {
     String getTipoDeCriatura() {
         return tipoDeCriatura;
     }
-    void setTipoDeCritura(String tipoDeCriatura) {
+    public void setTipoCriatura(String tipoDeCriatura) {
         this.tipoDeCriatura = tipoDeCriatura;
     }
     String getNivelDePerigo() {
         return nivelDePerigo;
     }
-    void setNivelDePerigo(String nivelDePerigo){
+    public void setNivelDePerigo(String nivelDePerigo){
         this.nivelDePerigo = nivelDePerigo;
     }
     String getOpcoesDeAcao() {
         return opcoesDeAcao;
     }
-    void setOpcoesDeACao(String opcoesDeAcao) {
+    public void setOpcoesDeAcao(String opcoesDeAcao) {
         this.opcoesDeAcao = opcoesDeAcao;
     }
 }

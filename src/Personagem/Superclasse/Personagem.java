@@ -36,7 +36,8 @@ public class Personagem {
         this.nome = nomeUsuario;
     }
     public String getClasse () {
-        return classe;}
+        return classe;
+    }
     public void setClasse (String classeUsuario) {
         this.classe = classeUsuario;
     }
