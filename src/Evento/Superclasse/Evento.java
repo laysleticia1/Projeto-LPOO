@@ -1,34 +1,41 @@
-package Evento;
+package Evento.Superclasse;
 
-import Ambiente.Ambiente;
-import Personagem.Personagem;
+import Ambiente.Superclasse.Ambiente;
+import Personagem.Superclasse.Personagem;
 
 public class Evento {
-    private String nomeEvento;
+    private String nome;
     private String descricao;
     private double probabilidadeDeOcorrencia;
     private String impacto;
     private String condicaoDeAtivacao;
 
-    String getNomeEvento () {
+    public Evento (String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;
+        this.impacto = impacto;
+        this.condicaoDeAtivacao = condicaoDeAtivacao;
+    }
+
+    public String getNomeEvento () {
         return nomeEvento;
     }
-    void setNomeEvento (String nomeEvento) {
+    public void setNomeEvento (String nomeEvento) {
         this.nomeEvento = nomeEvento;
     }
-    String getDescricao () {
+    public String getDescricao () {
         return descricao;
     }
-    void setDescricao (String descricao) {
+    public void setDescricao (String descricao) {
         this.descricao = descricao;
     }
-    double getProbabilidadeDeOcorrencia () {
+    public double getProbabilidadeDeOcorrencia () {
         return probabilidadeDeOcorrencia;
     }
-    void setProbabilidadeDeOcorrencia (double probabilidadeDeOcorrencia) {
-        this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;
-    }
-    String getImpacto () {
+    public void setProbabilidadeDeOcorrencia (double probabilidadeDeOcorrencia) {
+        this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;}
+    public String getImpacto () {
         return impacto;
     }
     void setImpacto (String impacto) {
@@ -37,11 +44,12 @@ public class Evento {
     String getCondicaoDeAtivacao () {
         return condicaoDeAtivacao;
     }
-    void setCondicaoDeAtivacao (String condicaoDeAtivacao) {
+    public void setCondicaoDeAtivacao (String condicaoDeAtivacao) {
         this.condicaoDeAtivacao = condicaoDeAtivacao;
     }
 
-    void executar (Personagem jogador, Ambiente local) {
+    //Método Principal
+    public void executar (Personagem jogador, Ambiente local) {
     }
 
     // Subclasse EventoClimatico

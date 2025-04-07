@@ -1,19 +1,27 @@
-package Personagem;
+package Personagem.Inventario;
 
-import Item.Item;
+import java.util.List;
+import java.util.ArrayList;
+import Item.Superclasse.Item;
 
 public class Inventario {
-    private String[] listaDeItens;
+    private List<Item> listaDeItens;
     private double pesoTotal;
     private double espacoDisponivel;
 
-    void adicionarItem(Item item) {
+    public Inventario () {
+        this.listaDeItens = new ArrayList<> ();
+        this.pesoTotal = 0;
+        this.espacoDisponivel = 50;
     }
 
-    void removerItem(String nomeItem) {
+    public void adicionarItem(Item item) {
     }
 
-    void usarItem(String nomeItem) {
+    public void removerItem(String nomeItem) {
+    }
+
+    public void usarItem(String nomeItem) {
     }
 
     public double getEspacoDisponivel() {
