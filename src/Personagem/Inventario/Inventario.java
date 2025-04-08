@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import Item.Superclasse.Item;
 
 public class Inventario {
-    private List<Item> listaDeItens;
+    private ArrayList<Item> listaDeItens;
     private double pesoTotal;
     private double espacoDisponivel;
 
@@ -16,9 +16,11 @@ public class Inventario {
     }
 
     public void adicionarItem(Item item) {
+    this.pesoTotal += item.getPeso();
     }
 
-    public void removerItem(String nomeItem) {
+    public void removerItem(Item item) {
+    this.pesoTotal -= item.getPeso();
     }
 
     public void usarItem(String nomeItem) {

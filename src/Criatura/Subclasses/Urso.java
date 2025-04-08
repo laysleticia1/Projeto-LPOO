@@ -1,29 +1,26 @@
 package Criatura.Subclasses;
 
 import Criatura.Superclasse.Criatura;
+import Personagem.Superclasse.Personagem;
 
 public class Urso extends Criatura {
 
     // Construtor da classe Lobo
     public Urso() {
-        setTipoCriatura("Urso");
-        setNivelDePerigo("Muito alto");
-            setOpcoesDeAcao("Atacar, Rugir, Ignorar");
+        super ("Urso", "Médio", "Atacar, rugir ou fugir");
     }
 
-    //Método
-    public void atacar() {
+    public void atacar(Personagem alvo) {
+        alvo.receberDano (15);
         System.out.println("O urso se levanta e desfere um ataque poderoso!");
     }
 
-    //Método
     public void rugir() {
-        System.out.println("O urso solta um rugido ameaçador");
+        System.out.println("O urso solta um rugido que estremece a floresta, um aviso de fúria iminente.");
     }
 
-    //Método
-    public void ignorar() {
-        System.out.println("O urso decide que não vale o esforço");
+    public void fugir() {
+        System.out.println("Ferido, o urso recua entre os arbustos e desaparece na floresta");
     }
 
 }
