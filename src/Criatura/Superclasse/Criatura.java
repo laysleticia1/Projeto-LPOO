@@ -5,6 +5,12 @@ public class Criatura {
     private String nivelDePerigo;
     private String opcoesDeAcao;
 
+    public Criatura (String tipoDeCriatura, String nivelDePerigo, String opcoesDeAcao) {
+        this.tipoDeCriatura = tipoDeCriatura;
+        this.nivelDePerigo = nivelDePerigo;
+        this.opcoesDeAcao = opcoesDeAcao;
+    }
+
     String getTipoDeCriatura() {
         return tipoDeCriatura;
     }

@@ -141,8 +141,8 @@ public class Personagem {
     }
     public void moverDireita() {
         if (getEnergia () > 0) {
-        x++;
-        System.out.println ("Jogador se moveu para a direita");
+            x++;
+            System.out.println ("Jogador se moveu para a direita");
         }
         else {
             System.out.println ("Jogador não poderá se mover");
@@ -176,13 +176,12 @@ public class Personagem {
         }
     }
     public void moverAmbiente (Ambiente novoAmbiente) {
-    if (getEnergia () >= 5) {
-
-        this.energia -= 5;
-    }
-    else {
-        System.out.println ("Jogador não poderá mover de ambiente");
-        }
+        //Atualiza a localização do personagem
+        setLocalizacao(new String [] {novoAmbiente.getNome()});
+        //Exibe uma mensagem no terminal
+        System.out.println(nome + "Se moveu para: " + novoAmbiente.getNome());
+        //Descrição do Ambiente
+        System.out.println(novoAmbiente.getDescricao());
     }
     public void usarItem () {
         if (getEnergia () > 0) {
@@ -198,9 +197,9 @@ public class Personagem {
         }
     }
     public void descansar () {
-            if (getEnergia() >= 0) {
-                System.out.println ("Jogador está descansando");
-            }
+        if (getEnergia() >= 0) {
+            System.out.println ("Jogador está descansando");
+        }
     }
     public void receberDano (int dano) {
         this.vida -= dano;
@@ -216,4 +215,15 @@ public class Personagem {
         } else {
         }
     }
+
+    private Ambiente ambienteAtual;
+
+    public void setAmbienteAtual(Ambiente ambiente) {
+        this.ambienteAtual = ambiente;
+    }
+
+    public Ambiente getAmbienteAtual() {
+        return ambienteAtual;
+    }
+
 }
