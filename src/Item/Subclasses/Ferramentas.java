@@ -6,12 +6,14 @@ public class Ferramentas extends Item {
     private String tipo;
     private int eficiencia;
 
-    public Ferramentas (String nome, double peso, int durabilidade, String tipo,int eficiencia) {
-        super(nome,peso,durabilidade);
+    public Ferramentas (String tipo, double peso, int durabilidade, int eficiencia) {
+        super("Ferramenta",peso,durabilidade);
         this.tipo = tipo;
         this.eficiencia = eficiencia;
     }
 
     public void usar() {
+        this.setDurabilidade (this.getDurabilidade() - 2);
+
     }
 }

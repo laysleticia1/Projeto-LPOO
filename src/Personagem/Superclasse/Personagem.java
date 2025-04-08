@@ -179,7 +179,7 @@ public class Personagem {
         //Atualiza a localização do personagem
         setLocalizacao(new String [] {novoAmbiente.getNome()});
         //Exibe uma mensagem no terminal
-        System.out.println(nome + "Se moveu para: " + novoAmbiente.getNome());
+        System.out.println(nome + " se moveu para: " + novoAmbiente.getNome());
         //Descrição do Ambiente
         System.out.println(novoAmbiente.getDescricao());
     }

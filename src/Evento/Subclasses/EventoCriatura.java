@@ -10,6 +10,3 @@ public class EventoCriatura extends Evento {
     public EventoCriatura (String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao, String tipo, int nivelPerigo, String acoes) {
         super (nome, descricao, probabilidadeDeOcorrencia, impacto, condicaoDeAtivacao);
     }
-
-
-}
