@@ -12,7 +12,13 @@ public abstract class Ambiente {
     private String condicaoClimatica;
 
     //Construtor
-    public Ambiente () {
+    public Ambiente (String nome, String descricao, int dificuldadeExploracao, ArrayList<String> recursosDisponiveis, double probabilidadeEventos, String condicaoClimatica) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.dificuldadeExploracao = dificuldadeExploracao;
+        this.recursosDisponiveis = recursosDisponiveis;
+        this.probabilidadeEventos = probabilidadeEventos;
+        this.condicaoClimatica = condicaoClimatica;
     }
 
     public String getNome(){
