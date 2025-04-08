@@ -7,32 +7,18 @@ public class Cobra extends Criatura {
 
     // Construtor da classe Cobra
     public Cobra() {
-        setTipoCriatura("Cobra");
-        setNivelDePerigo("Médio");
-        setOpcoesDeAcao("Atacar, Envenenar, Esconder");
+        super ("Cobra", "Alto", "Atacar ou fugir");
     }
 
-    // Método
-    public void atacar() {
-        System.out.println("A cobra da um bote venenosa...");
-    }
-
-    // Método
-    public void envenenar(Personagem alvo) {
-        System.out.println("A cobra injeta veneno! O personagem começa a sentir seus efeitos...");
+    public void atacar (Personagem alvo) {
+        System.out.println("A cobra crava as presas na pele e injeta seu veneno letal. Uma onda de tontura e fraqueza se espalha como fogo lento pelo corpo do personagem");
 
         alvo.setVida(alvo.getVida() - 20);
         alvo.setEnergia(alvo.getEnergia() - 10);
-        alvo.setSanidade(alvo.getSanidade() - 5);
-
-        System.out.println("Efeitos do veneno: -20 de vida, -10 de energia, -5 de sanidade.");
-        System.out.println("Vida atual de " + alvo.getNome() + ": " + alvo.getVida());
-        System.out.println("Energia atual de " + alvo.getNome() + ": " + alvo.getEnergia());
-        System.out.println("Sanidade atual de " + alvo.getNome() + ": " + alvo.getSanidade());
+        alvo.setSanidade(alvo.getSanidade() - 10);
     }
 
-    //Método
     public void esconder() {
-        System.out.println("A cobra foge e se esconde");
+        System.out.println("Sem deixar rastros, a cobra se esgueira pela relva e desaparece nas entranhas da floresta.");
     }
 }

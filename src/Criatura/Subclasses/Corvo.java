@@ -1,28 +1,22 @@
 package Criatura.Subclasses;
 
 import Criatura.Superclasse.Criatura;
+import Personagem.Superclasse.Personagem;
 
 public class Corvo extends Criatura {
 
     // Construtor da classe Corvo
     public Corvo() {
-        setTipoCriatura("Corvo");
-        setNivelDePerigo("Baixo");
-        setOpcoesDeAcao("Espionar, Fazer barulho, Voar");
+        super ("Corvo", "Baixo", "Atacar ou voar");
     }
 
-    // Método
-    public void espionar() {
-        System.out.println("O corvo observa de longe...");
+    public void atacar(Personagem alvo) {
+        System.out.println("O corvo mergulha das sombras e seu grasnar perfura a mente do personagem, despedaçando sua sanidade com seu grasnar sombrio.");
+        alvo.setSanidade(alvo.getSanidade() - 10);
     }
 
-    // Método
-    public void fazerBarulho() {
-        System.out.println("O corvo alerta as outras criaturas com seu grasnar!");
-    }
-
-    // Método
     public void voar() {
-        System.out.println("O corvo bate asas e desaparece no céu");
+        System.out.println("Com um bater de asas silencioso, o corvo se ergue aos céus e desaparece entre as nuvens escuras.");
     }
+
 }
