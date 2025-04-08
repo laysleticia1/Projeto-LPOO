@@ -74,7 +74,7 @@ public class Main {
 
         //Loop de Movimentação
         boolean continuar = true;
-        while (continuar) {
+        while (true) {
             System.out.println("\nEscolha para onde quer se mover: ");
             System.out.println("1 - Floresta");
             System.out.println("2 - Caverna");
@@ -93,13 +93,15 @@ public class Main {
                 case 4 -> gerenciador.mudarAmbiente(jogador, montanha);
                 case 5 -> gerenciador.mudarAmbiente(jogador, ruinas);
                 case 0 -> {
-                    continuar = false;
                     gerenciador.mostrarHistorico();
                     System.out.println("Obrigado por jogar!");
+                    return;//Encerra o jogo
                 }
                 default -> {
                     System.out.println("Opção Inválida");
-                    continue;
+                    gerenciador.mostrarHistorico();
+                    System.out.println("Obrigado por jogar!");
+                    return;
                 }
             }
 
@@ -108,13 +110,9 @@ public class Main {
 
             if(!resposta.equalsIgnoreCase("Sim")){
                 System.out.println("Você decide explorar por mais um tempo...");
-                continuar = false;
-                gerenciador.mostrarHistorico();
-                System.out.println("Obrigado por jogar!");
+                continue; //Continua no ambiente atual
             }
         }
 
-        scanner.close();
     }
 }
-
