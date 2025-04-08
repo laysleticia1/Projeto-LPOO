@@ -177,7 +177,6 @@ public class Personagem {
     }
     public void moverAmbiente (Ambiente novoAmbiente) {
     if (getEnergia () >= 5) {
-
         this.energia -= 5;
     }
     else {

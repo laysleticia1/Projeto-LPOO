@@ -1,28 +1,25 @@
 package Criatura.Subclasses;
 
 import Criatura.Superclasse.Criatura;
+import Personagem.Superclasse.Personagem;
 
 public class Lobo extends Criatura {
 
     // Construtor da classe Lobo
     public Lobo() {
-        setTipoCriatura("Lobo");
-        setNivelDePerigo("Médio");
-        setOpcoesDeAcao("Atacar, Fugir, Uivar");
+        super ("Lobo", "Médio", "Atacar, fugir ou uivar");
     }
 
-    // Método
-    public void atacar() {
-        System.out.println("O lobo avança e tenta atacar");
+    public void ataqueLobo(Personagem alvo) {
+        alvo.receberDano(15);
+        System.out.println("O lobo avança rapidamente e desfere um golpe, cravando os dentes com fúria!");
     }
 
-    // Método
     public void fugir() {
-        System.out.println("O lobo recua e corre para a floresta");
+        System.out.println("O lobo rosna em retirada e some entre as sombras densas da floresta.");
     }
 
-    // Método
     public void uivar() {
-        System.out.println("Auuuu! O lobo uiva chamando a sua alcateia");
+        System.out.println("Auuuu! O lobo ergue o focinho à lua, convocando sua alcateia com um uivo que ecoa na noite.");
     }
 }
