@@ -10,19 +10,12 @@ public class Floresta extends Ambiente {
     private String clima;
 
     //Construtor
-    public Floresta (String nome, String descricao, int dificuldadeDeExploracao, ArrayList<String> recursosDisponiveis, double probabilidadeDeEventos, String condicaoClimatica) {
-        super("Floresta", "Floresta densa e habitada", 2, new ArrayList<>(Arrays.asList("Frutas, Madeira, Ervas Medicinais")), 0.4, "Chuvoso");
+    public Floresta () {
+        super("Floresta", "Local coberto por uma vegetação densa e viva, repleta de árvores altas e sons constantes da natureza. Criaturas selvagens habitam essa região rica em recursos como frutas, madeira e ervas medicinais.", 2, new ArrayList<>(Arrays.asList("Frutas, Madeira, Ervas Medicinais")), 0.4, "Chuvoso");
         this.vegetacao = "Vegetação densa e úmida";
         this.fauna = "Lobos, cervos, passáros exóticos";
         this.clima = "Chuvoso";
 
-        //Atributos herdados da superclasse
-        setNome("Floresta");
-        setDescricao("Uma floresta com " + vegetacao + ", habitada por " + fauna + ".");
-        setDificuldadeExploracao(2);
-        setRecursosDisponiveis(new ArrayList<>(Arrays.asList("Frutas, Madeira, Ervas Medicinais ")));
-        setProbabilidadeEventos(0.4);
-        setCondicaoClimatica(clima);
     }
     //Setter e Getters
     public String getVegetacao() {

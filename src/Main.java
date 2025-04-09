@@ -10,109 +10,150 @@ import Ambiente.Subclasses.Montanha;
 import Ambiente.Subclasses.LagoRio;
 import Ambiente.Subclasses.Ruinas;
 import Gerenciadores.GerenciadorDeAmbientes;
+import Personagem.Inventario.Inventario;
 
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("BEM-VINDO AO JOGO DE SOBREVIÊNCIA ÚLTIMA FRONTEIRA");
+        System.out.println("BEM-VINDO AO JOGO DE SOBREVIVÊNCIA - ÚLTIMA FRONTEIRA");
 
-        System.out.println("Digite o nome do seu personagem: ");
-        String nome = scanner.nextLine();
+        System.out.println("\nSelecione a opção escolhida: ");
+        System.out.println("1 - Iniciar");
+        System.out.println("2 - Sair");
 
-        System.out.println("Escolha a classe do personagem");
-        System.out.println("1 - Rastreador");
-        System.out.println("2 - Mecânico");
-        System.out.println("3 - Médico");
-        System.out.println("4 - Sobrevivente Nato");
+        int option = scanner.nextInt();
+        scanner.nextLine(); // limpar buffer
 
-        //Forçar que o úsuario digite um número de 1 a 4
-        int escolha = -1;
-        while (escolha < 1 || escolha > 4) {
-            System.out.print("Digite um número de 1 a 4: ");
-            escolha = scanner.nextInt();
-        }
+        switch (option) {
+            case 1 -> {
+                System.out.println("Digite o nome do seu personagem: ");
+                String nome = scanner.nextLine();
 
-        String classe = "";
-        switch (escolha) {
-            case 1 -> classe = "Rastreador";
-            case 2 -> classe = "Mecânico";
-            case 3 -> classe = "Médico";
-            case 4 -> classe = "Sobrevivente Nato";
-        }
+                System.out.println("Escolha a classe do personagem");
+                System.out.println("1 - Rastreador");
+                System.out.println("2 - Mecânico");
+                System.out.println("3 - Médico");
+                System.out.println("4 - Sobrevivente Nato");
 
-        Personagem jogador = new Personagem(nome, classe);
-
-        //Criação dos Ambientes
-        Ambiente floresta = new Floresta("Floresta", "Floresta densa e habitada", 2, new ArrayList<>(Arrays.asList("Frutas, Madeira, Ervas Medicinais")), 0.4, "Chuvos");
-        Ambiente caverna = new Caverna("Caverna", "Caverna subterrânea e escura", 7, new ArrayList<>(Arrays.asList("Rochas e minérios raros")), 0.65, "Úmido e escuro" );
-        Ambiente lagorio = new LagoRio("Lago/Rio", "Um grande Lago/Rio que oferece oportunidades de hidratação, pesca e travessia", 2, new ArrayList<>(Arrays.asList("Água, peixes e algas")), 0.4, "Úmido e fresco");
-        Ambiente montanha = new Montanha("Montanha", "Ambiente elevado, terreno acidentado e grandes variações de temperatura, ALTO RISCO", 8, new ArrayList<>(Arrays.asList("Minérios e pedras preciosas")), 0.6, "Frio e com ventos fortes" );
-        Ambiente ruinas = new Ruinas("Ruínas", "Restos de uma civilização antiga com mistérios e perigos", 6, new ArrayList<>(Arrays.asList("Artefatos antigos, Estruturas colapsadas, inscrições misteriosas")), 0.6, "Seco, com fortes ventos");
-
-        //Gerenciador de Ambientes
-        GerenciadorDeAmbientes gerenciador = new GerenciadorDeAmbientes();
-        gerenciador.adicionarAmbiente(floresta);
-        gerenciador.adicionarAmbiente(caverna);
-        gerenciador.adicionarAmbiente(lagorio);
-        gerenciador.adicionarAmbiente(montanha);
-        gerenciador.adicionarAmbiente(ruinas);
-
-        //Adicionando ambiente inicial random
-        Random random = new Random();
-        ArrayList<Ambiente> ambientesDisponiveis = gerenciador.getAmbientes();
-        Ambiente ambienteInicial = ambientesDisponiveis.get(random.nextInt(ambientesDisponiveis.size()));
-
-        //Definir ambiente inicial
-        jogador.setAmbienteAtual(ambienteInicial);
-        gerenciador.registrarAmbienteInicial(ambienteInicial);
-
-        //Mensagem do início
-        System.out.println("\nVocê acorda em um local desconhecido...");
-        System.out.println("Ambiente inicial: " + ambienteInicial.getNome());
-        System.out.println(ambienteInicial.getDescricao());
-
-        //Loop de Movimentação
-        boolean continuar = true;
-        while (true) {
-            System.out.println("\nEscolha para onde quer se mover: ");
-            System.out.println("1 - Floresta");
-            System.out.println("2 - Caverna");
-            System.out.println("3 - LagoRio");
-            System.out.println("4 - Montanha");
-            System.out.println("5 - Ruinas");
-            System.out.println("0 - Sair do jogo");
-
-            int opcao = scanner.nextInt();
-            scanner.nextLine(); //Limpa o buffer
-
-            switch (opcao) {
-                case 1 -> gerenciador.mudarAmbiente(jogador, floresta);
-                case 2 -> gerenciador.mudarAmbiente(jogador, caverna);
-                case 3 -> gerenciador.mudarAmbiente(jogador, lagorio);
-                case 4 -> gerenciador.mudarAmbiente(jogador, montanha);
-                case 5 -> gerenciador.mudarAmbiente(jogador, ruinas);
-                case 0 -> {
-                    gerenciador.mostrarHistorico();
-                    System.out.println("Obrigado por jogar!");
-                    return;//Encerra o jogo
+                //Forçar que o úsuario digite um número de 1 a 4
+                int escolha = -1;
+                while (escolha < 1 || escolha > 4) {
+                    System.out.print("Digite um número de 1 a 4: ");
+                    escolha = scanner.nextInt();
                 }
-                default -> {
-                    System.out.println("Opção Inválida");
-                    gerenciador.mostrarHistorico();
-                    System.out.println("Obrigado por jogar!");
-                    return;
+
+                String classe = "";
+                switch (escolha) {
+                    case 1 -> classe = "Rastreador";
+                    case 2 -> classe = "Mecânico";
+                    case 3 -> classe = "Médico";
+                    case 4 -> classe = "Sobrevivente Nato";
+                }
+
+                Personagem jogador = new Personagem(nome, classe);
+
+                //Criação dos Ambientes
+                Ambiente floresta = new Floresta();
+                Ambiente caverna = new Caverna();
+                Ambiente lagorio = new LagoRio();
+                Ambiente montanha = new Montanha();
+                Ambiente ruinas = new Ruinas();
+
+                //Gerenciador de Ambientes
+                GerenciadorDeAmbientes gerenciador = new GerenciadorDeAmbientes();
+                gerenciador.adicionarAmbiente(floresta);
+                gerenciador.adicionarAmbiente(caverna);
+                gerenciador.adicionarAmbiente(lagorio);
+                gerenciador.adicionarAmbiente(montanha);
+                gerenciador.adicionarAmbiente(ruinas);
+
+                //Adicionando ambiente inicial random
+                Random random = new Random();
+                ArrayList<Ambiente> ambientesDisponiveis = gerenciador.getAmbientes();
+                Ambiente ambienteInicial = ambientesDisponiveis.get(random.nextInt(ambientesDisponiveis.size()));
+
+                //Definir ambiente inicial
+                jogador.setAmbienteAtual(ambienteInicial);
+                gerenciador.registrarAmbienteInicial(ambienteInicial);
+
+                //Mensagem do início
+                System.out.println("\n>>>>> JOGO INICIADO <<<<<\n");
+                System.out.println(jogador.getNome() + " desperta lentamente, sem saber como chegou ali.");
+                System.out.println("Está sozinho/a, cercado/a por um ambiente desconhecido e cheio de perigos.");
+                System.out.println("Será preciso explorar, coletar recursos e tomar boas decisões para sobreviver.");
+                System.out.println("\nAmbiente inicial: " + ambienteInicial.getNome());
+                System.out.println("Descrição: " + ambienteInicial.getDescricao());
+
+                //Loop
+                boolean continuar = true;
+
+                while (true) {
+                    jogador.menuPrincipal();
+
+                    int escolhaMenu = scanner.nextInt();
+                    scanner.nextLine();
+
+                    //Criar inventário
+                    Inventario inventario = new Inventario ();
+
+                    switch (escolhaMenu) {
+                        case 1 -> jogador.getStatus(); // ou System.out.println(jogador);
+                        case 2 -> jogador.visualizarInventario();
+                        case 3 -> {
+                            System.out.print("Digite o nome do item que deseja usar: ");
+                            String itemUsar = scanner.nextLine();
+                            jogador.usarItem();  // EM CONSTRUÇÃO !!!!!!!
+                        }
+                        case 4 -> {
+                            while (true) {
+                                System.out.println("\nEscolha para qual ambiente deseja mudar: ");
+                                System.out.println("1 - Floresta");
+                                System.out.println("2 - Caverna");
+                                System.out.println("3 - Lago/Rio");
+                                System.out.println("4 - Montanha");
+                                System.out.println("5 - Ruinas");
+                                System.out.println("0 - Voltar ao menu");
+
+                                int opcao = scanner.nextInt();
+                                scanner.nextLine();
+
+                                if (opcao == 0) break;
+
+                                switch (opcao) {
+                                    case 1 -> gerenciador.mudarAmbiente(jogador, floresta);
+                                    case 2 -> gerenciador.mudarAmbiente(jogador, caverna);
+                                    case 3 -> gerenciador.mudarAmbiente(jogador, lagorio);
+                                    case 4 -> gerenciador.mudarAmbiente(jogador, montanha);
+                                    case 5 -> gerenciador.mudarAmbiente(jogador, ruinas);
+                                    default -> System.out.println("Opção inválida.");
+                                }
+
+                                System.out.println("\nDeseja se mover para outro ambiente? (Sim/Não)");
+                                String resposta = scanner.nextLine();
+                                if (!resposta.equalsIgnoreCase("Sim")) break;
+                            }
+                        }
+                        case 0 -> {
+                            gerenciador.mostrarHistorico();
+                            System.out.println("Obrigado por jogar!");
+                            return;
+                        }
+                        default -> System.out.println("Opção inválida.");
+                    }
                 }
             }
+            case 2 -> {
+                System.out.println("Você decide não embarcar nesta aventura... Até a próxima!");
+                return; // Encerra o programa
+            }
 
-            System.out.println("\nDeseja se mover para outro ambiente?");
-            String resposta = scanner.nextLine();
-
-            if(!resposta.equalsIgnoreCase("Sim")){
-                System.out.println("Você decide explorar por mais um tempo...");
-                continue; //Continua no ambiente atual
+            default -> {
+                System.out.println("Opção inválida. Reinicie o jogo para tentar novamente.");
+                break;
             }
         }
+
 
     }
 }

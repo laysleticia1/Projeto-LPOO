@@ -9,18 +9,18 @@ public class Inventario {
     private double pesoTotal;
     private double espacoDisponivel;
 
-    public Inventario () {
-        this.listaDeItens = new ArrayList<> ();
+    public Inventario() {
+        this.listaDeItens = new ArrayList<>();
         this.pesoTotal = 0;
         this.espacoDisponivel = 50;
     }
 
     public void adicionarItem(Item item) {
-    this.pesoTotal += item.getPeso();
+        this.pesoTotal += item.getPeso();
     }
 
     public void removerItem(Item item) {
-    this.pesoTotal -= item.getPeso();
+        this.pesoTotal -= item.getPeso();
     }
 
     public void usarItem(String nomeItem) {
@@ -42,5 +42,17 @@ public class Inventario {
         this.pesoTotal = pesoTotal;
     }
 
+    public ArrayList<Item> getArrayInventario() {
+        return listaDeItens;
+    }
+
+    public void setArrayInventario(ArrayList<Item> novaLista) {
+        this.listaDeItens = novaLista;
+        this.pesoTotal = 0;
+        for (Item item : novaLista) {
+            this.pesoTotal += item.getPeso();
+        }
+
+    }
 
 }

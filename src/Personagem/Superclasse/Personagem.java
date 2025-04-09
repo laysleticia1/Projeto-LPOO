@@ -1,6 +1,8 @@
 package Personagem.Superclasse;
 
 import Ambiente.Superclasse.Ambiente;
+import Personagem.Inventario.Inventario;
+import Item.Superclasse.Item;
 
 public class Personagem {
     private String nome;
@@ -11,10 +13,11 @@ public class Personagem {
     private int sede;
     private int energia;
     private int sanidade;
-    private String [] inventario;
+    private Inventario inventario;
     private String [] localizacao;
     private int x, y; // Coordenadas
     private int velocidade;
+    private Ambiente ambienteAtual;
 
     public Personagem (String nomeUsuario, String classeUsuario) { // Construtor
         this.nome = nomeUsuario;
@@ -25,6 +28,7 @@ public class Personagem {
         sede = 100;
         energia = 100;
         sanidade = 100;
+        this.inventario = new Inventario ();
         x = 0;
         y = 0;
         velocidade = 10;
@@ -77,10 +81,10 @@ public class Personagem {
     public void setSanidade (int sanidadeUsuario) {
         this.sanidade = sanidadeUsuario;
     }
-    public String [] getInventario () {
+    public Inventario getInventario () {
         return inventario;
     }
-    public void setInventario (String [] inventarioUsuario) {
+    public void setInventario (Inventario inventarioUsuario) {
         this.inventario = inventarioUsuario;
     }
     public String [] getLocalizacao () {
@@ -207,16 +211,6 @@ public class Personagem {
             vida = 0;
         }
     }
-    public void habilidadeEspecial(String classe) {
-        if (classe.equals("Rastreador")) {
-        } else if (classe.equals("Mecânico")) {
-        } else if (classe.equals("Médico")) {
-        } else if (classe.equals("Sobrevivente Nato")) {
-        } else {
-        }
-    }
-
-    private Ambiente ambienteAtual;
 
     public void setAmbienteAtual(Ambiente ambiente) {
         this.ambienteAtual = ambiente;
@@ -226,4 +220,37 @@ public class Personagem {
         return ambienteAtual;
     }
 
+    public void getStatus () {
+        System.out.println ("Nome: " + getNome());
+        System.out.println ("Nível: " + getNivel());
+        System.out.println ("Vida: " + getVida());
+        System.out.println ("Fome: " + getFome());
+        System.out.println ("Sede: " + getSede());
+        System.out.println ("Energia: " + getSanidade());
+    }
+
+    public void menuPrincipal () {
+        System.out.println("\nMENU:");
+        System.out.println("1 - Ver status");
+        System.out.println("2 - Ver inventário");
+        System.out.println("3 - Usar item");
+        System.out.println("4 - Mudar de ambiente");
+        System.out.println("0 - Sair do jogo");
+    }
+
+    public void visualizarInventario() {
+        if (inventario.getArrayInventario().isEmpty()) {
+            System.out.println("O inventário está vazio.");
+            return;
+        }
+
+        System.out.println("\nItens no inventário:");
+        for (Item item : inventario.getArrayInventario()) {
+            System.out.println("- " + item.getNome() +
+                    " | Peso: " + item.getPeso() +
+                    " | Durabilidade: " + item.getDurabilidade());
+        }
+    }
+
 }
+
