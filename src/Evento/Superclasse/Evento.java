@@ -34,14 +34,16 @@ public class Evento {
         return probabilidadeDeOcorrencia;
     }
     public void setProbabilidadeDeOcorrencia (double probabilidadeDeOcorrencia) {
-        this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;}
+        this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;
+    }
+
     public String getImpacto () {
         return impacto;
     }
     void setImpacto (String impacto) {
         this.impacto = impacto;
     }
-    String getCondicaoDeAtivacao () {
+    public String getCondicaoDeAtivacao () {
         return condicaoDeAtivacao;
     }
     public void setCondicaoDeAtivacao (String condicaoDeAtivacao) {
@@ -49,8 +51,6 @@ public class Evento {
     }
 
     //Método Principal
-    public void executar (Personagem jogador, Ambiente local) {
-    }
 
     // Subclasse EventoClimatico
     private String clima;
@@ -78,6 +78,11 @@ public class Evento {
     }
     void removerEvento (Evento evento) {
     }
+
+    public void executar(Personagem jogador, Ambiente local) {
+        System.out.println("Evento sendo executado: " + nome + " " + descricao);
+    }
+
 
 }
 

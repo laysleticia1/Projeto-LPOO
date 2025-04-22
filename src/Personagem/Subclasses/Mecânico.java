@@ -1,4 +1,4 @@
 package Personagem.Subclasses;
 
-public class Mecânico {
+public class Mecanico {
 }
