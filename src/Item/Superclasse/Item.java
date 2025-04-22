@@ -12,8 +12,10 @@ public class Item {
     this.durabilidade = durabilidade;
     }
 
-    public void usar (Item item) { // FAZER MELHOR !!
-    this.durabilidade -= 1;
+    public void usar() {
+        if (durabilidade > 0) {
+            durabilidade--;
+        }
     }
 
     public void setDurabilidade(int durabilidade) {

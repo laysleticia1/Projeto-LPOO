@@ -33,6 +33,129 @@ public class Personagem {
         y = 0;
         velocidade = 10;
     }
+
+    public void atacar() {
+        if (energia >= 4) {
+            energia -= 4;
+            System.out.println("Jogador está atacando (-4 energia)");
+        } else {
+            System.out.println("Jogador não tem energia suficiente para atacar.");
+        }
+    }
+    public void defender() {
+        if (energia >= 2) {
+            energia -= 2;
+            System.out.println("Jogador está defendendo (-2 energia)");
+        } else {
+            System.out.println("Jogador não tem energia suficiente para defender.");
+        }
+    }
+    public void correr() {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está correndo");
+        }
+        else {
+            System.out.println ("Jogador não poderá correr");
+        }
+    }
+    public void agachar() {
+        if (getEnergia () > 0) {
+            System.out.println ("Jogador está agachado");
+        }
+        else {
+            System.out.println ("Jogador não poderá agachar");
+        }
+    }
+    public void moverDireita() {
+        if (getEnergia () > 0) {
+            x++;
+            System.out.println ("Jogador se moveu para a direita");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverEsquerda() {
+        if (getEnergia () > 0) {
+            x--;
+            System.out.println ("Jogador se moveu para a esquerda");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverCima() {
+        if (getEnergia () > 0) {
+            y++;
+            System.out.println ("Jogador se moveu para cima");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverBaixo() {
+        if (getEnergia () > 0) {
+            y--;
+            System.out.println ("Jogador se moveu para baixo");
+        }
+        else {
+            System.out.println ("Jogador não poderá se mover");
+        }
+    }
+    public void moverAmbiente (Ambiente novoAmbiente) {
+        //Atualiza a localização do personagem
+        setLocalizacao(new String [] {novoAmbiente.getNome()});
+        //Exibe uma mensagem no terminal
+        System.out.println(nome + " se moveu para: " + novoAmbiente.getNome());
+        //Descrição do Ambiente
+        System.out.println(novoAmbiente.getDescricao());
+    }
+    public void usarItem(String nomeItem) {
+        if (getEnergia() > 0) {
+            inventario.usarItem(nomeItem);
+        } else {
+            System.out.println("Jogador não poderá usar item, pois o nivel de energia está baixo.");
+        }
+    }
+    public void curar () {
+        if (getEnergia() >= 0) {
+            System.out.println("Jogador está se curando");
+        }
+    }
+    public void descansar () {
+        if (getEnergia() >= 0) {
+            System.out.println ("Jogador está descansando");
+        }
+    }
+    public void receberDano (int dano) {
+        this.vida -= dano;
+        if (vida < 0) {
+            vida = 0;
+        }
+    }
+    public void getStatus () {
+        System.out.println ("Nome: " + getNome());
+        System.out.println ("Nível: " + getNivel());
+        System.out.println ("Vida: " + getVida());
+        System.out.println ("Fome: " + getFome());
+        System.out.println ("Sede: " + getSede());
+        System.out.println ("Energia: " + getEnergia());
+        System.out.println ("Sanidade: " + getSanidade());
+    }
+
+    public void menuPrincipal () {
+        System.out.println("\nMENU:");
+        System.out.println("1 - Ver status");
+        System.out.println("2 - Ver inventário");
+        System.out.println("3 - Usar item");
+        System.out.println("4 - Mudar de ambiente");
+        System.out.println("0 - Sair do jogo");
+    }
+    public void visualizarInventario() {
+        inventario.listarItens();
+    }
+
+    // Getters e Setters
     public String getNome () {
         return nome;
     }
@@ -111,145 +234,11 @@ public class Personagem {
     public void setY(int y) {
         this.y = y;
     }
-    public void atacar() {
-        if (getEnergia () > 0) {
-            System.out.println ("Jogador está atacando");
-        }
-        else {
-            System.out.println ("Jogador não poderá atacar");
-        }
-    }
-    public void defender() {
-        if (getEnergia () > 0) {
-            System.out.println ("Jogador está defendendo");
-        }
-        else {
-            System.out.println ("Jogador não poderá defender");
-        }
-    }
-    public void correr() {
-        if (getEnergia () > 0) {
-            System.out.println ("Jogador está correndo");
-        }
-        else {
-            System.out.println ("Jogador não poderá correr");
-        }
-    }
-    public void agachar() {
-        if (getEnergia () > 0) {
-            System.out.println ("Jogador está agachado");
-        }
-        else {
-            System.out.println ("Jogador não poderá agachar");
-        }
-    }
-    public void moverDireita() {
-        if (getEnergia () > 0) {
-            x++;
-            System.out.println ("Jogador se moveu para a direita");
-        }
-        else {
-            System.out.println ("Jogador não poderá se mover");
-        }
-    }
-    public void moverEsquerda() {
-        if (getEnergia () > 0) {
-            x--;
-            System.out.println ("Jogador se moveu para a esquerda");
-        }
-        else {
-            System.out.println ("Jogador não poderá se mover");
-        }
-    }
-    public void moverCima() {
-        if (getEnergia () > 0) {
-            y++;
-            System.out.println ("Jogador se moveu para cima");
-        }
-        else {
-            System.out.println ("Jogador não poderá se mover");
-        }
-    }
-    public void moverBaixo() {
-        if (getEnergia () > 0) {
-            y--;
-            System.out.println ("Jogador se moveu para baixo");
-        }
-        else {
-            System.out.println ("Jogador não poderá se mover");
-        }
-    }
-    public void moverAmbiente (Ambiente novoAmbiente) {
-        //Atualiza a localização do personagem
-        setLocalizacao(new String [] {novoAmbiente.getNome()});
-        //Exibe uma mensagem no terminal
-        System.out.println(nome + " se moveu para: " + novoAmbiente.getNome());
-        //Descrição do Ambiente
-        System.out.println(novoAmbiente.getDescricao());
-    }
-    public void usarItem () {
-        if (getEnergia () > 0) {
-            System.out.println ("Jogador está usando item");
-        }
-        else {
-            System.out.println ("Jogador não poderá usar item");
-        }
-    }
-    public void curar () {
-        if (getEnergia() >= 0) {
-            System.out.println("Jogador está se curando");
-        }
-    }
-    public void descansar () {
-        if (getEnergia() >= 0) {
-            System.out.println ("Jogador está descansando");
-        }
-    }
-    public void receberDano (int dano) {
-        this.vida -= dano;
-        if (vida < 0) {
-            vida = 0;
-        }
-    }
-
     public void setAmbienteAtual(Ambiente ambiente) {
         this.ambienteAtual = ambiente;
     }
-
     public Ambiente getAmbienteAtual() {
         return ambienteAtual;
-    }
-
-    public void getStatus () {
-        System.out.println ("Nome: " + getNome());
-        System.out.println ("Nível: " + getNivel());
-        System.out.println ("Vida: " + getVida());
-        System.out.println ("Fome: " + getFome());
-        System.out.println ("Sede: " + getSede());
-        System.out.println ("Energia: " + getSanidade());
-    }
-
-    public void menuPrincipal () {
-        System.out.println("\nMENU:");
-        System.out.println("1 - Ver status");
-        System.out.println("2 - Ver inventário");
-        System.out.println("3 - Usar item");
-        System.out.println("4 - Mudar de ambiente");
-        System.out.println("0 - Sair do jogo");
-    }
-
-    public void visualizarInventario() {
-        if (inventario.getArrayInventario().isEmpty()) {
-            System.out.println("O inventário está vazio.");
-            return;
-        }
-
-        System.out.println("\nItens no inventário:");
-        for (Item item : inventario.getArrayInventario()) {
-            System.out.println("- " + item.getNome() +
-                    " | Peso: " + item.getPeso() +
-                    " | Durabilidade: " + item.getDurabilidade());
-        }
     }
 
 }
