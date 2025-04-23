@@ -4,7 +4,7 @@ import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
-public class EventoClimatico extends Evento {
+public abstract class EventoClimatico extends Evento {
     private String tipo;
     private int duracao;
     private String efeitoNoAmbiente;

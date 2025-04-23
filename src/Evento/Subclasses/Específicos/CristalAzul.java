@@ -29,4 +29,10 @@ public class CristalAzul extends EventoDescoberta {
         System.out.println("Impacto: " + getImpacto());
         // Você pode adicionar lógica futura para adicionar item ao inventário
     }
+
+    @Override
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return ambiente.getNome().equalsIgnoreCase("Caverna");
+    }
+
 }

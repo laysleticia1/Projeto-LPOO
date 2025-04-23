@@ -8,7 +8,7 @@ public abstract class Ambiente {
     private String descricao;
     private int dificuldadeExploracao;
     private ArrayList<String> recursosDisponiveis;
-    private double probabilidaDeEventos;
+    private double probabilidadeDeEventos;
     private String condicaoClimatica;
 
     //Construtor
@@ -17,7 +17,7 @@ public abstract class Ambiente {
         this.descricao = descricao;
         this.dificuldadeExploracao = dificuldadeExploracao;
         this.recursosDisponiveis = recursosDisponiveis;
-        this.probabilidaDeEventos = probabilidaDeEventos;
+        this.probabilidadeDeEventos = probabilidadeDeEventos;
         this.condicaoClimatica = condicaoClimatica;
     }
 
@@ -46,10 +46,10 @@ public abstract class Ambiente {
         this.recursosDisponiveis = recursosDisponiveis;
     }
     public double getProbabilidadeEventos(){
-        return probabilidaDeEventos;
+        return probabilidadeDeEventos;
     }
     public void setProbabilidadeEventos(double probabilidade){
-        this.probabilidaDeEventos = probabilidade;
+        this.probabilidadeDeEventos = probabilidade;
     }
     public String getCondicaoClimatica(){
         return condicaoClimatica;

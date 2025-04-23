@@ -4,7 +4,7 @@ import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
-public class EventoDoencaFerimento extends Evento {
+public abstract class EventoDoencaFerimento extends Evento {
     private String tipoDeCondicao;
     private String impactoCondicao;
     private String curaDisponivel;

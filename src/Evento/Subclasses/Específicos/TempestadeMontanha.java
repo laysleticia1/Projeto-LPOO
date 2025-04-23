@@ -31,4 +31,9 @@ public class TempestadeMontanha extends EventoClimatico {
         jogador.setEnergia(jogador.getEnergia() - 10);
         System.out.println("O personagem perdeu 10 de energia.");
     }
+    @Override
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return ambiente.getNome().equalsIgnoreCase("Montanha");
+    }
+
 }
