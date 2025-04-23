@@ -32,4 +32,9 @@ public class PoeiraToxica extends EventoDoencaFerimento {
         jogador.setSanidade(jogador.getSanidade() - 5);
         System.out.println("O personagem perdeu 10 de vida e 5 de sanidade.");
     }
+    @Override
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return ambiente.getNome().equalsIgnoreCase("Ruínas");
+    }
+
 }

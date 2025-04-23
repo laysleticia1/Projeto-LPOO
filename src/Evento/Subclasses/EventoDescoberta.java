@@ -15,7 +15,7 @@ public abstract class EventoDescoberta extends Evento {
     }
 
     @Override
-    public abstract void executar(Personagem jogador, Ambiente local); {
+    public void executar(Personagem jogador, Ambiente local) {
         System.out.println("Evento de Descoberta: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Tipo de Descoberta: " + tipoDeDescoberta);

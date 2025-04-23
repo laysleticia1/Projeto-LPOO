@@ -11,12 +11,15 @@ import Ambiente.Subclasses.LagoRio;
 import Ambiente.Subclasses.Montanha;
 import Ambiente.Subclasses.Ruinas;
 import Gerenciadores.GerenciadorDeAmbientes;
+import Gerenciadores.GerenciadorDeEventos;
+import Evento.Subclasses.Específicos.*;
 import Personagem.Superclasse.Personagem;
 import Item.Superclasse.Item;
 
 public class Jogo {
     private Scanner scanner = new Scanner(System.in);
     private GerenciadorDeAmbientes gerenciador = new GerenciadorDeAmbientes();
+    private GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
     private Personagem jogador;
     private Ambiente floresta, caverna, lagorio, montanha, ruinas;
 
@@ -34,6 +37,7 @@ public class Jogo {
             case 1 -> {
                 criarPersonagem();
                 configurarAmbientes();
+                configurarEventos();
                 introducao();
                 loopJogo();
             }
@@ -95,6 +99,14 @@ public class Jogo {
         gerenciador.registrarAmbienteInicial(ambienteInicial);
     }
 
+    private void configurarEventos() {
+        gerenciadorEventos.adicionarEvento(new CristalAzul());
+        gerenciadorEventos.adicionarEvento(new EmboscadaLobos());
+        gerenciadorEventos.adicionarEvento(new EnchenteRapida());
+        gerenciadorEventos.adicionarEvento(new PoeiraToxica());
+        gerenciadorEventos.adicionarEvento(new TempestadeMontanha());
+    }
+
     private void introducao() {
         System.out.println("\n>>>>> JOGO INICIADO <<<<<\n");
         System.out.println(jogador.getNome() + " desperta lentamente, sem saber como chegou naquele lugar.");
@@ -112,6 +124,7 @@ public class Jogo {
             System.out.println("3 - Usar item");
             System.out.println("4 - Mudar de ambiente");
             System.out.println("5 - Realizar ações");
+            System.out.println("6 - Explorar o ambiente");
             System.out.println("0 - Sair do jogo");
 
             int escolhaMenu = scanner.nextInt();
@@ -127,14 +140,21 @@ public class Jogo {
                 }
                 case 4 -> menuAmbientes();
                 case 5 -> realizarAcoes();
+                case 6 -> explorarAmbiente();
                 case 0 -> {
                     gerenciador.mostrarHistorico();
+                    gerenciadorEventos.mostrarHistoricoDeEventos();
                     System.out.println("Obrigado por jogar!");
                     return;
                 }
                 default -> System.out.println("Opção inválida.");
             }
         }
+    }
+
+    private void explorarAmbiente() {
+        System.out.println("\nVocê decide explorar a área ao redor...");
+        gerenciadorEventos.aplicarEventoAleatorio(jogador);
     }
 
     private void realizarAcoes() {
@@ -152,8 +172,6 @@ public class Jogo {
         jogador.getInventario().adicionarItem(new Item("Kit Médico", 2.0, 1));
 
         System.out.println(" ");
-
-
         jogador.visualizarInventario();
     }
 

@@ -3,7 +3,7 @@ package Evento.Superclasse;
 import Ambiente.Superclasse.Ambiente;
 import Personagem.Superclasse.Personagem;
 
-public class Evento {
+public abstract class Evento {
     private String nome;
     private String descricao;
     private double probabilidadeDeOcorrencia;
@@ -82,7 +82,7 @@ public class Evento {
     public void executar(Personagem jogador, Ambiente local) {
         System.out.println("Evento sendo executado: " + nome + " " + descricao);
     }
-
+    public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
 
 }
 

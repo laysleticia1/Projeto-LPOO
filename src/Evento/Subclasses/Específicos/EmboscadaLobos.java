@@ -30,4 +30,10 @@ public class EmboscadaLobos extends EventoCriatura {
         jogador.setSanidade(jogador.getSanidade() - 5);
         System.out.println("O personagem recebeu 12 de dano e perdeu 5 de sanidade.");
     }
+
+    @Override
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return ambiente.getNome().equalsIgnoreCase("Floresta");
+    }
+
 }

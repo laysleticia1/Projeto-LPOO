@@ -33,4 +33,9 @@ public class EnchenteRapida extends EventoClimatico {
 
         System.out.println("⚠️ Você perdeu 7 de energia e 2 de velocidade por causa da enchente!");
     }
+    @Override
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return ambiente.getNome().equalsIgnoreCase("Lago/Rio");
+    }
+
 }
