@@ -155,6 +155,17 @@ public class Personagem {
         inventario.listarItens();
     }
 
+    public void diminuirEnergia(int valor) {
+        this.energia -= valor;
+        if (this.energia < 0) {
+            this.energia = 0;
+        }
+    }
+    public void adicionarAoInventario(Item item) {
+        inventario.adicionarItem(item);
+    }
+
+
     // Getters e Setters
     public String getNome () {
         return nome;
