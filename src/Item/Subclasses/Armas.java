@@ -1,6 +1,8 @@
 package Item.Subclasses;
 
 import Item.Superclasse.Item;
+import Interface.Usavel;
+import Personagem.Superclasse.*;
 
 public class Armas extends Item {
     private String tipo;
@@ -14,6 +16,13 @@ public class Armas extends Item {
         this.alcance = alcance;
     }
 
-    public void atacar() {  // Faltando alvo
+    public void usar(Personagem alvo) {
+        if (getDurabilidade() > 0) {
+            setDurabilidade(getDurabilidade() - 1);
+            alvo.receberDano(dano);
+            System.out.println("Você atacou com: " + getNome() + " e causou " + dano + " de dano!");
+        } else {
+            System.out.println("A arma está quebrada.");
+        }
     }
 }

@@ -2,9 +2,10 @@ package Evento.Superclasse;
 
 import Ambiente.Superclasse.Ambiente;
 import Personagem.Superclasse.Personagem;
-import Interfaces.Executavel;
+import Interface.Executavel;
+import Interface.Condicional;
 
-public abstract class Evento implements Executavel {
+public abstract class Evento implements Executavel, Condicional {
     private String nome;
     private String descricao;
     private double probabilidadeDeOcorrencia;

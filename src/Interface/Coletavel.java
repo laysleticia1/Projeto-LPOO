@@ -1,4 +1,4 @@
-package Interfaces;
+package Interface;
 
 import Item.Superclasse.Item;
 

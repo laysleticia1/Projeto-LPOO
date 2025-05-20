@@ -4,9 +4,8 @@ import java.util.Collections;
 import Personagem.Superclasse.Personagem;
 import java.util.ArrayList;
 import Item.Superclasse.*;
-import Item.Subclasses.*;
-import Interfaces.Exploravel;
-import Interfaces.Coletavel;
+import Interface.Exploravel;
+import Interface.Coletavel;
 
 public abstract class Ambiente implements Exploravel, Coletavel {
     private String nome;
