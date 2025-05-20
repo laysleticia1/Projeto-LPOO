@@ -63,6 +63,5 @@ public abstract class Evento implements Executavel, Condicional {
     public abstract void executar(Personagem jogador, Ambiente local);
 
     public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
-
 }
 

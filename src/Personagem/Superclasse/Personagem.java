@@ -1,9 +1,12 @@
 package Personagem.Superclasse;
 
 import Ambiente.Superclasse.Ambiente;
+import Excecoes.InventarioCheioException;
 import Personagem.Inventario.Inventario;
 import Item.Superclasse.Item;
 import Interface.Movivel;
+import Excecoes.MortePorFomeOuSedeException;
+
 
 public class Personagem implements Movivel {
     private String nome;
@@ -34,6 +37,28 @@ public class Personagem implements Movivel {
         y = 0;
         velocidade = 10;
     }
+
+    public void verificarMortePorFomeOuSede() throws MortePorFomeOuSedeException {
+        if (fome <= 0) {
+            throw new MortePorFomeOuSedeException("Você morreu de fome.");
+        }
+        if (sede <= 0) {
+            throw new MortePorFomeOuSedeException("Você morreu de sede.");
+        }
+    }
+
+    public void aumentarFome(int quantidade) throws MortePorFomeOuSedeException {
+        this.fome += quantidade;
+        if (this.fome < 0) this.fome = 0;
+        verificarMortePorFomeOuSede();
+    }
+
+    public void aumentarSede(int quantidade) throws MortePorFomeOuSedeException {
+        this.sede += quantidade;
+        if (this.sede < 0) this.sede = 0;
+        verificarMortePorFomeOuSede();
+    }
+
 
     public void atacar() {
         if (energia >= 4) {
@@ -176,6 +201,11 @@ public class Personagem implements Movivel {
     }
 
     public void adicionarAoInventario(Item item) {
+        try{
+        inventario.adicionarItem(item);
+    } catch (InventarioCheioException e) {
+            System.out.println("Inventário cheio! " + e.getMessage());
+        }
         inventario.adicionarItem(item);
     }
     public void restaurarVida(int quantidade) {
@@ -194,7 +224,6 @@ public class Personagem implements Movivel {
     }
 
 
-        // Toda vez que o personagem explora ou passa o tempo, deve perder energia, fome e sede.
     public void consumirRecursosBasicos() {
         this.energia -= 5;
         this.fome -= 4;
