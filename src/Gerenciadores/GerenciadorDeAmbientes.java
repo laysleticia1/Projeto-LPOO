@@ -3,6 +3,7 @@ package Gerenciadores;
 import Ambiente.Superclasse.Ambiente;
 import Personagem.Superclasse.Personagem;
 import java.util.ArrayList;
+import Excecoes.AmbienteInacessivelException;
 
 public class GerenciadorDeAmbientes {
     private ArrayList<Ambiente> ambientesDisponiveis = new ArrayList<>();
@@ -12,12 +13,16 @@ public class GerenciadorDeAmbientes {
         ambientesDisponiveis.add(ambiente);
     }
 
-    public void mudarAmbiente(Personagem jogador, Ambiente novoAmbiente) {
+    public void mudarAmbiente(Personagem jogador, Ambiente novoAmbiente) throws AmbienteInacessivelException {
 
         //Caso o jogador escolha o mesmo ambiente vai avisar, evitando movimentação inútil
         if (jogador.getAmbienteAtual() != null && jogador.getAmbienteAtual().getNome().equals(novoAmbiente.getNome())) {
             System.out.println("Você já está nesse ambiente!");
             return;
+        }
+        //Lançamento da Exceção se não for acessível
+        if (!novoAmbiente.estaAcessivel()){
+            throw new AmbienteInacessivelException("O ambiente " + novoAmbiente.getNome() + " está inacessível no momento");
         }
 
         jogador.setAmbienteAtual(novoAmbiente);

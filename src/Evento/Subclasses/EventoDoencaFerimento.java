@@ -22,5 +22,4 @@ public abstract class EventoDoencaFerimento extends Evento {
         System.out.println("Cura: " + curaDisponivel);
         System.out.println("Impacto geral: " + getImpacto());
     }
-
 }

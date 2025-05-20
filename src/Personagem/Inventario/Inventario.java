@@ -1,6 +1,8 @@
 package Personagem.Inventario;
 
 import java.util.ArrayList;
+
+import Excecoes.InventarioCheioException;
 import Item.Superclasse.Item;
 
 public class Inventario {
@@ -14,15 +16,13 @@ public class Inventario {
         this.espacoDisponivel = 15; // capacidade máxima
     }
 
-    public boolean adicionarItem(Item item) {
+    public void adicionarItem(Item item) throws InventarioCheioException {
         if (pesoTotal + item.getPeso() <= espacoDisponivel) {
             listaDeItens.add(item);
             pesoTotal += item.getPeso();
             System.out.println(item.getNome() + " foi adicionado/a ao inventário.");
-            return true;
         } else {
-            System.out.println("Não há espaço suficiente para carregar " + item.getNome() + ".");
-            return false;
+            throw new InventarioCheioException("Não há espaço suficiente para carregar "+ item.getNome() + ".");
         }
     }
 

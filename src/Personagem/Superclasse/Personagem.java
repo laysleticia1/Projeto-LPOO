@@ -1,10 +1,13 @@
 package Personagem.Superclasse;
 
 import Ambiente.Superclasse.Ambiente;
+import Excecoes.InventarioCheioException;
 import Personagem.Inventario.Inventario;
 import Item.Superclasse.Item;
+import Interface.Movivel;
+import Excecoes.MortePorFomeOuSedeException;
 
-public class Personagem {
+public class Personagem implements Movivel {
     private String nome;
     private String classe;
     private int nivel;
@@ -33,6 +36,28 @@ public class Personagem {
         y = 0;
         velocidade = 10;
     }
+
+    public void verificarMortePorFomeOuSede() throws MortePorFomeOuSedeException {
+        if (fome <= 0) {
+            throw new MortePorFomeOuSedeException("Você morreu de fome.");
+        }
+        if (sede <= 0) {
+            throw new MortePorFomeOuSedeException("Você morreu de sede.");
+        }
+    }
+
+    public void aumentarFome(int quantidade) throws MortePorFomeOuSedeException {
+        this.fome += quantidade;
+        if (this.fome < 0) this.fome = 0;
+        verificarMortePorFomeOuSede();
+    }
+
+    public void aumentarSede(int quantidade) throws MortePorFomeOuSedeException {
+        this.sede += quantidade;
+        if (this.sede < 0) this.sede = 0;
+        verificarMortePorFomeOuSede();
+    }
+
 
     public void atacar() {
         if (energia >= 4) {
@@ -102,14 +127,21 @@ public class Personagem {
             System.out.println ("Jogador não poderá se mover");
         }
     }
-    public void moverAmbiente (Ambiente novoAmbiente) {
-        //Atualiza a localização do personagem
-        setLocalizacao(new String [] {novoAmbiente.getNome()});
-        //Exibe uma mensagem no terminal
-        System.out.println(nome + " se moveu para: " + novoAmbiente.getNome());
-        //Descrição do Ambiente
-        System.out.println(novoAmbiente.getDescricao());
+    public void moverParaAmbiente(Ambiente novoAmbiente) {
+        int custoMovimento = 7;
+
+        if (this.energia < custoMovimento) {
+            System.out.println("\n❌ Você está exausto demais para se mover.");
+            System.out.println("Energia atual: " + energia + " | Necessário: " + custoMovimento);
+            return;
+        }
+
+        this.energia -= custoMovimento;
+        this.ambienteAtual = novoAmbiente;
+
+        System.out.println("\n🌍 Você se moveu para o ambiente: " + novoAmbiente.getNome());
     }
+
     public void usarItem(String nomeItem) {
         if (getEnergia() > 0) {
             inventario.usarItem(nomeItem);
@@ -153,6 +185,72 @@ public class Personagem {
     }
     public void visualizarInventario() {
         inventario.listarItens();
+    }
+
+    public void diminuirEnergia(int valor) {
+        this.energia -= valor;
+        if (this.energia < 0) {
+            this.energia = 0;
+        }
+    }
+    public void recuperarEnergia(double quantidade) {
+        energia += quantidade;
+        if (energia > 100) energia = 100;
+        System.out.println("Energia recuperada em " + quantidade + ". Energia atual: " + energia);
+    }
+
+    public void adicionarAoInventario(Item item) {
+        try{
+        inventario.adicionarItem(item);
+    } catch (InventarioCheioException e) {
+            System.out.println("Inventário cheio! " + e.getMessage());
+        }
+    }
+    public void restaurarVida(int quantidade) {
+        this.vida += quantidade;
+
+        // opcional: limitar vida máxima
+        if (this.vida > 100) {
+            this.vida = 100;
+        }
+    }
+    public void restaurarFome (int quantidade) {
+        this.fome += quantidade;
+        if (this.fome > 100) {
+            this.fome = 100;
+        }
+    }
+
+
+    // Toda vez que o personagem explora ou passa o tempo, deve perder energia, fome e sede.
+    public void consumirRecursosBasicos() {
+        this.energia -= 5;
+        this.fome -= 4;
+        this.sede -= 3;
+
+        if (energia < 0) energia = 0;
+        if (fome < 0) fome = 0;
+        if (sede < 0) sede = 0;
+
+        System.out.println("\n🔋 Consumo diário aplicado:");
+        System.out.println("Energia: " + energia);
+        System.out.println("Fome: " + fome);
+        System.out.println("Sede: " + sede);
+    }
+
+
+    public void verificarEstadoSobrevivencia() {
+        if (fome <= 0) {
+            this.vida -= 10;
+            System.out.println("Você está com fome extrema! Perdeu 10 de vida.");
+        }
+        if (sede <= 0) {
+            this.vida -= 10;
+            System.out.println("Você está desidratado! Perdeu 10 de vida.");
+        }
+        if (energia <= 0) {
+            System.out.println("Você está exausto. Precisa descansar.");
+        }
     }
 
     // Getters e Setters

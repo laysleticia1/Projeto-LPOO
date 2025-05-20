@@ -64,4 +64,7 @@ public abstract class Ambiente {
     }
     public void modificarClima(){
     }
+    public boolean estaAcessivel(){
+        return this.dificuldadeExploracao <= 70;
+    }
 }

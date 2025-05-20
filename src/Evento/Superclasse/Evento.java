@@ -83,6 +83,5 @@ public abstract class Evento {
         System.out.println("Evento sendo executado: " + nome + " " + descricao);
     }
     public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
-
 }
 

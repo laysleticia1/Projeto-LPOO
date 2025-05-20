@@ -10,9 +10,13 @@ import Ambiente.Subclasses.Floresta;
 import Ambiente.Subclasses.LagoRio;
 import Ambiente.Subclasses.Montanha;
 import Ambiente.Subclasses.Ruinas;
+import Excecoes.AmbienteInacessivelException;
+import Excecoes.InventarioCheioException;
+import Excecoes.MortePorFomeOuSedeException;
 import Gerenciadores.GerenciadorDeAmbientes;
 import Gerenciadores.GerenciadorDeEventos;
 import Evento.Subclasses.Específicos.*;
+import Personagem.Inventario.Inventario;
 import Personagem.Superclasse.Personagem;
 import Item.Superclasse.Item;
 
@@ -130,32 +134,42 @@ public class Jogo {
             int escolhaMenu = scanner.nextInt();
             scanner.nextLine();
 
-            switch (escolhaMenu) {
-                case 1 -> jogador.getStatus();
-                case 2 -> jogador.visualizarInventario();
-                case 3 -> {
-                    System.out.print("Digite o nome do item que deseja usar: ");
-                    String itemUsar = scanner.nextLine();
-                    jogador.usarItem(itemUsar);
+            try {
+                switch (escolhaMenu) {
+                    case 1 -> jogador.getStatus();
+                    case 2 -> jogador.visualizarInventario();
+                    case 3 -> {
+                        System.out.print("Digite o nome do item que deseja usar: ");
+                        String itemUsar = scanner.nextLine();
+                        jogador.usarItem(itemUsar);
+                    }
+                    case 4 -> menuAmbientes();
+                    case 5 -> realizarAcoes();
+                    case 6 -> explorarAmbiente();
+                    case 0 -> {
+                        gerenciador.mostrarHistorico();
+                        gerenciadorEventos.mostrarHistoricoDeEventos();
+                        System.out.println("Obrigado por jogar!");
+                        return;
+                    }
+                    default -> System.out.println("Opção inválida.");
                 }
-                case 4 -> menuAmbientes();
-                case 5 -> realizarAcoes();
-                case 6 -> explorarAmbiente();
-                case 0 -> {
-                    gerenciador.mostrarHistorico();
-                    gerenciadorEventos.mostrarHistoricoDeEventos();
-                    System.out.println("Obrigado por jogar!");
-                    return;
-                }
-                default -> System.out.println("Opção inválida.");
+
+                jogador.aumentarFome(10);
+                jogador.aumentarSede(10);
+
+            } catch (MortePorFomeOuSedeException e) {
+                System.out.println("Morte" + e.getMessage());
+                System.out.println("O jogador não resistiu.");
+                return;
             }
         }
     }
 
-    private void explorarAmbiente() {
-        System.out.println("\nVocê decide explorar a área ao redor...");
-        gerenciadorEventos.aplicarEventoAleatorio(jogador);
-    }
+        private void explorarAmbiente() {
+            System.out.println("\nVocê decide explorar a área ao redor...");
+            gerenciadorEventos.aplicarEventoAleatorio(jogador);
+        }
 
     private void realizarAcoes() {
         System.out.println("\n--- Realizando Ações do Personagem ---");
@@ -167,9 +181,15 @@ public class Jogo {
         jogador.agachar();
 
         System.out.println("\n--- Adicionando Itens ao Inventário ---");
-        jogador.getInventario().adicionarItem(new Item("Lanterna", 1.5, 3));
-        jogador.getInventario().adicionarItem(new Item("Garrafa de Água", 0.8, 1));
-        jogador.getInventario().adicionarItem(new Item("Kit Médico", 2.0, 1));
+        try {
+            jogador.getInventario().adicionarItem(new Item("Lanterna", 1.5, 10));
+            jogador.getInventario().adicionarItem(new Item("Garrafa de Água", 0.8, 10));
+            jogador.getInventario().adicionarItem(new Item("Kit Médico", 2.0, 10));
+            jogador.getInventario().adicionarItem(new Item( "Espada", 3.0, 10));
+            jogador.getInventario().adicionarItem(new Item("Escudo", 4.0,10));
+        } catch (InventarioCheioException e) {
+            System.out.println("Erro ao adicionar item: " + e.getMessage());
+        }
 
         System.out.println(" ");
         jogador.visualizarInventario();
@@ -191,11 +211,41 @@ public class Jogo {
             if (opcao == 0) break;
 
             switch (opcao) {
-                case 1 -> gerenciador.mudarAmbiente(jogador, floresta);
-                case 2 -> gerenciador.mudarAmbiente(jogador, caverna);
-                case 3 -> gerenciador.mudarAmbiente(jogador, lagorio);
-                case 4 -> gerenciador.mudarAmbiente(jogador, montanha);
-                case 5 -> gerenciador.mudarAmbiente(jogador, ruinas);
+                case 1 -> {
+                    try {
+                        gerenciador.mudarAmbiente(jogador, floresta);
+                    } catch (AmbienteInacessivelException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    }
+                }
+                case 2 -> {
+                    try {
+                        gerenciador.mudarAmbiente(jogador, caverna);
+                    } catch (AmbienteInacessivelException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    try {
+                        gerenciador.mudarAmbiente(jogador, lagorio);
+                    } catch (AmbienteInacessivelException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    }
+                }
+                case 4 -> {
+                    try {
+                        gerenciador.mudarAmbiente(jogador, montanha);
+                    } catch (AmbienteInacessivelException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    }
+                }
+                case 5 -> {
+                    try {
+                        gerenciador.mudarAmbiente(jogador, ruinas);
+                    } catch (AmbienteInacessivelException e) {
+                        System.out.println("⚠️ " + e.getMessage());
+                    }
+                }
                 default -> System.out.println("Opção inválida.");
             }
 
