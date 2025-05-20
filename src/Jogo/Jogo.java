@@ -186,8 +186,8 @@ public class Jogo {
                     default -> System.out.println("Opção inválida.");
                 }
 
-                jogador.aumentarFome(10);
-                jogador.aumentarSede(10);
+                jogador.diminuirFome(10);
+                jogador.diminuirSede(10);
 
             } catch (MortePorFomeOuSedeException e) {
                 System.out.println("Morte" + e.getMessage());
@@ -203,27 +203,6 @@ public class Jogo {
         }
 
     private void realizarAcoes() {
-        System.out.println("\n--- Realizando Ações do Personagem ---");
-        jogador.atacar();
-        jogador.defender();
-        jogador.correr();
-        jogador.moverCima();
-        jogador.moverDireita();
-        jogador.agachar();
-
-        System.out.println("\n--- Adicionando Itens ao Inventário ---");
-        try {
-            jogador.getInventario().adicionarItem(new Item("Lanterna", 1.5, 10));
-            jogador.getInventario().adicionarItem(new Item("Garrafa de Água", 0.8, 10));
-            jogador.getInventario().adicionarItem(new Item("Kit Médico", 2.0, 10));
-            jogador.getInventario().adicionarItem(new Item( "Espada", 3.0, 10));
-            jogador.getInventario().adicionarItem(new Item("Escudo", 4.0,10));
-        } catch (InventarioCheioException e) {
-            System.out.println("Erro ao adicionar item: " + e.getMessage());
-        }
-
-        System.out.println(" ");
-
         apresentarAcoesPorAmbiente(jogador);
 
         System.out.print("\nEscolha uma ação: ");
@@ -236,53 +215,97 @@ public class Jogo {
             case 1 -> {
                 if (ambiente instanceof Floresta) {
                     System.out.println("Você coleta frutas frescas da floresta.");
-                    jogador.getInventario().adicionarItem(new Item("Frutas", 0.5, 3));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Frutas", 0.5, 3));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Frutas.");
+                    }
                     jogador.restaurarFome(10);
                 } else if (ambiente instanceof Montanha) {
                     System.out.println("Você escala e encontra uma caverna para abrigo.");
-                    jogador.getInventario().adicionarItem(new Item("Pedra Afiada", 1.0, 1));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Pedra Afiada", 1.0, 1));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Pedra Afiada.");
+                    }
                 } else if (ambiente instanceof LagoRio) {
                     System.out.println("Você bebe água do lago, recuperando energia.");
                     jogador.recuperarEnergia(5);
                 } else if (ambiente instanceof Caverna) {
                     System.out.println("Você acende tochas e encontra minérios.");
-                    jogador.getInventario().adicionarItem(new Item("Minério Brilhante", 2.0, 1));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Minério Brilhante", 2.0, 1));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Minério Brilhante.");
+                    }
                 } else if (ambiente instanceof Ruinas) {
                     System.out.println("Você vasculha e encontra um mapa antigo.");
-                    jogador.getInventario().adicionarItem(new Item("Mapa Antigo", 0.7, 1));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Mapa Antigo", 0.7, 1));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Mapa Antigo.");
+                    }
                 } else {
                     System.out.println("Você observa atentamente o local.");
                 }
             }
+
             case 2 -> {
                 if (ambiente instanceof Floresta) {
                     System.out.println("Você monta um abrigo improvisado com galhos.");
                 } else if (ambiente instanceof Montanha) {
                     System.out.println("Você encontra restos de equipamentos congelados.");
-                    jogador.getInventario().adicionarItem(new Item("Equipamento Congelado", 3.0, 1));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Equipamento Congelado", 3.0, 1));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Equipamento Congelado.");
+                    }
                 } else if (ambiente instanceof LagoRio) {
                     System.out.println("Você pesca um peixe pequeno.");
-                    jogador.getInventario().adicionarItem(new Item("Peixe", 1.2, 1));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Peixe", 1.2, 1));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Peixe.");
+                    }
                     jogador.restaurarFome(10);
                 } else if (ambiente instanceof Caverna) {
                     System.out.println("Você encontra carvão e ferramentas antigas.");
-                    jogador.getInventario().adicionarItem(new Item("Carvão", 1.0, 2));
+                    try {
+                        jogador.getInventario().adicionarItem(new Item("Carvão", 1.0, 2));
+                    } catch (InventarioCheioException e) {
+                        System.out.println("Inventário cheio! Não foi possível adicionar Carvão.");
+                    }
                 } else if (ambiente instanceof Ruinas) {
                     System.out.println("Você estuda símbolos e ganha conhecimento.");
                 } else {
                     System.out.println("Você caminha sem rumo definido.");
                 }
             }
+
             case 3 -> {
                 System.out.print("Digite o nome do item que deseja usar: ");
                 String itemUsar = scanner.nextLine();
                 jogador.usarItem(itemUsar);
+
+                if (itemUsar.equalsIgnoreCase("Água")) {
+                    jogador.restaurarSede(15);
+                    System.out.println("Você bebeu água e recuperou a sede.");
+                }
             }
-            case 4 -> System.out.println("Você decide apenas descansar e observar o ambiente.");
-            default -> System.out.println("Ação inválida para este ambiente.");
+
+
+            case 4 -> {
+                System.out.println("Você decide apenas descansar e observar o ambiente.");
+            }
+
+            default -> {
+                System.out.println("Ação inválida para este ambiente.");
+            }
         }
 
-
+        // Ao final de qualquer ação, aplica o custo do turno e verifica o estado
+        jogador.consumirRecursosBasicos();
+        jogador.verificarEstadoSobrevivencia();
 
         System.out.println("\n--- Inventário atualizado ---");
         jogador.visualizarInventario();

@@ -1,5 +1,7 @@
 package Item.Superclasse;
 
+import Personagem.Inventario.*;
+
 public class Item {
     private String nome;
     private double peso;
@@ -11,10 +13,9 @@ public class Item {
     this.peso = peso;
     this.durabilidade = durabilidade;
     }
+    public void usar (){
 
-    public void usar() {
     }
-
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;
     }

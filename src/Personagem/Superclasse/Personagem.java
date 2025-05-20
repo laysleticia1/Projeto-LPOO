@@ -47,14 +47,14 @@ public class Personagem implements Movivel {
         }
     }
 
-    public void aumentarFome(int quantidade) throws MortePorFomeOuSedeException {
-        this.fome += quantidade;
+    public void diminuirFome(int quantidade) throws MortePorFomeOuSedeException {
+        this.fome -= quantidade;
         if (this.fome < 0) this.fome = 0;
         verificarMortePorFomeOuSede();
     }
 
-    public void aumentarSede(int quantidade) throws MortePorFomeOuSedeException {
-        this.sede += quantidade;
+    public void diminuirSede(int quantidade) throws MortePorFomeOuSedeException {
+        this.sede -= quantidade;
         if (this.sede < 0) this.sede = 0;
         verificarMortePorFomeOuSede();
     }
@@ -206,23 +206,26 @@ public class Personagem implements Movivel {
     } catch (InventarioCheioException e) {
             System.out.println("Inventário cheio! " + e.getMessage());
         }
-        inventario.adicionarItem(item);
     }
     public void restaurarVida(int quantidade) {
         this.vida += quantidade;
 
-        // opcional: limitar vida máxima
         if (this.vida > 100) {
             this.vida = 100;
         }
     }
-    public void restaurarFome (int quantidade) {
+    public void restaurarFome(int quantidade) {
         this.fome += quantidade;
         if (this.fome > 100) {
             this.fome = 100;
         }
     }
-
+    public void restaurarSede(int quantidade) {
+        this.sede += quantidade;
+        if (this.sede > 100) {
+            this.sede = 100;
+        }
+    }
 
     public void consumirRecursosBasicos() {
         this.energia -= 5;
@@ -248,6 +251,10 @@ public class Personagem implements Movivel {
         if (sede <= 0) {
             this.vida -= 10;
             System.out.println("Você está desidratado! Perdeu 10 de vida.");
+        }
+        if (sanidade <= 0) {
+            this.vida -= 10;
+            System.out.println("Você está mentalmente instável! Perdeu 10 de vida.");
         }
         if (energia <= 0) {
             System.out.println("Você está exausto. Precisa descansar.");
