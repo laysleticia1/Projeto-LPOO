@@ -11,6 +11,9 @@ public class EventoClimatico extends Evento {
 
     public EventoClimatico(String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao, String tipo, int duracao, String efeitoNoAmbiente) {
         super (nome, descricao, probabilidadeDeOcorrencia, impacto, condicaoDeAtivacao);
+        this.tipo = tipo;
+        this.duracao = duracao;
+        this.efeitoNoAmbiente = efeitoNoAmbiente;
     }
 
     public void executar(Personagem jogador, Ambiente local) {
@@ -33,6 +36,11 @@ public class EventoClimatico extends Evento {
     public String getEfeitoNoAmbiente() {
         return efeitoNoAmbiente;
     }
+
+    public void setEfeitoNoAmbiente(String efeitoNoAmbiente) {
+        this.efeitoNoAmbiente = efeitoNoAmbiente;
+    }
+
 
     public String getTipo() {
         return tipo;

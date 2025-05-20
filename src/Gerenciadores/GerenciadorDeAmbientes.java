@@ -20,10 +20,10 @@ public class GerenciadorDeAmbientes {
             return;
         }
 
-        jogador.setAmbienteAtual(novoAmbiente);
+        jogador.moverParaAmbiente(novoAmbiente);
         historicoDeMovimentacao.add(novoAmbiente.getNome());
-        System.out.println("Você se moveu para: " + novoAmbiente.getNome());
         System.out.println("Descrição: " + novoAmbiente.getDescricao());
+        System.out.println("Energia restante após se mover: " + jogador.getEnergia());
     }
 
     public void mostrarHistorico() {
