@@ -13,9 +13,6 @@ public class Item {
     }
 
     public void usar() {
-        if (durabilidade > 0) {
-            durabilidade--;
-        }
     }
 
     public void setDurabilidade(int durabilidade) {

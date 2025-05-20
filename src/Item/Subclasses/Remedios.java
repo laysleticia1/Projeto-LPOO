@@ -2,8 +2,10 @@ package Item.Subclasses;
 
 import Item.Superclasse.Item;
 import Personagem.Superclasse.Personagem;
+import Interface.Usavel;
+import Interface.Curavel;
 
-public class Remedios extends Item {
+public class Remedios extends Item implements Usavel, Curavel{
     private String tipo;
     private String efeito;
 
@@ -14,16 +16,22 @@ public class Remedios extends Item {
     }
 
     public void usar(Personagem alvo) {
-    if (getDurabilidade() > 0 ) {
-        setDurabilidade(getDurabilidade() - 1);
-        alvo.setVida(alvo.getVida() + 20);
-        int cura = 20;
-        System.out.println("Você tomou o remédio de tipo: " + tipo + ". Efeito aplicado: " + efeito + ". Uma sensação de alívio percorre seu corpo, restaurando " + cura + " pontos de vida.");
-    } else {
-        System.out.println("Este remédio já foi utilizado e não pode ser usado novamente.");
+        if (getDurabilidade() > 0) {
+            setDurabilidade(getDurabilidade() - 1);
+            curar(alvo);
+        } else {
+            System.out.println("Este remédio já foi utilizado e não pode ser usado novamente.");
         }
     }
-
+    public void curar(Personagem alvo) {
+        int cura = 20;
+        int vidaAnterior = alvo.getVida();
+        alvo.setVida(vidaAnterior + cura);
+        System.out.println("Você tomou o remédio de tipo: " + tipo +
+                ". Efeito aplicado: " + efeito +
+                ". Uma sensação de alívio percorre seu corpo, restaurando " +
+                cura + " pontos de vida.");
+    }
     public String getTipo() {
         return tipo;
     }

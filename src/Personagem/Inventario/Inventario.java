@@ -70,7 +70,6 @@ public class Inventario {
         }
     }
 
-
     public void listarItens() {
         if (listaDeItens.isEmpty()) {
             System.out.println("Inventário vazio.");

@@ -4,17 +4,18 @@ import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
-public abstract class EventoClimatico extends Evento {
+public class EventoClimatico extends Evento {
     private String tipo;
     private int duracao;
     private String efeitoNoAmbiente;
 
     public EventoClimatico(String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao, String tipo, int duracao, String efeitoNoAmbiente) {
         super (nome, descricao, probabilidadeDeOcorrencia, impacto, condicaoDeAtivacao);
+        this.tipo = tipo;
+        this.duracao = duracao;
+        this.efeitoNoAmbiente = efeitoNoAmbiente;
     }
 
-
-    @Override
     public void executar(Personagem jogador, Ambiente local) {
         System.out.println("Evento Climático: " + getNomeEvento());
         System.out.println(getDescricao());
@@ -24,6 +25,10 @@ public abstract class EventoClimatico extends Evento {
         System.out.println("Impacto geral: " + getImpacto());
     }
 
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return true;
+    }
+
     public int getDuracao() {
         return duracao;
     }
@@ -31,6 +36,11 @@ public abstract class EventoClimatico extends Evento {
     public String getEfeitoNoAmbiente() {
         return efeitoNoAmbiente;
     }
+
+    public void setEfeitoNoAmbiente(String efeitoNoAmbiente) {
+        this.efeitoNoAmbiente = efeitoNoAmbiente;
+    }
+
 
     public String getTipo() {
         return tipo;

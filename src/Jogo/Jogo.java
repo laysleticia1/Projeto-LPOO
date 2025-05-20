@@ -18,6 +18,7 @@ import Gerenciadores.GerenciadorDeEventos;
 import Evento.Subclasses.Específicos.*;
 import Personagem.Inventario.Inventario;
 import Personagem.Superclasse.Personagem;
+import Personagem.Subclasses.*;
 import Item.Superclasse.Item;
 
 public class Jogo {
@@ -35,7 +36,7 @@ public class Jogo {
         System.out.println("2 - Sair");
 
         int option = scanner.nextInt();
-        scanner.nextLine(); // limpar buffer
+        scanner.nextLine();
 
         switch (option) {
             case 1 -> {
@@ -55,6 +56,34 @@ public class Jogo {
         }
     }
 
+    public void apresentarAcoesPorAmbiente(Personagem jogador) {
+        Ambiente ambiente = jogador.getAmbienteAtual();
+
+        System.out.println("\n🔹 Ações disponíveis neste local:");
+
+        if (ambiente instanceof Floresta) {
+            System.out.println("1 - Coletar frutas");
+            System.out.println("2 - Procurar abrigo improvisado");
+        } else if (ambiente instanceof Montanha) {
+            System.out.println("1 - Escalar para encontrar abrigo natural");
+            System.out.println("2 - Procurar itens congelados no alto");
+        } else if (ambiente instanceof LagoRio) {
+            System.out.println("1 - Beber água diretamente");
+            System.out.println("2 - Pescar");
+        } else if (ambiente instanceof Caverna) {
+            System.out.println("1 - Acender tochas e explorar");
+            System.out.println("2 - Buscar minerais úteis");
+        } else if (ambiente instanceof Ruinas) {
+            System.out.println("1 - Vasculhar ruínas por suprimentos antigos");
+            System.out.println("2 - Analisar símbolos misteriosos");
+        } else {
+            System.out.println("1 - Explorar o local");
+        }
+
+        System.out.println("3 - Usar item");
+        System.out.println("4 - Passar turno");
+    }
+
     private void criarPersonagem() {
         System.out.println("Digite o nome do seu personagem: ");
         String nome = scanner.nextLine();
@@ -70,7 +99,7 @@ public class Jogo {
             System.out.print("Digite um número de 1 a 4: ");
             escolha = scanner.nextInt();
         }
-        scanner.nextLine(); // limpar buffer
+        scanner.nextLine();
 
         String classe = switch (escolha) {
             case 1 -> "Rastreador";
@@ -116,8 +145,10 @@ public class Jogo {
         System.out.println(jogador.getNome() + " desperta lentamente, sem saber como chegou naquele lugar.");
         System.out.println("Está sozinho/a, cercado/a por um ambiente desconhecido e cheio de perigos.");
         System.out.println("Será preciso explorar, coletar recursos e tomar boas decisões para sobreviver.");
-        System.out.println("\nAmbiente inicial: " + jogador.getAmbienteAtual().getNome());
+        System.out.println("\n🔹 Ambiente inicial: " + jogador.getAmbienteAtual().getNome());
         System.out.println("Descrição: " + jogador.getAmbienteAtual().getDescricao());
+        System.out.println("Clima: " + jogador.getAmbienteAtual().getCondicaoClimatica());
+
     }
 
     private void loopJogo() {
@@ -192,6 +223,68 @@ public class Jogo {
         }
 
         System.out.println(" ");
+
+        apresentarAcoesPorAmbiente(jogador);
+
+        System.out.print("\nEscolha uma ação: ");
+        int escolha = scanner.nextInt();
+        scanner.nextLine();
+
+        Ambiente ambiente = jogador.getAmbienteAtual();
+
+        switch (escolha) {
+            case 1 -> {
+                if (ambiente instanceof Floresta) {
+                    System.out.println("Você coleta frutas frescas da floresta.");
+                    jogador.getInventario().adicionarItem(new Item("Frutas", 0.5, 3));
+                    jogador.restaurarFome(10);
+                } else if (ambiente instanceof Montanha) {
+                    System.out.println("Você escala e encontra uma caverna para abrigo.");
+                    jogador.getInventario().adicionarItem(new Item("Pedra Afiada", 1.0, 1));
+                } else if (ambiente instanceof LagoRio) {
+                    System.out.println("Você bebe água do lago, recuperando energia.");
+                    jogador.recuperarEnergia(5);
+                } else if (ambiente instanceof Caverna) {
+                    System.out.println("Você acende tochas e encontra minérios.");
+                    jogador.getInventario().adicionarItem(new Item("Minério Brilhante", 2.0, 1));
+                } else if (ambiente instanceof Ruinas) {
+                    System.out.println("Você vasculha e encontra um mapa antigo.");
+                    jogador.getInventario().adicionarItem(new Item("Mapa Antigo", 0.7, 1));
+                } else {
+                    System.out.println("Você observa atentamente o local.");
+                }
+            }
+            case 2 -> {
+                if (ambiente instanceof Floresta) {
+                    System.out.println("Você monta um abrigo improvisado com galhos.");
+                } else if (ambiente instanceof Montanha) {
+                    System.out.println("Você encontra restos de equipamentos congelados.");
+                    jogador.getInventario().adicionarItem(new Item("Equipamento Congelado", 3.0, 1));
+                } else if (ambiente instanceof LagoRio) {
+                    System.out.println("Você pesca um peixe pequeno.");
+                    jogador.getInventario().adicionarItem(new Item("Peixe", 1.2, 1));
+                    jogador.restaurarFome(10);
+                } else if (ambiente instanceof Caverna) {
+                    System.out.println("Você encontra carvão e ferramentas antigas.");
+                    jogador.getInventario().adicionarItem(new Item("Carvão", 1.0, 2));
+                } else if (ambiente instanceof Ruinas) {
+                    System.out.println("Você estuda símbolos e ganha conhecimento.");
+                } else {
+                    System.out.println("Você caminha sem rumo definido.");
+                }
+            }
+            case 3 -> {
+                System.out.print("Digite o nome do item que deseja usar: ");
+                String itemUsar = scanner.nextLine();
+                jogador.usarItem(itemUsar);
+            }
+            case 4 -> System.out.println("Você decide apenas descansar e observar o ambiente.");
+            default -> System.out.println("Ação inválida para este ambiente.");
+        }
+
+
+
+        System.out.println("\n--- Inventário atualizado ---");
         jogador.visualizarInventario();
     }
 
