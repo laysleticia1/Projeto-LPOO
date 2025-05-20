@@ -2,9 +2,10 @@ package Evento.Subclasses;
 
 import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
-import Ambiente.Superclasse.Ambiente;
+import Ambiente.Superclasse.*;
+import Ambiente.Subclasses.*;
 
-public abstract class EventoCriatura extends Evento {
+public class EventoCriatura extends Evento {
     private String tipo;
     private int nivelPerigo;
     private String acoes;
@@ -13,7 +14,6 @@ public abstract class EventoCriatura extends Evento {
         super(nome, descricao, probabilidadeDeOcorrencia, impacto, condicaoDeAtivacao);
     }
 
-    @Override
     public void executar(Personagem jogador, Ambiente local) {
         System.out.println("\n👹 Evento de Criatura: " + getNomeEvento());
         System.out.println(getDescricao());
@@ -21,5 +21,8 @@ public abstract class EventoCriatura extends Evento {
         System.out.println("Nível de perigo: " + nivelPerigo);
         System.out.println("Ações possíveis: " + acoes);
         System.out.println("Impacto no personagem: " + getImpacto());
+    }
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        return ambiente instanceof Floresta;
     }
 }

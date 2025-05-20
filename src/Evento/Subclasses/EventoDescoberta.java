@@ -3,8 +3,9 @@ package Evento.Subclasses;
 import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
+import Ambiente.Subclasses.*;
 
-public abstract class EventoDescoberta extends Evento {
+public class EventoDescoberta extends Evento {
     private String tipoDeDescoberta;
     private String recursosEncontrados;
     private String condicaoEspecial;
@@ -14,7 +15,6 @@ public abstract class EventoDescoberta extends Evento {
 
     }
 
-    @Override
     public void executar(Personagem jogador, Ambiente local) {
         System.out.println("Evento de Descoberta: " + getNomeEvento());
         System.out.println(getDescricao());
@@ -22,5 +22,9 @@ public abstract class EventoDescoberta extends Evento {
         System.out.println("Recursos: " + recursosEncontrados);
         System.out.println("Condicao: " + condicaoEspecial);
         System.out.println("Impacto no jogo: " + getImpacto());
+    }
+    public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        // Suponha que só ocorre em Ruínas
+        return ambiente instanceof Ruinas;
     }
 }

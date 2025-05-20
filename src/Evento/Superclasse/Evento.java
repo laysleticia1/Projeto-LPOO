@@ -2,14 +2,17 @@ package Evento.Superclasse;
 
 import Ambiente.Superclasse.Ambiente;
 import Personagem.Superclasse.Personagem;
+import Interface.Executavel;
+import Interface.Condicional;
 
-public abstract class Evento {
+public abstract class Evento implements Executavel, Condicional {
     private String nome;
     private String descricao;
     private double probabilidadeDeOcorrencia;
     private String impacto;
     private String condicaoDeAtivacao;
 
+    //Construtor
     public Evento (String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao) {
         this.nome = nome;
         this.descricao = descricao;
@@ -50,28 +53,6 @@ public abstract class Evento {
         this.condicaoDeAtivacao = condicaoDeAtivacao;
     }
 
-    //Método Principal
-
-    // Subclasse EventoClimatico
-    private String clima;
-    private int duracao;
-    private String efeitoNoAmbiente;
-
-    // Subclasse EventoDescoberta
-    private String tipoDeDescoberta;
-    private String recursosEncontrados;
-    private String condicaoEspecial;
-
-    // Subclasse EventoDoencaFerimento
-    private String tipoDeCondicao;
-    private String impacto2;
-    private String curaDisponivel;
-
-    // Classe GerenciadorDeEventos
-    private String [] listaDeEventosPossiveis;
-    private double probabilidadeDeOcorrencia2;
-    private String historicoDeEventos;
-
     void sortearEvento (Ambiente local) {
     }
     void aplicarEvento (Personagem jogador) {
@@ -79,9 +60,8 @@ public abstract class Evento {
     void removerEvento (Evento evento) {
     }
 
-    public void executar(Personagem jogador, Ambiente local) {
-        System.out.println("Evento sendo executado: " + nome + " " + descricao);
-    }
+    public abstract void executar(Personagem jogador, Ambiente local);
+
     public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
 
 }

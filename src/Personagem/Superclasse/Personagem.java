@@ -3,8 +3,9 @@ package Personagem.Superclasse;
 import Ambiente.Superclasse.Ambiente;
 import Personagem.Inventario.Inventario;
 import Item.Superclasse.Item;
+import Interface.Movivel;
 
-public class Personagem {
+public class Personagem implements Movivel {
     private String nome;
     private String classe;
     private int nivel;
@@ -153,6 +154,24 @@ public class Personagem {
     }
     public void visualizarInventario() {
         inventario.listarItens();
+    }
+
+    public void diminuirEnergia(int valor) {
+        this.energia -= valor;
+        if (this.energia < 0) {
+            this.energia = 0;
+        }
+    }
+    public void adicionarAoInventario(Item item) {
+        inventario.adicionarItem(item);
+    }
+    public void restaurarVida(int quantidade) {
+        this.vida += quantidade;
+
+        // opcional: limitar vida máxima
+        if (this.vida > 100) {
+            this.vida = 100;
+        }
     }
 
     // Getters e Setters
