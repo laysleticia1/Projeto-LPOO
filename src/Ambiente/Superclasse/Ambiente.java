@@ -90,7 +90,6 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     public void setCondicaoClimatica(String condicao) {
         this.condicaoClimatica = condicao;
     }
-  <<<<<<< excecao_e_turno
     public boolean estaAcessivel(){
         return this.dificuldadeExploracao <= 70;
     }
