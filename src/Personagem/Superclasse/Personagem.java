@@ -7,7 +7,6 @@ import Item.Superclasse.Item;
 import Interface.Movivel;
 import Excecoes.FomeSedeSanidadeException;
 
-
 public class Personagem implements Movivel {
     private String nome;
     private String classe;
