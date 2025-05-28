@@ -3,6 +3,10 @@ package Gerenciadores;
 import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
+import Evento.Subclasses.*;
+import Ambiente.Subclasses.*;
+import Criatura.Subclasses.*;
+import Criatura.Superclasse.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -48,4 +52,5 @@ public class GerenciadorDeEventos {
             }
         }
     }
+
 }
