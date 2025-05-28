@@ -15,7 +15,7 @@ public class EventoCriatura extends Evento {
     }
 
     public void executar(Personagem jogador, Ambiente local) {
-        System.out.println("\n👹 Evento de Criatura: " + getNomeEvento());
+        System.out.println("\nEvento de Criatura: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Criatura: " + tipo);
         System.out.println("Nível de perigo: " + nivelPerigo);

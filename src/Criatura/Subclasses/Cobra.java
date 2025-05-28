@@ -5,20 +5,26 @@ import Personagem.Superclasse.Personagem;
 
 public class Cobra extends Criatura {
 
-    // Construtor da classe Cobra
     public Cobra() {
-        super ("Cobra", "Alto", "Atacar ou fugir");
+        super("Cobra", "Moderado", "Mordida venenosa, Silvo ameaçador");
     }
 
-    public void atacar (Personagem alvo) {
-        System.out.println("A cobra crava as presas na pele e injeta seu veneno letal. Uma onda de tontura e fraqueza se espalha como fogo lento pelo corpo do personagem");
-
-        alvo.setVida(alvo.getVida() - 20);
-        alvo.setEnergia(alvo.getEnergia() - 10);
-        alvo.setSanidade(alvo.getSanidade() - 10);
+    @Override
+    public void atacar(Personagem jogador) {
+        jogador.diminuirVida(10);
+        System.out.println("A Cobra dá o bote com precisão, cravando suas presas venenosas em sua perna!");
+        System.out.println("Você perdeu 10 de vida.\n");
     }
 
-    public void esconder() {
-        System.out.println("Sem deixar rastros, a cobra se esgueira pela relva e desaparece nas entranhas da floresta.");
+    @Override
+    public void acaoEspecial(Personagem jogador) {
+        jogador.diminuirSanidade(7);
+        System.out.println("A Cobra silva intensamente, fazendo seu corpo congelar de medo e desespero.");
+        System.out.println("Você perdeu 7 de sanidade.\n");
+    }
+
+    @Override
+    public void fugir() {
+        System.out.println("A Cobra desliza entre as pedras e some em meio à vegetação rasteira.\n");
     }
 }

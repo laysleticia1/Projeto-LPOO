@@ -5,18 +5,27 @@ import Personagem.Superclasse.Personagem;
 
 public class Corvo extends Criatura {
 
-    // Construtor da classe Corvo
     public Corvo() {
-        super ("Corvo", "Baixo", "Atacar ou voar");
+        super("Corvo", "Baixo", "Bicar, Grito perturbador");
     }
 
-    public void atacar(Personagem alvo) {
-        System.out.println("O corvo mergulha das sombras e seu grasnar perfura a mente do personagem, despedaçando sua sanidade com seu grasnar sombrio.");
-        alvo.setSanidade(alvo.getSanidade() - 10);
+    @Override
+    public void atacar(Personagem jogador) {
+        jogador.diminuirVida(5);
+        System.out.println("O Corvo mergulha em sua direção e começa a bicar sua cabeça com agilidade e raiva!");
+        System.out.println("Você perdeu 5 de vida.\n");
     }
 
-    public void voar() {
-        System.out.println("Com um bater de asas silencioso, o corvo se ergue aos céus e desaparece entre as nuvens escuras.");
+    @Override
+    public void acaoEspecial(Personagem jogador) {
+        jogador.diminuirSanidade(6);
+        System.out.println("O Corvo emite um grito estridente e perturbador que ecoa por sua mente.");
+        System.out.println("Você perdeu 6 de sanidade.\n");
     }
 
+    @Override
+    public void fugir() {
+        System.out.println("Com um bater de asas veloz, o Corvo desaparece entre as copas das árvores.\n");
+    }
 }
+

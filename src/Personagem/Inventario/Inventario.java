@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Excecoes.InventarioCheioException;
 import Item.Superclasse.Item;
+import java.util.Random;
 
 public class Inventario {
     private ArrayList<Item> listaDeItens;
@@ -43,6 +44,19 @@ public class Inventario {
             System.out.println("Item não encontrado.");
         }
     }
+
+    public void removerItemAleatorio() {
+        if (listaDeItens.isEmpty()) {
+            System.out.println("O inventário está vazio. Nenhum item foi removido.");
+            return;
+        }
+
+        int indice = new Random().nextInt(listaDeItens.size());
+        Item removido = listaDeItens.remove(indice);
+        pesoTotal -= removido.getPeso();
+        System.out.println("O item \"" + removido.getNome() + "\" foi removido do inventário.");
+    }
+
 
     public void usarItem(String nomeItem) {
         Item itemParaUsar = null;

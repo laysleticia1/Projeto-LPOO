@@ -52,6 +52,13 @@ public class Personagem implements Movivel {
         }
     }
 
+    public void diminuirVida (int quantidade) {
+        this.vida -= quantidade;
+        if (this.vida < 0) {
+            this.vida = 0;
+        }
+    }
+
     public void diminuirEnergia(int valor) {
         this.energia -= valor;
         if (this.energia < 0) {
@@ -195,12 +202,7 @@ public class Personagem implements Movivel {
             System.out.println ("Jogador está descansando");
         }
     }
-    public void receberDano (int dano) {
-        this.vida -= dano;
-        if (vida < 0) {
-            vida = 0;
-        }
-    }
+
     public void getStatus () {
         System.out.println ("Nome: " + getNome());
         System.out.println ("Nível: " + getNivel());
@@ -249,33 +251,30 @@ public class Personagem implements Movivel {
     public void verificarFomeSedeSanidade() throws FomeSedeSanidadeException {
         boolean perdeuVida = false;
         StringBuilder mensagem = new StringBuilder();
-
         if (this.fome <= 0) {
             this.vida -= 10;
             perdeuVida = true;
             mensagem.append("Você está com fome extrema! Perdeu 10 de vida.\n");
         }
-
         if (this.sede <= 0) {
             this.vida -= 10;
             perdeuVida = true;
             mensagem.append("Você está desidratado! Perdeu 10 de vida.\n");
         }
-
         if (sanidade <= 0) {
             this.vida -= 10;
             perdeuVida = true;
             mensagem.append("Você está mentalmente instável! Perdeu 10 de vida.\n");
         }
-
         if (this.vida <= 0) {
             throw new RuntimeException("Você morreu por perder toda a vida.");
         }
-
         if (perdeuVida) {
             throw new FomeSedeSanidadeException(mensagem.toString());
         }
     }
+
+
 
     // Getters e Setters
     public String getNome () {

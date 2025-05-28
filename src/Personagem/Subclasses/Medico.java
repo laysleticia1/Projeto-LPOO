@@ -12,7 +12,7 @@ public class Medico extends Personagem implements Curavel {
     @Override
     public void curar(Personagem alvo) {
         int vidaAnterior = alvo.getVida();
-        alvo.restaurarVida(20); // Você precisa ter esse método em Personagem
+        alvo.restaurarVida(20);
         System.out.println(getNome() + " tratou " + alvo.getNome() + ". Vida: " + vidaAnterior + " → " + alvo.getVida());
     }
 }
