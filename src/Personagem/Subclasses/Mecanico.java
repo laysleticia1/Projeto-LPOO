@@ -13,7 +13,6 @@ public class Mecanico extends Personagem {
         super(nomeUsuario, "Mecânico");
     }
 
-
     public void consertarEquipamento() {
         System.out.println("Você ajusta engrenagens, reaperta parafusos e reativa partes do seu equipamento.");
     }

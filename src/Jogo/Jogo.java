@@ -18,6 +18,7 @@ import Gerenciadores.GerenciadorDeEventos;
 import Evento.Subclasses.Específicos.*;
 import Personagem.Superclasse.Personagem;
 import Item.Superclasse.Item;
+import Personagem.Subclasses.*;
 
 public class Jogo {
     private Scanner scanner = new Scanner(System.in);
@@ -103,15 +104,12 @@ public class Jogo {
         }
         scanner.nextLine();
 
-        String classe = switch (escolha) {
-            case 1 -> "Rastreador";
-            case 2 -> "Mecânico";
-            case 3 -> "Médico";
-            case 4 -> "Sobrevivente Nato";
-            default -> "Sobrevivente";
+        switch (escolha) {
+            case 1 -> jogador = new Rastreador(nome);
+            case 2 -> jogador = new Mecanico(nome);
+            case 3 -> jogador = new Medico(nome);
+            case 4 -> jogador = new SobreviventeNato(nome);
         };
-
-        jogador = new Personagem(nome, classe);
     }
 
     private void configurarAmbientes() {
@@ -162,6 +160,7 @@ public class Jogo {
             System.out.println("4 - Mudar de ambiente");
             System.out.println("5 - Realizar ações");
             System.out.println("6 - Explorar o ambiente");
+            System.out.println("7 - Ação especial da sua classe");
             System.out.println("0 - Sair do jogo");
 
             int escolhaMenu = scanner.nextInt();
@@ -193,6 +192,55 @@ public class Jogo {
                         jogador.diminuirFome(5);
                         jogador.diminuirSede(5);
                     }
+                    case 7 -> {
+                        if (jogador instanceof Rastreador rastreador) {
+                            System.out.println("1 - Identificar pegadas");
+                            System.out.println("2 - Farejar trilha");
+                            int escolha = scanner.nextInt();
+                            scanner.nextLine();
+                            if (escolha == 1) rastreador.identificarPegadas(jogador.getAmbienteAtual());
+                            else if (escolha == 2) rastreador.farejarTrilha(jogador.getAmbienteAtual());
+                            else System.out.println("Opção inválida.");
+                        } else if (jogador instanceof Mecanico mecanico) {
+                            System.out.println("1 - Consertar equipamento");
+                            System.out.println("2 - Melhorar arma");
+                            int escolha = scanner.nextInt();
+                            scanner.nextLine();
+                            if (escolha == 1) mecanico.consertarEquipamento();
+                            else if (escolha == 2) mecanico.melhorarArma();
+                            else System.out.println("Opção inválida.");
+                        } else if (jogador instanceof Medico medico) {
+                            System.out.println("1 - Curar a si mesmo");
+                            System.out.println("2 - Curar outro personagem");
+                            System.out.println("3 - Preparar remédio natural");
+                            int escolha = scanner.nextInt();
+                            scanner.nextLine();
+                            if (escolha == 1) {
+                                medico.autoCurarFerimentosLeves();
+                            } else if (escolha == 2) {
+                                System.out.println("Ainda não há outro personagem disponível.");
+                            } else if (escolha == 3) {
+                                medico.prepararRemedioNatural();
+                            } else {
+                                System.out.println("Opção inválida.");
+                            }
+                        } else if (jogador instanceof SobreviventeNato sobrevivente) {
+                            System.out.println("1 - Montar abrigo improvisado");
+                            System.out.println("2 - Fabricar lança");
+                            System.out.println("3 - Caçar pequenos animais");
+                            int escolha = scanner.nextInt();
+                            scanner.nextLine();
+                            if (escolha == 1) sobrevivente.montarAbrigoImprovisado(jogador.getAmbienteAtual());
+                            else if (escolha == 2) sobrevivente.fabricarLanca();
+                            else if (escolha == 3) sobrevivente.cacarPequenosAnimais();
+                            else System.out.println("Opção inválida.");
+                        } else {
+                            System.out.println("Sua classe não possui ações especiais definidas.");
+                        }
+                        jogador.diminuirFome(3);
+                        jogador.diminuirSede(3);
+                    }
+
                     case 0 -> {
                         gerenciador.mostrarHistorico();
                         gerenciadorEventos.mostrarHistoricoDeEventos();

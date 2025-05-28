@@ -233,19 +233,17 @@ public class Personagem implements Movivel {
     }
 
     public void consumirRecursosBasicos() {
-        this.energia -= 5;
-        this.fome -= 4;
-        this.sede -= 3;
-
-        if (energia < 0) energia = 0;
-        if (fome < 0) fome = 0;
-        if (sede < 0) sede = 0;
+        diminuirEnergia(5);
+        diminuirFome(4);
+        diminuirSede(3);
 
         System.out.println("\n🔋 Consumo diário aplicado:");
+        System.out.println("Vida: " + vida);
         System.out.println("Energia: " + energia);
         System.out.println("Fome: " + fome);
         System.out.println("Sede: " + sede);
     }
+
 
     public void verificarFomeSedeSanidade() throws FomeSedeSanidadeException {
         boolean perdeuVida = false;
@@ -253,20 +251,20 @@ public class Personagem implements Movivel {
         if (this.fome <= 0) {
             this.vida -= 10;
             perdeuVida = true;
-            mensagem.append("Você está com fome extrema! Perdeu 10 de vida.\n");
+            mensagem.append("\nVocê está com fome extrema! Perdeu 10 de vida.\n");
         }
         if (this.sede <= 0) {
             this.vida -= 10;
             perdeuVida = true;
-            mensagem.append("Você está desidratado! Perdeu 10 de vida.\n");
+            mensagem.append("\nVocê está desidratado! Perdeu 10 de vida.\n");
         }
         if (sanidade <= 0) {
             this.vida -= 10;
             perdeuVida = true;
-            mensagem.append("Você está mentalmente instável! Perdeu 10 de vida.\n");
+            mensagem.append("\nVocê está mentalmente instável! Perdeu 10 de vida.\n");
         }
         if (this.vida <= 0) {
-            throw new RuntimeException("Você morreu por perder toda a vida.");
+            throw new RuntimeException("\nVocê morreu por perder toda a vida.");
         }
         if (perdeuVida) {
             throw new FomeSedeSanidadeException(mensagem.toString());

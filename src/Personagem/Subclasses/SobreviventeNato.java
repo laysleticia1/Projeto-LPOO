@@ -75,4 +75,44 @@ public class SobreviventeNato extends Personagem{
         }
     }
 
+    public void cacarPequenosAnimais() {
+        Ambiente ambiente = getAmbienteAtual();
+        String animal = "";
+        String carne = "";
+        double peso = 1.0;
+
+        if (ambiente instanceof Floresta) {
+            animal = "javali";
+            carne = "Carne de Javali";
+            peso = 1.2;
+        } else if (ambiente instanceof Montanha) {
+            animal = "corvo";
+            carne = "Carne de Corvo";
+            peso = 0.8;
+        } else if (ambiente instanceof Caverna) {
+            animal = "morcego gigante";
+            carne = "Carne de Morcego";
+            peso = 0.6;
+        } else if (ambiente instanceof LagoRio) {
+            animal = "piranha";
+            carne = "Carne de Piranha";
+            peso = 0.9;
+        } else if (ambiente instanceof Ruinas) {
+            animal = "rato mutante";
+            carne = "Carne de Rato Mutante";
+            peso = 1.0;
+        } else {
+            System.out.println("Ambiente desconhecido. Nenhum animal disponível para caça.");
+            return;
+        }
+
+        System.out.println(getNome() + " caçou um(a) " + animal + " e obteve alimento.");
+        try {
+            getInventario().adicionarItem(new Item(carne, peso, 1));
+        } catch (InventarioCheioException e) {
+            System.out.println("Inventário cheio. Não foi possível adicionar a carne.");
+        }
+        restaurarFome(25);
+        restaurarEnergia(10);
+    }
 }
