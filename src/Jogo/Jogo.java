@@ -12,13 +12,11 @@ import Ambiente.Subclasses.Montanha;
 import Ambiente.Subclasses.Ruinas;
 import Excecoes.AmbienteInacessivelException;
 import Excecoes.InventarioCheioException;
-import Excecoes.MortePorFomeOuSedeException;
+import Excecoes.FomeSedeSanidadeException;
 import Gerenciadores.GerenciadorDeAmbientes;
 import Gerenciadores.GerenciadorDeEventos;
 import Evento.Subclasses.Específicos.*;
-import Personagem.Inventario.Inventario;
 import Personagem.Superclasse.Personagem;
-import Personagem.Subclasses.*;
 import Item.Superclasse.Item;
 
 public class Jogo {
@@ -44,16 +42,20 @@ public class Jogo {
                 configurarAmbientes();
                 configurarEventos();
                 introducao();
-                loopJogo();
+                loopJogo();  // Aqui o jogo acontece
+
             }
+
             case 2 -> {
                 System.out.println("Você decidiu não embarcar nesta aventura... Até a próxima!");
                 return;
             }
+
             default -> {
                 System.out.println("Opção inválida. Reinicie o jogo para tentar novamente.");
             }
         }
+
     }
 
     public void apresentarAcoesPorAmbiente(Personagem jogador) {
@@ -173,10 +175,24 @@ public class Jogo {
                         System.out.print("Digite o nome do item que deseja usar: ");
                         String itemUsar = scanner.nextLine();
                         jogador.usarItem(itemUsar);
+                        jogador.diminuirFome(2);
+                        jogador.diminuirSede(2);
                     }
-                    case 4 -> menuAmbientes();
-                    case 5 -> realizarAcoes();
-                    case 6 -> explorarAmbiente();
+                    case 4 -> {
+                        menuAmbientes();
+                        jogador.diminuirFome(10);
+                        jogador.diminuirSede(10);
+                    }
+                    case 5 -> {
+                        realizarAcoes();
+                        jogador.diminuirFome(5);
+                        jogador.diminuirSede(5);
+                    }
+                    case 6 -> {
+                        explorarAmbiente();
+                        jogador.diminuirFome(5);
+                        jogador.diminuirSede(5);
+                    }
                     case 0 -> {
                         gerenciador.mostrarHistorico();
                         gerenciadorEventos.mostrarHistoricoDeEventos();
@@ -186,21 +202,24 @@ public class Jogo {
                     default -> System.out.println("Opção inválida.");
                 }
 
-                jogador.diminuirFome(10);
-                jogador.diminuirSede(10);
+                // Verificação de sobrevivência com exceção
+                jogador.verificarFomeSedeSanidade();
 
-            } catch (MortePorFomeOuSedeException e) {
-                System.out.println("Morte" + e.getMessage());
+            } catch (FomeSedeSanidadeException e) {
+                System.out.println(e.getMessage());
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
                 System.out.println("O jogador não resistiu.");
                 return;
             }
+
         }
     }
 
-        private void explorarAmbiente() {
-            System.out.println("\nVocê decide explorar a área ao redor...");
-            gerenciadorEventos.aplicarEventoAleatorio(jogador);
-        }
+    private void explorarAmbiente() {
+        System.out.println("\nVocê decide explorar a área ao redor...");
+        gerenciadorEventos.aplicarEventoAleatorio(jogador);
+    }
 
     private void realizarAcoes() {
         apresentarAcoesPorAmbiente(jogador);
@@ -229,8 +248,9 @@ public class Jogo {
                         System.out.println("Inventário cheio! Não foi possível adicionar Pedra Afiada.");
                     }
                 } else if (ambiente instanceof LagoRio) {
-                    System.out.println("Você bebe água do lago, recuperando energia.");
-                    jogador.recuperarEnergia(5);
+                    System.out.println("Você bebe água do lago, se hidratando e recuperando energia.");
+                    jogador.restaurarEnergia(5);
+                    jogador.restaurarSede(15);
                 } else if (ambiente instanceof Caverna) {
                     System.out.println("Você acende tochas e encontra minérios.");
                     try {
@@ -303,9 +323,16 @@ public class Jogo {
             }
         }
 
-        // Ao final de qualquer ação, aplica o custo do turno e verifica o estado
         jogador.consumirRecursosBasicos();
-        jogador.verificarEstadoSobrevivencia();
+        try {
+            jogador.verificarFomeSedeSanidade();
+        } catch (FomeSedeSanidadeException e) {
+            System.out.println(e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            System.out.println("O jogador não resistiu.");
+            return;
+        }
 
         System.out.println("\n--- Inventário atualizado ---");
         jogador.visualizarInventario();

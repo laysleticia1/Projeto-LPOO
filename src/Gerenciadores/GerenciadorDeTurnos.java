@@ -1,8 +1,7 @@
 package Gerenciadores;
 
-import Excecoes.MortePorFomeOuSedeException;
+import Excecoes.FomeSedeSanidadeException;
 import Personagem.Superclasse.Personagem;
-import Gerenciadores.GerenciadorDeEventos;
 import Ambiente.Superclasse.Ambiente;
 
 public class GerenciadorDeTurnos {
@@ -22,7 +21,7 @@ public class GerenciadorDeTurnos {
             personagem.consumirRecursosBasicos();
 
             //Verifica morte após consumo
-            personagem.verificarMortePorFomeOuSede();
+            personagem.verificarFomeSedeSanidade();
 
             //Atualiza ambiente
             atualizarAmbiente(personagem.getAmbienteAtual());
@@ -32,7 +31,7 @@ public class GerenciadorDeTurnos {
 
             turnoAtual++;
             return true;
-        } catch (MortePorFomeOuSedeException e) {
+        } catch (FomeSedeSanidadeException e) {
             System.out.println("" + e.getMessage());
             System.out.println("Fim de jogo.");
             return false;
