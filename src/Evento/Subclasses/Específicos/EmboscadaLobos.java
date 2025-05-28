@@ -26,7 +26,7 @@ public class EmboscadaLobos extends EventoCriatura {
         System.out.println("Criatura: Lobos famintos");
         System.out.println("Impacto: " + getImpacto());
 
-        jogador.receberDano(12);
+        jogador.diminuirVida(12);
         jogador.setSanidade(jogador.getSanidade() - 5);
         System.out.println("O personagem recebeu 12 de dano e perdeu 5 de sanidade.");
     }

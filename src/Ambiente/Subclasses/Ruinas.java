@@ -3,13 +3,15 @@ package Ambiente.Subclasses;
 import Ambiente.Superclasse.Ambiente;
 import java.util.ArrayList;
 import java.util.Arrays;
-import Evento.Superclasse.*;
 import Evento.Subclasses.*;
 import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
-
+import java.util.List;
+import java.util.Random;
+import Evento.Subclasses.*;
+import Evento.Superclasse.*;
 
 public class Ruinas extends Ambiente {
     private String estrutura;
@@ -81,6 +83,5 @@ public class Ruinas extends Ambiente {
                 return new Agua("Água Purificada", 0.5, 1, "Alta", 1.0); // fallback
         }
     }
-
 
 }

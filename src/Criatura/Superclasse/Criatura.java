@@ -1,6 +1,9 @@
 package Criatura.Superclasse;
 
-public class Criatura {
+import Personagem.Superclasse.*;
+import Personagem.Subclasses.*;
+
+public abstract class Criatura {
     private String tipoDeCriatura;
     private String nivelDePerigo;
     private String opcoesDeAcao;
@@ -11,6 +14,11 @@ public class Criatura {
         this.opcoesDeAcao = opcoesDeAcao;
     }
 
+    public abstract void atacar(Personagem jogador);
+    public abstract void acaoEspecial(Personagem jogador);
+    public abstract void fugir();
+
+    // Gettes and Setters
     String getTipoDeCriatura() {
         return tipoDeCriatura;
     }

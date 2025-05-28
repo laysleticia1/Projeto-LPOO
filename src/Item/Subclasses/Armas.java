@@ -19,7 +19,7 @@ public class Armas extends Item {
     public void usar(Personagem alvo) {
         if (getDurabilidade() > 0) {
             setDurabilidade(getDurabilidade() - 1);
-            alvo.receberDano(dano);
+            alvo.diminuirVida(dano);
             System.out.println("Você atacou com: " + getNome() + " e causou " + dano + " de dano!");
         } else {
             System.out.println("A arma está quebrada.");

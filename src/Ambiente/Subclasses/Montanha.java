@@ -9,6 +9,8 @@ import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
+import java.util.List;
+import java.util.Random;
 
 public class Montanha extends Ambiente {
     private String terreno;

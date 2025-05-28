@@ -10,16 +10,20 @@ public class Lobo extends Criatura {
         super ("Lobo", "Médio", "Atacar, fugir ou uivar");
     }
 
-    public void ataqueLobo(Personagem alvo) {
-        alvo.receberDano(15);
+    public void atacar (Personagem alvo) {
+        alvo.diminuirVida(15);
         System.out.println("O lobo avança rapidamente e desfere um golpe, cravando os dentes com fúria!");
+        System.out.println("Você perdeu 15 de vida.\n");
+    }
+
+    public void acaoEspecial(Personagem jogador) {
+        System.out.println("O Lobo uivou alto, desestabilizando sua sanidade.");
+        System.out.println("Você perdeu 8 de sanidade.\n");
+        jogador.diminuirSanidade(8);
     }
 
     public void fugir() {
-        System.out.println("O lobo rosna em retirada e some entre as sombras densas da floresta.");
+        System.out.println("O lobo rosna em retirada e some entre as sombras densas da floresta.\n");
     }
 
-    public void uivar() {
-        System.out.println("Auuuu! O lobo ergue o focinho à lua, convocando sua alcateia com um uivo que ecoa na noite.");
-    }
 }
