@@ -25,4 +25,31 @@ public class Armas extends Item {
             System.out.println("A arma está quebrada.");
         }
     }
+
+    //Getters and Setters
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setAlcance(int alcance) {
+        this.alcance = alcance;
+    }
+
+    public int getAlcance() {
+        return alcance;
+    }
+
+    public void setDano(int dano) {
+        this.dano = dano;
+    }
+
+    public int getDano() {
+        return dano;
+    }
+
 }
+
