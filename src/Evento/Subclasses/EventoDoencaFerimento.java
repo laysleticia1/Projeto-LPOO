@@ -7,18 +7,19 @@ import Ambiente.Subclasses.*;
 
 public class EventoDoencaFerimento extends Evento {
     private String tipoDeCondicao;
-    private String impactoCondicao;
     private String curaDisponivel;
 
-    public EventoDoencaFerimento(String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao, String tipoDeCondicao, String impactoSecundario, String curaDisponivel) {
+    public EventoDoencaFerimento(String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao, String tipoDeCondicao, String curaDisponivel) {
         super(nome, descricao, probabilidadeDeOcorrencia, impacto, condicaoDeAtivacao);
+        this.tipoDeCondicao = tipoDeCondicao;
+        this.curaDisponivel = curaDisponivel;
     }
 
     public void executar(Personagem jogador, Ambiente local) {
         System.out.println("Evento de Doença/Ferimento: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Condição: " + tipoDeCondicao);
-        System.out.println("Impacto: " + impactoCondicao);
+        System.out.println("Impacto: " + getImpacto());
         System.out.println("Cura: " + curaDisponivel);
         System.out.println("Impacto geral: " + getImpacto());
     }

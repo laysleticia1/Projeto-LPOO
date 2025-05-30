@@ -174,22 +174,22 @@ public class Jogo {
                         System.out.print("Digite o nome do item que deseja usar: ");
                         String itemUsar = scanner.nextLine();
                         jogador.usarItem(itemUsar);
-                        jogador.diminuirFome(2);
+                        jogador.diminuirFome(1);
                         jogador.diminuirSede(2);
                     }
                     case 4 -> {
                         menuAmbientes();
-                        jogador.diminuirFome(10);
+                        jogador.diminuirFome(8);
                         jogador.diminuirSede(10);
                     }
                     case 5 -> {
                         realizarAcoes();
-                        jogador.diminuirFome(5);
+                        jogador.diminuirFome(3);
                         jogador.diminuirSede(5);
                     }
                     case 6 -> {
                         explorarAmbiente();
-                        jogador.diminuirFome(5);
+                        jogador.diminuirFome(3);
                         jogador.diminuirSede(5);
                     }
                     case 7 -> {
@@ -266,7 +266,7 @@ public class Jogo {
 
     private void explorarAmbiente() {
         System.out.println("\nVocê decide explorar a área ao redor...");
-        gerenciadorEventos.aplicarEventoAleatorio(jogador);
+        jogador.getAmbienteAtual().explorar(jogador);
     }
 
     private void realizarAcoes() {
@@ -364,6 +364,7 @@ public class Jogo {
 
             case 4 -> {
                 System.out.println("Você decide apenas descansar e observar o ambiente.");
+                jogador.descansar();
             }
 
             default -> {

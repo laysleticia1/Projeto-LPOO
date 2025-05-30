@@ -57,7 +57,7 @@ public class Medico extends Personagem implements Curavel {
             inventario.usarItem("Água");
             inventario.usarItem("Frutas Silvestres");
 
-            Remedios remedio = new Remedios("Remédio Natural", "Fitoterápico");
+            Remedios remedio = new Remedios("Remédio Natural", "Fitoterápico", "Alivia dores leves e melhora a sanidade");
             try {
                 inventario.adicionarItem(remedio);
                 System.out.println("Você preparou um remédio natural usando água e frutas silvestres.");

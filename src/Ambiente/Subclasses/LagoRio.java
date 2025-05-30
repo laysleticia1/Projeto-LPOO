@@ -9,6 +9,8 @@ import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
+import Gerenciadores.*;
+import java.util.Scanner;
 import java.util.List;
 import java.util.Random;
 
@@ -25,50 +27,51 @@ public class LagoRio extends Ambiente {
         this.terreno = "Plano, bonito e escorregadio nas margens";
 
     }
-
-    @Override
     public void explorar(Personagem jogador) {
-        System.out.println("Você anda pela margem lamacenta de um rio tranquilo...");
-
+        System.out.println("\nVocê caminha pela margem do lago tranquilo...");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
-        if (Math.random() < 0.65) {
-            Item recurso = new Agua("Água do Rio", 1.0, 1, "Contaminada", 1.5);
-            jogador.adicionarAoInventario(recurso);
-            System.out.println("Você coletou: " + recurso.getNome());
+        Item recurso = coletarItemAleatorio();
+        if (recurso != null) {
+            System.out.println("\nVocê encontrou: " + recurso.getNome());
+            System.out.println("Deseja adicionar ao inventário? (s/n)");
+            Scanner sc = new Scanner(System.in);
+            if (sc.nextLine().trim().equalsIgnoreCase("s")) {
+                jogador.adicionarAoInventario(recurso);
+            } else {
+                System.out.println("Você deixou o item para trás.");
+            }
         } else {
-            System.out.println("Nada foi encontrado nas águas do rio.");
+            System.out.println("\nNenhum recurso encontrado desta vez.");
         }
 
-        if (Math.random() < this.getProbabilidadeEventos()) {
-            Evento evento = new EventoCriatura(
-                    "Ataque de Piranhas",
-                    "Enquanto se aproxima da água, piranhas avançam!",
-                    0.3,
-                    "Ferimentos",
-                    "LagoRio",
-                    "Criatura",
-                    3,
-                    "Você sofre cortes e deve se afastar rapidamente."
-            );
-            if (evento.podeOcorrerNoAmbiente(this)) evento.executar(jogador, this);
-        }
+        GerenciadorDeEventos gerenciador = new GerenciadorDeEventos();
+        gerenciador.aplicarEventoAleatorioPorAmbiente(jogador);
     }
+
     @Override
     public Item coletarItemAleatorio() {
-        int opcao = (int) (Math.random() * 3);
+        double chanceEncontrar = Math.random();
+        if (chanceEncontrar < 0.5) return null;
+
+        int opcao = (int) (Math.random() * 4);
         switch (opcao) {
             case 0:
-                return new Agua("Água do Lago", 1.2, 1, "Contaminada", 2.0);
+                return new Agua("Água do Lago", 1.2, 1, "Contaminada", 2.0, 0.4);
             case 1:
                 return new Alimentos("Peixe Cru", 1.0, 2, 300, "Carne", 1);
+            case 2:
+                return new Material("Corda Natural", "Fibra Vegetal", 0.6, 3, 40);
+            case 3:
+                return new Ferramentas("Rede de Pesca", 1.3, 4, 55);
+            case 4:
+                return new Armas("Adaga Enferrujada", 1.2, 4, "Curta", 15, 1);
             default:
-                return new Material("Corda Natural", 0.6, 3, 40);
+            return null;
         }
     }
 
-
-    //Getters e Setters específicos
+    //Getters and Setters
 
     public String getHidratacao() {
         return hidratacao;

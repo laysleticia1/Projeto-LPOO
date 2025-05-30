@@ -6,8 +6,8 @@ public class Material extends Item {
     private String tipo;
     private int resistencia;
 
-    public Material (String tipo, double peso, int durabilidade, int resistencia) {
-        super("Material", peso, durabilidade);
+    public Material (String nome,String tipo, double peso, int durabilidade, int resistencia) {
+        super(nome, peso, durabilidade);
         this.tipo = tipo;
         this.resistencia = resistencia;
     }

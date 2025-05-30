@@ -9,6 +9,8 @@ import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
+import Gerenciadores.*;
+import java.util.Scanner;
 import java.util.List;
 import java.util.Random;
 
@@ -24,45 +26,54 @@ public class Montanha extends Ambiente {
         this.clima = "Grandes variações de temperatura";
         this.vegetacao = "Escassa mas resiste";
     }
-    @Override
     public void explorar(Personagem jogador) {
-        System.out.println("Você escala encostas rochosas em busca de algo útil...");
+        System.out.println("\nVocê sobe pelas trilhas íngremes da montanha...");
 
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
-        if (Math.random() < 0.4) {
-            Item recurso = new Material("Fragmento de Rocha Rara", 1.2, 3, 80);
-            jogador.adicionarAoInventario(recurso);
-            System.out.println("Você encontrou: " + recurso.getNome());
+        Item itemEncontrado = coletarItemAleatorio();
+        if (itemEncontrado != null) {
+            System.out.println("\nVocê encontrou um item: " + itemEncontrado.getNome());
+            System.out.println("Deseja coletar esse item? (s/n)");
+            Scanner scanner = new Scanner(System.in);
+            String escolha = scanner.nextLine();
+            if (escolha.equalsIgnoreCase("s")) {
+                jogador.adicionarAoInventario(itemEncontrado);
+            } else {
+                System.out.println("Você decidiu deixar o item para trás.");
+            }
         } else {
-            System.out.println("As pedras não revelaram nada útil desta vez.");
+            System.out.println("\nHoje não foi possível encontrar nenhum item útil na montanha.");
         }
 
-        if (Math.random() < this.getProbabilidadeEventos()) {
-            Evento evento = new EventoClimatico(
-                    "Nevasca",
-                    "Uma nevasca repentina cobre tudo ao redor.",
-                    0.25,
-                    "Reduz energia",
-                    "Montanha",
-                    "Nevasca",
-                    2,
-                    "Você precisa buscar abrigo ou sofrerá congelamento."
-            );
-            if (evento.podeOcorrerNoAmbiente(this)) evento.executar(jogador, this);
-        }
+        GerenciadorDeEventos gerenciador = new GerenciadorDeEventos();
+        gerenciador.aplicarEventoAleatorioPorAmbiente(jogador);
     }
+
     @Override
     public Item coletarItemAleatorio() {
-        int opcao = (int) (Math.random() * 3);
+        double chanceEncontrar = Math.random();
+        if (chanceEncontrar < 0.2) return null; // 20% de chance de não encontrar nada
+
+        int opcao = (int) (Math.random() * 6); // aumentamos para 6 opções
         switch (opcao) {
             case 0:
-                return new Material("Rocha Metálica", 1.8, 4, 75);
+                return new Material("Rocha Metálica", "Mineral", 1.8, 4, 75);
             case 1:
                 return new Ferramentas("Pederneira", 0.7, 5, 40);
+            case 2:
+                return new Agua("Água de Degelo", 1.0, 1, "Potável", 1.0, 0.6);
+            case 3:
+                return new Ferramentas("Bastão de Escalada", 1.2, 3, 60);
+            case 4:
+                return new Remedios("Pomada Térmica", "Térmico", "Alivia queimaduras e dores musculares");
+            case 5:
+                return new Armas("Faca de Sobrevivência", 1.5, 4, "Curta", 20, 1);
             default:
-                return new Agua("Água de Degelo", 1.0, 1, "Potável", 1.0);
+                return null;
         }
     }
+
+
 
 }

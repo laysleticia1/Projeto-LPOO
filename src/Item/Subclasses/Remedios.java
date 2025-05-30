@@ -9,8 +9,8 @@ public class Remedios extends Item implements Usavel, Curavel{
     private String tipo;
     private String efeito;
 
-    public Remedios(String tipo, String efeito) {
-        super("Remédio",0.5, 1);
+    public Remedios(String nome, String tipo, String efeito) {
+        super(nome,0.5, 1);
         this.tipo = tipo;
         this.efeito = efeito;
     }

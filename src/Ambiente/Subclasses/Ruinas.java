@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 import Evento.Subclasses.*;
 import Evento.Superclasse.*;
+import Gerenciadores.*;
+import java.util.Scanner;
 
 public class Ruinas extends Ambiente {
     private String estrutura;
@@ -28,59 +30,51 @@ public class Ruinas extends Ambiente {
     }
 
     public void explorar(Personagem jogador) {
-        System.out.println("Explorando as densas ruinas...");
-
-
-        // Custo de energia baseado na dificuldade
+        System.out.println("\nVocê adentra a escuridão úmida de uma caverna profunda...");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
-        // 60% de chance de encontrar recurso
-        if (Math.random() < 0.6) {
-            Item recurso = this.coletarItemAleatorio();
-            jogador.adicionarAoInventario(recurso);
-            System.out.println("Você encontrou: " + recurso.getNome());
-
-        } else {
-            System.out.println("Nada foi encontrado entre as árvores...");
-        }
-
-        // 30% de chance de evento ocorrer
-        if (Math.random() < this.getProbabilidadeEventos()) {
-            Evento evento = new EventoCriatura(
-                    "Ataque de Lobo",
-                    "Uma alcateia de lobos surge entre os escombros.",
-                    0.3,
-                    "Ataque físico",
-                    "Ruínas",
-                    "Criatura",
-                    2,
-                    "Os lobos cercam e avançam sobre o jogador."
-            );
-
-            if (evento.podeOcorrerNoAmbiente(this)) {
-                evento.executar(jogador, this);
+        Item recurso = coletarItemAleatorio();
+        if (recurso != null) {
+            System.out.println("\nVocê encontrou: " + recurso.getNome());
+            System.out.print("Deseja adicionar este item ao seu inventário? (s/n): ");
+            Scanner sc = new Scanner(System.in);
+            String resposta = sc.nextLine().trim().toLowerCase();
+            if (resposta.equals("s") || resposta.equals("sim")) {
+                try {
+                    jogador.adicionarAoInventario(recurso);
+                } catch (Exception e) {
+                    System.out.println("Não foi possível adicionar o item: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Você deixou o item para trás.");
             }
+        } else {
+            System.out.println("\nA caverna não revelou nada desta vez.");
         }
+
+        GerenciadorDeEventos gerenciador = new GerenciadorDeEventos();
+        gerenciador.aplicarEventoAleatorioPorAmbiente(jogador);
     }
 
     @Override
     public Item coletarItemAleatorio() {
-        int opcao = (int) (Math.random() * 6); // 0 a 5, total de 6 itens
+        double chanceEncontrar = Math.random();
+        if (chanceEncontrar < 0.4) return null;
+
+        int opcao = (int) (Math.random() * 5); // aumentamos para 5 opções
         switch (opcao) {
             case 0:
-                return new Agua("Água Purificada", 0.5, 1, "Alta", 1.0);
+                return new Ferramentas("Lanterna Improvisada", 1.5, 3, 30);
             case 1:
-                return new Alimentos("Barrinha de Cereal", 0.3, 2, 250, "Doce", 10);
+                return new Material("Cristal de Caverna", "Mineral", 0.8, 2, 90);
             case 2:
-                return new Armas("Adaga Enferrujada", 1.2, 4, "Curta", 15, 1);
+                return new Agua("Gotejamento de Rocha", 0.4, 1, "Duvidosa", 0.5, 0.7);
             case 3:
-                return new Ferramentas("Martelo de Manutenção", 2.0, 6, 75);
+                return new Remedios("Elixir Antigo", "Histórico", "Restaura parte da vida e da sanidade");
             case 4:
-                return new Material("Placa de Circuito", 0.8, 3, 60);
-            case 5:
-                return new Remedios("Analgésico", "Reduz dor por tempo limitado");
+                return new Armas("Espada Cerimonial", 2.5, 3, "Longa", 30, 2);
             default:
-                return new Agua("Água Purificada", 0.5, 1, "Alta", 1.0); // fallback
+                return null;
         }
     }
 
