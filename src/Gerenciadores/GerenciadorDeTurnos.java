@@ -40,7 +40,7 @@ public class GerenciadorDeTurnos {
 
     private void aplicarEventoAleatorio(Personagem personagem) {
         System.out.println("Verificando evento...");
-        gerenciadorDeEventos.aplicarEventoAleatorio(personagem);
+        gerenciadorDeEventos.aplicarEventoAleatorioPorAmbiente(personagem);
     }
 
     private void atualizarAmbiente(Ambiente ambiente) {

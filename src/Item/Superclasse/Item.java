@@ -14,7 +14,6 @@ public class Item {
     this.durabilidade = durabilidade;
     }
     public void usar (){
-
     }
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;

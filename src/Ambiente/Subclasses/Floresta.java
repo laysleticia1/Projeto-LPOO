@@ -9,8 +9,10 @@ import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
-import java.util.List;
-import java.util.Random;
+import Criatura.Subclasses.*;
+import Gerenciadores.*;
+import java.util.Scanner;
+
 
 public class Floresta extends Ambiente {
     private String vegetacao;
@@ -24,48 +26,58 @@ public class Floresta extends Ambiente {
         this.fauna = "Lobos, cervos, passáros exóticos";
         this.clima = "Chuvoso";
     }
+
     @Override
     public void explorar(Personagem jogador) {
-        System.out.println("Você caminha pela floresta úmida, cercado por vegetação densa...");
-
+        System.out.println("\nVocê caminha entre as árvores densas da floresta...");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
-        if (Math.random() < 0.7) {
-            Item recurso = new Alimentos("Raízes Nutritivas", 0.4, 2, 200, "Raiz", 3);
-            jogador.adicionarAoInventario(recurso);
-            System.out.println("Você encontrou: " + recurso.getNome());
+        Item recurso = coletarItemAleatorio();
+        if (recurso != null) {
+            System.out.println("\nVocê encontrou: " + recurso.getNome());
+            System.out.print("Deseja adicionar este item ao seu inventário? (s/n): ");
+            Scanner scanner = new Scanner(System.in);
+            String resposta = scanner.nextLine().trim().toLowerCase();
+            if (resposta.equals("s") || resposta.equals("sim")) {
+                try {
+                    jogador.adicionarAoInventario(recurso);
+                } catch (Exception e) {
+                    System.out.println("Não foi possível adicionar o item: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Você deixou o item para trás.");
+            }
         } else {
-            System.out.println("A busca por recursos na floresta foi em vão.");
+            System.out.println("\nNada útil foi encontrado na floresta.");
         }
 
-        if (Math.random() < this.getProbabilidadeEventos()) {
-            Evento evento = new EventoCriatura(
-                    "Emboscada de Jaguatirica",
-                    "Uma jaguatirica salta dos arbustos!",
-                    0.2,
-                    "Ataque físico",
-                    "Floresta",
-                    "Criatura",
-                    3,
-                    "Ela ataca antes de desaparecer na vegetação."
-            );
-            if (evento.podeOcorrerNoAmbiente(this)) evento.executar(jogador, this);
-        }
+        GerenciadorDeEventos gerenciador = new GerenciadorDeEventos();
+        gerenciador.aplicarEventoAleatorioPorAmbiente(jogador);
     }
 
     @Override
     public Item coletarItemAleatorio() {
-        int opcao = (int) (Math.random() * 3);
+        double chanceEncontrar = Math.random();
+        if (chanceEncontrar < 0.4) return null;
+
+        int opcao = (int) (Math.random() * 6);
         switch (opcao) {
             case 0:
                 return new Alimentos("Cogumelo Nutritivo", 0.3, 1, 150, "Fungo", 2);
             case 1:
                 return new Alimentos("Fruta Selvagem", 0.2, 2, 100, "Fruta", 3);
+            case 2:
+                return new Material("Galho de Árvore", "Madeira", 0.5, 3, 30);
+            case 3:
+                return new Agua("Coco Verde", 1.2, 3, "Alta", 0.5, 0.0);
+            case 4:
+                return new Remedios("Pomada de Folhas", "Fitoterápico", "Cura pequenos ferimentos e alivia irritações");
+            case 5:
+                return new Armas("Faca de Caça", 1.0, 4, "Curta", 20, 2);
             default:
-                return new Material("Galho de Árvore", 0.5, 3, 30);
+                return null;
         }
     }
-
 
     //Setter e Getters
     public String getVegetacao() {

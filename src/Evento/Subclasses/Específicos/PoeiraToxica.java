@@ -5,16 +5,14 @@ import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
 public class PoeiraToxica extends EventoDoencaFerimento {
-
     public PoeiraToxica() {
         super(
                 "Poeira Tóxica Ancestral",
                 "Ao entrar em uma sala selada das ruínas, uma nuvem de poeira densa sobe e entra pelas vias respiratórias.",
                 0.4,
-                "Reduz vida e sanidade",
-                "Ruínas",
-                "Intoxicação respiratória",
-                "Tontura, náusea e perda de foco",
+                "vida",
+                "Ruinas",
+                "Respiratória",
                 "Uso de máscara ou repouso"
         );
     }

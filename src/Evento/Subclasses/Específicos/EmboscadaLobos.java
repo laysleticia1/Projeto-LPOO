@@ -1,5 +1,6 @@
 package Evento.Subclasses.Específicos;
 
+import Criatura.Subclasses.Lobo;
 import Evento.Subclasses.EventoCriatura;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
@@ -13,7 +14,7 @@ public class EmboscadaLobos extends EventoCriatura {
                 0.6,
                 "Causa dano e reduz sanidade",
                 "Floresta",
-                "Lobos famintos",
+                new Lobo(),
                 3,
                 "Lutar, fugir ou se esconder"
         );

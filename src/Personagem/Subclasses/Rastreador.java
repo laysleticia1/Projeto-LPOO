@@ -39,7 +39,7 @@ public class Rastreador extends Personagem{
             itemEncontrado = new Ferramentas("Tocha", 1.5, 3, 3);
         } else if (ambiente instanceof LagoRio) {
             System.out.println(getNome() + " encontrou pegadas e redes de pesca abandonadas.");
-            itemEncontrado = new Material("Rede de Pesca", 1.2, 3, 2);
+            itemEncontrado = new Material("Rede de Pesca", "Fibra Natural", 1.2, 3, 2);
         } else if (ambiente instanceof Montanha) {
             System.out.println(getNome() + " observou rastros entre as pedras e achou uma bota reforçada.");
             itemEncontrado = new Ferramentas("Bota Reforçada", 2.0, 4, 3);

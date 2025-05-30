@@ -12,7 +12,9 @@ public class EventoDescoberta extends Evento {
 
     public EventoDescoberta(String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoAtivacao, String tipoDeDescoberta, String recursosEncontrados, String condicaoEspecial ) {
         super(nome, descricao, probabilidadeDeOcorrencia, impacto, condicaoAtivacao);
-
+        this.tipoDeDescoberta = tipoDeDescoberta;
+        this.recursosEncontrados = recursosEncontrados;
+        this.condicaoEspecial = condicaoEspecial;
     }
 
     public void executar(Personagem jogador, Ambiente local) {

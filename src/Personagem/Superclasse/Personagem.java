@@ -197,8 +197,11 @@ public class Personagem implements Movivel {
         }
     }
     public void descansar () {
-        if (getEnergia() >= 0) {
-            System.out.println ("Jogador está descansando");
+        if (getEnergia() >= 0 && getEnergia() <= 100) {
+            this.energia += 15;
+            if (getEnergia() > 100) {
+                this.energia = 100;
+            }
         }
     }
 
