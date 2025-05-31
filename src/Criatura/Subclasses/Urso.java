@@ -29,4 +29,12 @@ public class Urso extends Criatura {
         System.out.println("Ferido, o urso recua entre os arbustos e desaparece na floresta");
     }
 
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nO chão treme... você mal consegue abrir os olhos...");
+        System.out.println("Um Urso colossal golpeia sua direção com brutalidade!");
+        jogador.diminuirVida(25);
+        System.out.println("Você perdeu 25 de vida");
+    }
+
 }

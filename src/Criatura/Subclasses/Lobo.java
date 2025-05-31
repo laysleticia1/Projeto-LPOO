@@ -30,4 +30,12 @@ public class Lobo extends Criatura {
         System.out.println("O lobo rosna em retirada e some entre as sombras densas da floresta.");
     }
 
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nDurante seu descanso, um Lobo se aproxima silenciosamente...");
+        System.out.println("Antes que você possa reagir, ele crava os dentes com ferocidade!");
+        jogador.diminuirVida(15);
+        System.out.println("Você perdeu 15 de vida");
+    }
+
 }

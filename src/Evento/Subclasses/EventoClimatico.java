@@ -20,6 +20,7 @@ public class EventoClimatico extends Evento {
         System.out.println("Evento Climático: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Efeito no ambiente: " + efeitoNoAmbiente);
+        System.out.println("Duração: " + duracao + " turno/s.");
         switch (getImpacto().toLowerCase()) {
             case "vida":
                 jogador.diminuirVida(15);
@@ -40,6 +41,9 @@ public class EventoClimatico extends Evento {
         return true;
     }
 
+    public void diminuirDuracao() { duracao--;}
+
+    //Getters and Setters
     public int getDuracao() {
         return duracao;
     }

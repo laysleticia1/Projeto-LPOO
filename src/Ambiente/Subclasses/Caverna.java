@@ -95,7 +95,7 @@ public class Caverna extends Ambiente {
         double chanceEncontrar = Math.random();
         if (chanceEncontrar < 0.5) return null; // 50% de chance de não encontrar nada
 
-        int opcao = (int) (Math.random() * 8);
+        int opcao = (int) (Math.random() * 9);
         switch (opcao) {
             case 0:
                 return new Ferramentas("Lanterna Improvisada", 1.5, 3, 30);
@@ -111,6 +111,8 @@ public class Caverna extends Ambiente {
                 return new Alimentos("Musgo Nutritivo", 0.2, 1, 6, "Vegetal", 2);
             case 7:
                 return new Alimentos("Insetos de Caverna", 0.1, 3, 14, "Inseto", 7);
+            case 8:
+                return new Material("Sucata", "Metal Enferrujado", 1.0, 3, 40);
             default:
             return null;
         }

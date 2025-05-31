@@ -31,4 +31,13 @@ public class MorcegoGigante extends Criatura {
     public void fugir() {
         System.out.println("O Morcego Gigante voa para longe, escondendo-se nas sombras da caverna.");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nAlgo se agita no teto... você nem consegue levantar!");
+        System.out.println("Um Morcego Gigante mergulha em você enquanto dorme.");
+        jogador.diminuirVida(14);
+        System.out.println("Você perdeu 14 de vida");
+    }
+
 }

@@ -29,5 +29,14 @@ public class Fantasma extends Criatura {
     public void fugir() {
         System.out.println("O fantasma desaparece lentamente no ar, deixando um frio no ambiente.\n");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nUma presença gélida invade seus sonhos...");
+        System.out.println("Um Fantasma sussurra palavras sombrias e consome parte da sua sanidade!");
+        jogador.diminuirSanidade(12);
+        System.out.println("Você perdeu 12 de vida");
+    }
+
 }
 

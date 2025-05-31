@@ -3,10 +3,13 @@ package Personagem.Subclasses;
 import Ambiente.Superclasse.*;
 import Ambiente.Subclasses.*;
 import Personagem.Superclasse.Personagem;
+import Personagem.Subclasses.*;
 import Item.Subclasses.*;
 import Item.Superclasse.*;
 import Excecoes.InventarioCheioException;
+
 import java.util.Random;
+import java.util.Scanner;
 
 public class Rastreador extends Personagem{
 
@@ -52,14 +55,31 @@ public class Rastreador extends Personagem{
             return;
         }
 
-        // Adiciona o item encontrado ao inventário
-        try {
-            getInventario().adicionarItem(itemEncontrado);
-            System.out.println("Item encontrado e adicionado ao inventário: " + itemEncontrado.getNome());
-        } catch (InventarioCheioException e) {
-            System.out.println("Inventário cheio. Item não foi adicionado: " + itemEncontrado.getNome());
+        // Mostra detalhes do item com base no tipo
+        if (itemEncontrado instanceof Alimentos a) a.exibirDetalhes();
+        else if (itemEncontrado instanceof Material m) m.exibirDetalhes();
+        else if (itemEncontrado instanceof Remedios r) r.exibirDetalhes();
+        else if (itemEncontrado instanceof Ferramentas f) f.exibirDetalhes();
+        else if (itemEncontrado instanceof Armas a) a.exibirDetalhes();
+        else if (itemEncontrado instanceof Agua ag) ag.exibirDetalhes();
+
+        // Pergunta se o jogador quer guardar o item
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Deseja adicionar ao inventário? (s/n): ");
+        String resposta = scanner.nextLine().trim().toLowerCase();
+
+        if (resposta.equals("s")) {
+            try {
+                getInventario().adicionarItem(itemEncontrado);
+                System.out.println(itemEncontrado.getNome() + " foi adicionado ao inventário.");
+            } catch (InventarioCheioException e) {
+                System.out.println("Inventário cheio. Item não foi adicionado: " + itemEncontrado.getNome());
+            }
+        } else {
+            System.out.println("Você optou por deixar o item para trás.");
         }
     }
+
 
     public void procurarRecursos(Ambiente ambiente, Personagem jogador) {
         Random random = new Random();

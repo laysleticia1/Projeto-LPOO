@@ -30,4 +30,14 @@ public class Piranha extends Criatura {
     public void fugir() {
         System.out.println("As piranhas mergulham de volta para as profundezas do lago.");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nVocê sonha com água... e acorda em dor!");
+        System.out.println("Piranhas o cercaram enquanto dormia nas margens do rio.");
+        jogador.diminuirVida(12);
+        System.out.println("Você perdeu 12 de vida");
+    }
+
 }
+

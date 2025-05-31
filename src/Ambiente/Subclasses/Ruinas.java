@@ -98,7 +98,7 @@ public class Ruinas extends Ambiente {
         double chanceEncontrar = Math.random();
         if (chanceEncontrar < 0.4) return null;
 
-        int opcao = (int) (Math.random() * 7); // aumentamos para 5 opções
+        int opcao = (int) (Math.random() * 8); // aumentamos para 5 opções
         switch (opcao) {
             case 0:
                 return new Ferramentas("Lanterna Improvisada", 1.5, 3, 30);
@@ -114,6 +114,8 @@ public class Ruinas extends Ambiente {
                 return new Alimentos("Raiz Ressecada", 0.5, 2, 10, "Raiz", 6);
             case 6:
                 return new Alimentos("Resto de Conserva Apodrecida", 0.5, 1, -8, "Restos", 1);
+            case 7:
+                return new Material("Sucata", "Metal Enferrujado", 1.0, 3, 40);
             default:
             return null;
         }

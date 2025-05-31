@@ -31,5 +31,16 @@ public class Sanguessuga extends Criatura {
     public void fugir() {
         System.out.println("Satisfeita, a Sanguessuga se solta e desliza para a água escura.\n");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nVocê acorda exausto... algo está sugando sua força.");
+        System.out.println("Uma Sanguessuga está presa ao seu corpo!");
+        jogador.diminuirEnergia(10);
+        jogador.diminuirVida(5);
+        System.out.println("Você perdeu 5 de vida e 10 de energia.");
+    }
+
 }
+
 

@@ -81,7 +81,10 @@ public class EventoCriatura extends Evento {
         }
     }
 
-
+    public void executarDuranteDescanso(Personagem jogador, Ambiente ambiente) {
+        System.out.println("\n🔸 Um ataque inesperado durante o descanso!");
+        criatura.ataqueDuranteDescanso(jogador);
+    }
 
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
         return ambiente instanceof Floresta;

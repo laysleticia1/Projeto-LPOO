@@ -96,7 +96,7 @@ public class Floresta extends Ambiente {
         double chanceEncontrar = Math.random();
         if (chanceEncontrar < 0.4) return null;
 
-        int opcao = (int) (Math.random() * 8);
+        int opcao = (int) (Math.random() * 9);
         switch (opcao) {
             case 0:
                 return new Alimentos("Cogumelo Nutritivo", 0.3, 1, 20, "Fungo", 2);
@@ -114,6 +114,8 @@ public class Floresta extends Ambiente {
                 return new Alimentos("Bagas Amargas", 0.2, 2, -10, "Fruta", 1);
             case 7:
                 return new Alimentos("Mel Silvestre", 0.3, 5, 20, "Doce Natural", 10);
+            case 8:
+                return new Material("Sucata", "Metal Enferrujado", 1.0, 3, 40);
             default:
             return null;
         }
