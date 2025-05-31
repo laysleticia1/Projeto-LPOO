@@ -4,12 +4,15 @@ import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.*;
 import Ambiente.Subclasses.*;
 import Excecoes.InventarioCheioException;
-import Item.Subclasses.Armas;
-import Item.Superclasse.Item;
+import Item.Subclasses.*;
+import Item.Superclasse.*;
 import Personagem.Inventario.Inventario;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 
-public class SobreviventeNato extends Personagem{
+public class SobreviventeNato extends Personagem {
 
     public SobreviventeNato(String nomeUsuario) {
         super(nomeUsuario, "SobreviventeNato");
@@ -51,17 +54,11 @@ public class SobreviventeNato extends Personagem{
 
         if (sucata != null) {
             // Usa a sucata
-            inventario.usarItem("Sucata");
+            inventario.usarItem("Sucata", this);
 
             // Cria uma nova arma improvisada
             Armas lancaImprovisada = new Armas(
-                    "Lança Improvisada", // nome
-                    2.5,                 // peso
-                    5,                   // durabilidade
-                    "lança",             // tipo
-                    4,                   // dano
-                    1                    // alcance
-            );
+                    "Lança Improvisada", 2.5, 5, "lança", 4, 1);
 
             try {
                 inventario.adicionarItem(lancaImprovisada);
@@ -75,44 +72,42 @@ public class SobreviventeNato extends Personagem{
         }
     }
 
-    public void cacarPequenosAnimais() {
+    public void cacarAnimais() {
         Ambiente ambiente = getAmbienteAtual();
-        String animal = "";
-        String carne = "";
-        double peso = 1.0;
+
+        // Lista de alimentos possíveis: nome, peso, durabilidade, valorNutricional, tipo, validade
+        List<Alimentos> opcoes = new ArrayList<>();
 
         if (ambiente instanceof Floresta) {
-            animal = "javali";
-            carne = "Carne de Javali";
-            peso = 1.2;
+            opcoes.add(new Alimentos("Carne de Javali", 1.2, 3, 30, "Javali", 2));
+            opcoes.add(new Alimentos("Carne de Cobra", 0.7, 2, 20, "Cobra", 1));
+            opcoes.add(new Alimentos("Carne de Lobo", 1.1, 3, 35, "Lobo", 2));
         } else if (ambiente instanceof Montanha) {
-            animal = "corvo";
-            carne = "Carne de Corvo";
-            peso = 0.8;
+            opcoes.add(new Alimentos("Carne de Urso", 1.5, 4, 40, "Urso", 2));
+            opcoes.add(new Alimentos("Carne de Lobo da Neve", 1.2, 3, 30, "Lobo da Neve", 2));
         } else if (ambiente instanceof Caverna) {
-            animal = "morcego gigante";
-            carne = "Carne de Morcego";
-            peso = 0.6;
+            opcoes.add(new Alimentos("Carne de Morcego", 0.6, 2, 15, "Morcego", 1));
+            opcoes.add(new Alimentos("Carne de Rato Mutante", 0.9, 2, -10, "Rato Mutante", 1));
         } else if (ambiente instanceof LagoRio) {
-            animal = "piranha";
-            carne = "Carne de Piranha";
-            peso = 0.9;
+            opcoes.add(new Alimentos("Carne de Piranha", 0.9, 2, 15, "Piranha", 1));
+            opcoes.add(new Alimentos("Carne de Jacaré", 1.3, 3, 25, "Jacaré", 2));
         } else if (ambiente instanceof Ruinas) {
-            animal = "rato mutante";
-            carne = "Carne de Rato Mutante";
-            peso = 1.0;
+            opcoes.add(new Alimentos("Carne de Corvo", 0.8, 2, 15, "Corvo", 1));
         } else {
             System.out.println("Ambiente desconhecido. Nenhum animal disponível para caça.");
             return;
         }
 
-        System.out.println(getNome() + " caçou um(a) " + animal + " e obteve alimento.");
+        // Sorteio do alimento
+        Alimentos carneObtida = opcoes.get(new Random().nextInt(opcoes.size()));
+
+        System.out.println(getNome() + " caçou um/a " + carneObtida.getTipo() + " e obteve " + carneObtida.getNome() + ".");
+
         try {
-            getInventario().adicionarItem(new Item(carne, peso, 1));
+            getInventario().adicionarItem(carneObtida);
         } catch (InventarioCheioException e) {
-            System.out.println("Inventário cheio. Não foi possível adicionar a carne.");
+            System.out.println("❌ Inventário cheio. Não foi possível adicionar a carne.");
         }
-        restaurarFome(25);
-        restaurarEnergia(10);
     }
+
 }

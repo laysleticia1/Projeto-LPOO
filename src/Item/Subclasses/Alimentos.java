@@ -4,7 +4,7 @@ import Item.Superclasse.Item;
 import Interface.Usavel;
 import Personagem.Superclasse.*;
 
-public class Alimentos extends Item implements Usavel {
+public class Alimentos extends Item {
     private int valorNutricional;
     private String tipo;
     private int validade;
@@ -25,4 +25,29 @@ public class Alimentos extends Item implements Usavel {
             System.out.println("Este alimento está estragado.");
         }
     }
+
+    //Gettes and Setters
+    public String getTipo() {
+        return tipo;
+    }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public int getValidade() {
+        return validade;
+    }
+
+    public void setValidade(int validade) {
+        this.validade = validade;
+    }
+
+    public int getValorNutricional() {
+        return valorNutricional;
+    }
+
+    public void setValorNutricional(int valorNutricional) {
+        this.valorNutricional = valorNutricional;
+    }
+
 }

@@ -110,13 +110,25 @@ public class Personagem implements Movivel {
         }
     }
     public void defender() {
-        if (energia >= 2) {
-            energia -= 2;
-            System.out.println("Jogador está defendendo (-2 energia)");
+        if (energia >= 5) {
+            energia -= 5;
         } else {
             System.out.println("Jogador não tem energia suficiente para defender.");
         }
     }
+    public void fugir() {
+        int custoFuga = 15;
+        energia -= custoFuga;
+
+        if (energia < 0) {
+            energia = 0;
+        }
+        System.out.println("Você perdeu 15 de energia.");
+        if (energia == 0) {
+            System.out.println("Você está exausto... não conseguirá fugir de novo até descansar ou se alimentar.");
+        }
+    }
+
     public void correr() {
         if (getEnergia () > 0) {
             System.out.println ("Jogador está correndo");
@@ -186,11 +198,12 @@ public class Personagem implements Movivel {
 
     public void usarItem(String nomeItem) {
         if (getEnergia() > 0) {
-            inventario.usarItem(nomeItem);
+            inventario.usarItem(nomeItem, this);
         } else {
-            System.out.println("Jogador não poderá usar item, pois o nivel de energia está baixo.");
+            System.out.println("Jogador não poderá usar item, pois o nível de energia está baixo.");
         }
     }
+
     public void curar () {
         if (getEnergia() >= 0) {
             System.out.println("Jogador está se curando");
@@ -215,14 +228,6 @@ public class Personagem implements Movivel {
         System.out.println ("Sanidade: " + getSanidade());
     }
 
-    public void menuPrincipal () {
-        System.out.println("\nMENU:");
-        System.out.println("1 - Ver status");
-        System.out.println("2 - Ver inventário");
-        System.out.println("3 - Usar item");
-        System.out.println("4 - Mudar de ambiente");
-        System.out.println("0 - Sair do jogo");
-    }
     public void visualizarInventario() {
         inventario.listarItens();
     }

@@ -13,14 +13,18 @@ public class Cobra extends Criatura {
     public void atacar(Personagem jogador) {
         jogador.diminuirVida(10);
         System.out.println("A Cobra dá o bote com precisão, cravando suas presas venenosas em sua perna!");
-        System.out.println("Você perdeu 10 de vida.\n");
+        System.out.println("Você perdeu 10 de vida.");
+    }
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirVida(5);
+        System.out.println("A Cobra dá o bote com precisão, cravando suas presas venenosas em sua perna!");
     }
 
     @Override
     public void acaoEspecial(Personagem jogador) {
         jogador.diminuirSanidade(7);
         System.out.println("A Cobra silva intensamente, fazendo seu corpo congelar de medo e desespero.");
-        System.out.println("Você perdeu 7 de sanidade.\n");
+        System.out.println("Você perdeu 7 de sanidade.");
     }
 
     @Override

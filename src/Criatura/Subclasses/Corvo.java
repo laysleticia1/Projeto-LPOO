@@ -11,16 +11,21 @@ public class Corvo extends Criatura {
 
     @Override
     public void atacar(Personagem jogador) {
-        jogador.diminuirVida(5);
-        System.out.println("O Corvo mergulha em sua direção e começa a bicar sua cabeça com agilidade e raiva!");
-        System.out.println("Você perdeu 5 de vida.\n");
+        jogador.diminuirVida(10);
+        System.out.println("Um corvo negro mergulha em você com um grasnado estridente, arranhando seu rosto com as garras.");
+        System.out.println("Você perdeu 10 de vida.");
+    }
+
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirVida(5); // valor fixo reduzido
+        System.out.println("Um corvo negro mergulha em você com um grasnado estridente, arranhando seu rosto com as garras.");
     }
 
     @Override
     public void acaoEspecial(Personagem jogador) {
         jogador.diminuirSanidade(6);
         System.out.println("O Corvo emite um grito estridente e perturbador que ecoa por sua mente.");
-        System.out.println("Você perdeu 6 de sanidade.\n");
+        System.out.println("Você perdeu 6 de sanidade.");
     }
 
     @Override

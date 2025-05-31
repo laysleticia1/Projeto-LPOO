@@ -20,7 +20,10 @@ public abstract class Evento implements Executavel, Condicional {
         this.impacto = impacto;
         this.condicaoDeAtivacao = condicaoDeAtivacao;
     }
+    public abstract void executar(Personagem jogador, Ambiente local);
+    public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
 
+    //Getters and Setters
     public String getNomeEvento () {
         return nome;
     }
@@ -36,10 +39,7 @@ public abstract class Evento implements Executavel, Condicional {
     public double getProbabilidadeDeOcorrencia () {
         return probabilidadeDeOcorrencia;
     }
-    public void setProbabilidadeDeOcorrencia (double probabilidadeDeOcorrencia) {
-        this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;
-    }
-
+    public void setProbabilidadeDeOcorrencia (double probabilidadeDeOcorrencia) {this.probabilidadeDeOcorrencia = probabilidadeDeOcorrencia;}
     public String getImpacto () {
         return impacto;
     }
@@ -53,15 +53,6 @@ public abstract class Evento implements Executavel, Condicional {
         this.condicaoDeAtivacao = condicaoDeAtivacao;
     }
 
-    void sortearEvento (Ambiente local) {
-    }
-    void aplicarEvento (Personagem jogador) {
-    }
-    void removerEvento (Evento evento) {
-    }
 
-    public abstract void executar(Personagem jogador, Ambiente local);
-
-    public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
 }
 

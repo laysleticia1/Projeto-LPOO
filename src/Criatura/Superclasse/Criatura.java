@@ -17,9 +17,10 @@ public abstract class Criatura {
     public abstract void atacar(Personagem jogador);
     public abstract void acaoEspecial(Personagem jogador);
     public abstract void fugir();
+    public abstract void ataqueReduzido(Personagem jogador);
 
     // Gettes and Setters
-    String getTipoDeCriatura() {
+    public String getTipoDeCriatura() {
         return tipoDeCriatura;
     }
     public void setTipoCriatura(String tipoDeCriatura) {

@@ -6,7 +6,7 @@ import Interface.Usavel;
 import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 
-public class Agua extends Item implements Usavel{
+public class Agua extends Item {
     private String pureza;
     private double volume;
     private double chanceContaminacao;
@@ -31,5 +31,25 @@ public class Agua extends Item implements Usavel{
         } else {
             System.out.println("A água já foi consumida.\n");
         }
+    }
+
+    //Getters and Setters
+    public double getChanceContaminacao() {
+        return chanceContaminacao;
+    }
+    public void setChanceContaminacao(double chanceContaminacao) {
+        this.chanceContaminacao = chanceContaminacao;
+    }
+    public double getVolume() {
+        return volume;
+    }
+    public void setVolume(double volume) {
+        this.volume = volume;
+    }
+    public String getPureza() {
+        return pureza;
+    }
+    public void setPureza(String pureza) {
+        this.pureza = pureza;
     }
 }

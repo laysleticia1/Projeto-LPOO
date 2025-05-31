@@ -5,7 +5,7 @@ import Personagem.Superclasse.Personagem;
 import Interface.Usavel;
 import Interface.Curavel;
 
-public class Remedios extends Item implements Usavel, Curavel{
+public class Remedios extends Item implements Curavel, Usavel{
     private String tipo;
     private String efeito;
 

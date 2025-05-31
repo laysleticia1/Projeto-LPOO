@@ -11,8 +11,14 @@ public class Jaguatirica extends Criatura {
 
     @Override
     public void atacar(Personagem personagem) {
-        System.out.println("A jaguatirica salta rapidamente e arranha com garras afiadas!");
+        System.out.println("Com um salto veloz dos galhos, uma jaguatirica ataca seu ombro pelas costas!");
         personagem.diminuirVida(12);
+        System.out.println("Você perdeu 12 de vida.");
+    }
+
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirVida(6);
+        System.out.println("Com um salto veloz dos galhos, uma jaguatirica ataca seu ombro pelas costas!");
     }
 
     @Override
