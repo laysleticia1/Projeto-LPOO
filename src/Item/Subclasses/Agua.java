@@ -33,6 +33,16 @@ public class Agua extends Item {
         }
     }
 
+    public void exibirDetalhes() {
+        System.out.println("Informações da água:");
+        System.out.println("• Nome: " + getNome());
+        System.out.println("• Peso: " + getPeso());
+        System.out.println("• Durabilidade: " + getDurabilidade());
+        System.out.println("• Pureza: " + pureza);
+        System.out.println("• Volume: " + volume + "ml");
+        System.out.println("• Chance de contaminação: " + chanceContaminacao + "%");
+    }
+
     //Getters and Setters
     public double getChanceContaminacao() {
         return chanceContaminacao;

@@ -32,5 +32,14 @@ public class Corvo extends Criatura {
     public void fugir() {
         System.out.println("Com um bater de asas veloz, o Corvo desaparece entre as copas das árvores.\n");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nUm grasnado sombrio ecoa no seu sonho...");
+        System.out.println("Você acorda com arranhões no rosto — um Corvo o atacou enquanto dormia!");
+        jogador.diminuirSanidade(8);
+        System.out.println("Você perdeu 8 de vida");
+    }
+
 }
 

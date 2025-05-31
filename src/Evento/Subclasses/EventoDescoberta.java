@@ -7,7 +7,6 @@ import Ambiente.Subclasses.*;
 import java.util.Scanner;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
-import Excecoes.InventarioCheioException;
 
 public class EventoDescoberta extends Evento {
     private String tipoDeDescoberta;

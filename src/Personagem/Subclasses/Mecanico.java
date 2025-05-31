@@ -5,7 +5,8 @@ import Item.Superclasse.*;
 import Item.Subclasses.*;
 import Personagem.Inventario.*;
 
-
+import java.util.Scanner;
+import java.util.List;
 
 public class Mecanico extends Personagem {
 
@@ -14,8 +15,37 @@ public class Mecanico extends Personagem {
     }
 
     public void consertarEquipamento() {
-        System.out.println("Você ajusta engrenagens, reaperta parafusos e reativa partes do seu equipamento.");
+        List<Item> itens = getInventario().getItens();
+
+        Item ferramentaOuMaterial = null;
+
+        for (Item item : itens) {
+            if (item instanceof Ferramentas || item instanceof Material) {
+                ferramentaOuMaterial = item;
+                break;
+            }
+        }
+
+        if (ferramentaOuMaterial == null) {
+            System.out.println("Você precisa de ferramentas ou materiais para consertar um equipamento.");
+            return;
+        }
+
+        System.out.println("Você ajusta engrenagens, reaperta parafusos e reativa partes do seu equipamento utilizando: " + ferramentaOuMaterial.getNome());
+        System.out.println("Conserto realizado com sucesso.");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Deseja consumir " + ferramentaOuMaterial.getNome() + " após o conserto? (s/n): ");
+        String resposta = scanner.nextLine().trim().toLowerCase();
+
+        if (resposta.equals("s")) {
+            getInventario().removerItem(ferramentaOuMaterial);
+            System.out.println(ferramentaOuMaterial.getNome() + " foi consumido no processo.");
+        } else {
+            System.out.println(ferramentaOuMaterial.getNome() + " foi guardado novamente.");
+        }
     }
+
 
     public void montarDispositivoImprovizado(Item item) {
         System.out.println("Usando " + item.getNome() + ", você improvisa uma armadilha defensiva.");

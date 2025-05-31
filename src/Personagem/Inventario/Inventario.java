@@ -9,11 +9,13 @@ import Personagem.Superclasse.*;
 import Personagem.Subclasses.*;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
+import java.util.List;
 
 public class Inventario {
     private ArrayList<Item> listaDeItens;
     private double pesoTotal;
     private double espacoDisponivel;
+    private List<Item> itens = new ArrayList<>();
 
     public Inventario() {
         this.listaDeItens = new ArrayList<>();
@@ -44,6 +46,15 @@ public class Inventario {
             listaDeItens.remove(itemParaRemover);
             pesoTotal -= itemParaRemover.getPeso();
             System.out.println(nomeItem + " foi removido do inventário.");
+        } else {
+            System.out.println("Item não encontrado.");
+        }
+    }
+
+    public void removerItem(Item item) {
+        if (listaDeItens.remove(item)) {
+            pesoTotal -= item.getPeso();
+            System.out.println(item.getNome() + " foi removido do inventário.");
         } else {
             System.out.println("Item não encontrado.");
         }
@@ -102,8 +113,6 @@ public class Inventario {
         }
     }
 
-
-
     public void listarItens() {
         if (listaDeItens.isEmpty()) {
             System.out.println("Inventário vazio.");
@@ -139,6 +148,10 @@ public class Inventario {
         for (Item item : novaLista) {
             this.pesoTotal += item.getPeso();
         }
+    }
+
+    public List<Item> getItens() {
+        return itens;
     }
 
 }

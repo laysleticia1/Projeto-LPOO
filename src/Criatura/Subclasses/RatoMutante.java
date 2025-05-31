@@ -30,4 +30,13 @@ public class RatoMutante extends Criatura {
     public void fugir() {
         System.out.println("O Rato Mutante escapa por rachaduras e buracos nas ruínas.");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nUm rangido estranho ecoa pelo chão...");
+        System.out.println("Um Rato Mutante roeu sua mochila e mordeu seu braço!");
+        jogador.diminuirVida(10);
+        System.out.println("Você perdeu 10 de vida");
+    }
+
 }

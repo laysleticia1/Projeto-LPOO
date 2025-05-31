@@ -16,6 +16,7 @@ import Personagem.Superclasse.Personagem;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
 import Personagem.Subclasses.*;
+import Gerenciadores.*;
 
 public class Jogo {
     private Scanner scanner = new Scanner(System.in);
@@ -23,6 +24,7 @@ public class Jogo {
     private GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
     private Personagem jogador;
     private Ambiente floresta, caverna, lagorio, montanha, ruinas;
+    private GerenciadorDeTurnos gerenciadorDeTurnos;
 
     public void iniciar() {
         System.out.println("\nBEM-VINDO AO JOGO DE SOBREVIVÊNCIA - ÚLTIMA FRONTEIRA");
@@ -39,9 +41,9 @@ public class Jogo {
                 criarPersonagem();
                 configurarAmbientes();
                 configurarEventos();
+                gerenciadorDeTurnos = new GerenciadorDeTurnos(gerenciadorEventos);
                 introducao();
-                loopJogo();  // Aqui o jogo acontece
-
+                loopJogo();  //  Aqui o jogo acontece
             }
 
             case 2 -> {
@@ -153,11 +155,12 @@ public class Jogo {
             System.out.println("1 - Ver status");
             System.out.println("2 - Ver inventário");
             System.out.println("3 - Usar item");
-            System.out.println("4 - Mudar de ambiente");
-            System.out.println("5 - Realizar ações");
-            System.out.println("6 - Explorar o ambiente");
-            System.out.println("7 - Ação especial da sua classe");
-            System.out.println("8 - Remover item do inventário");
+            System.out.println("4 - Remover item do inventário");
+            System.out.println("5 - Mudar de ambiente");
+            System.out.println("6 - Explorar ambiente");
+            System.out.println("7 - Realizar ação comum");
+            System.out.println("8 - Realizar ação especial");
+            System.out.println("9 - Descansar");
             System.out.println("0 - Sair do jogo");
 
             int escolhaMenu = scanner.nextInt();
@@ -175,21 +178,29 @@ public class Jogo {
                         jogador.diminuirSede(2);
                     }
                     case 4 -> {
+                        System.out.print("Digite o nome do item que deseja remover: ");
+                        String itemRemover = scanner.nextLine();
+                        jogador.getInventario().removerItem(itemRemover);
+                    }
+                    case 5 -> {
                         menuAmbientes();
                         jogador.diminuirFome(8);
                         jogador.diminuirSede(10);
-                    }
-                    case 5 -> {
-                        realizarAcoes();
-                        jogador.diminuirFome(3);
-                        jogador.diminuirSede(4);
+                        if (!gerenciadorDeTurnos.executarTurno(jogador, true)) return;
                     }
                     case 6 -> {
                         explorarAmbiente();
                         jogador.diminuirFome(3);
                         jogador.diminuirSede(4);
+                        if (!gerenciadorDeTurnos.executarTurno(jogador, true)) return;
                     }
                     case 7 -> {
+                        realizarAcoes();
+                        jogador.diminuirFome(3);
+                        jogador.diminuirSede(4);
+                        if (!gerenciadorDeTurnos.executarTurno(jogador, true)) return;
+                    }
+                    case 8 -> {
                         if (jogador instanceof Rastreador rastreador) {
                             System.out.println("1 - Identificar pegadas");
                             System.out.println("2 - Farejar trilha");
@@ -214,35 +225,43 @@ public class Jogo {
                             System.out.println("3 - Preparar remédio natural");
                             int escolha = scanner.nextInt();
                             scanner.nextLine();
-                            if (escolha == 1) {
-                                medico.autoCurarFerimentosLeves();
-                            } else if (escolha == 2) {
-                                System.out.println("Ainda não há outro personagem disponível.");
-                            } else if (escolha == 3) {
-                                medico.prepararRemedioNatural();
-                            } else {
-                                System.out.println("Opção inválida.");
-                            }
+                            if (escolha == 1) medico.autoCurarFerimentosLeves();
+                            else if (escolha == 2) System.out.println("Ainda não há outro personagem disponível.");
+                            else if (escolha == 3) medico.prepararRemedioNatural();
+                            else System.out.println("Opção inválida.");
                         } else if (jogador instanceof SobreviventeNato sobrevivente) {
-                            System.out.println("1 - Montar abrigo improvisado");
-                            System.out.println("2 - Fabricar lança");
-                            System.out.println("3 - Caçar animais");
+                            System.out.println("1 - Fabricar lança");
+                            System.out.println("2 - Caçar animais");
                             int escolha = scanner.nextInt();
                             scanner.nextLine();
-                            if (escolha == 1) sobrevivente.montarAbrigoImprovisado(jogador.getAmbienteAtual());
-                            else if (escolha == 2) sobrevivente.fabricarLanca();
-                            else if (escolha == 3) sobrevivente.cacarAnimais();
+                            if (escolha == 1) sobrevivente.fabricarLanca();
+                            else if (escolha == 2) sobrevivente.cacarAnimais();
                             else System.out.println("Opção inválida.");
-                        } else {
-                            System.out.println("Sua classe não possui ações especiais definidas.");
                         }
                         jogador.diminuirFome(2);
                         jogador.diminuirSede(3);
+                        if (!gerenciadorDeTurnos.executarTurno(jogador, true)) return;
                     }
-                    case 8 -> {
-                        System.out.print("Digite o nome do item que deseja remover: ");
-                        String itemRemover = scanner.nextLine();
-                        jogador.getInventario().removerItem(itemRemover);
+                    case 9 -> {
+                        if (jogador instanceof SobreviventeNato sobrevivente) {
+                            sobrevivente.montarAbrigoImprovisado(jogador.getAmbienteAtual());
+                            System.out.println("Você descansou com segurança por ter montado um abrigo improvisado.");
+                        } else {
+                            System.out.println("Você se deita para descansar...");
+                            double chance = Math.random();
+                            if (chance < 0.25) {
+                                gerenciadorEventos.aplicarEventoCriaturaDuranteDescanso(jogador);
+                            } else if (chance < 0.50) {
+                                gerenciadorEventos.aplicarEventoClimaticoDuranteDescanso(jogador);
+                            } else {
+                                System.out.println("O descanso foi tranquilo.");
+                            }
+                        }
+
+                        jogador.descansar(); // descanso em si (recuperação)
+                        jogador.consumirRecursosBasicos(); // consumo após descansar
+
+                        if (!gerenciadorDeTurnos.executarTurno(jogador, true)) return;
                     }
 
                     case 0 -> {
@@ -254,17 +273,16 @@ public class Jogo {
                     default -> System.out.println("Opção inválida.");
                 }
 
-                // Verificação de sobrevivência com exceção
                 jogador.verificarFomeSedeSanidade();
 
             } catch (FomeSedeSanidadeException e) {
                 System.out.println(e.getMessage());
+                return;
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
                 System.out.println("O jogador não resistiu.");
                 return;
             }
-
         }
     }
 

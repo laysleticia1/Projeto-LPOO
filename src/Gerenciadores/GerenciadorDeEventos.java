@@ -121,10 +121,52 @@ public class GerenciadorDeEventos {
                 new EventoClimatico("Vento Cortante", "Ráfagas violentas varrem as ruínas, carregando poeira, estilhaços e grãos finos que cortam como lâminas sua pele e visão.", 0.3, "vida", "Ruinas", "Tempestade de Areia", 1, "Redução severa de visibilidade e risco de ferimentos"),
                 new EventoDoencaFerimento("Poeira Antiga", "Ao abrir uma porta de pedra, uma nuvem de poeira antiga invade seus pulmões, causando tosse e tontura.", 0.3, "sanidade", "Ruinas", "Respiratório", "Antídoto raro"),
                 new EventoDescoberta("Inscrições Perdidas", "Num pedestal coberto de musgo, você encontra inscrições quase apagadas que falam de um antigo ritual.", 0.4, "inventario", "Ruinas", "Artefato", "Artefato místico", "Somente se sanidade > 60")
-
         )));
     }
 
+    public void aplicarEventoCriaturaDuranteDescanso(Personagem jogador) {
+        String nomeAmbiente = jogador.getAmbienteAtual().getClass().getSimpleName();
+        List<Evento> eventos = eventosPorAmbiente.get(nomeAmbiente);
 
+        if (eventos != null) {
+            List<Evento> criaturas = new ArrayList<>();
+
+            for (Evento e : eventos) {
+                if (e instanceof EventoCriatura) {
+                    criaturas.add(e);
+                }
+            }
+
+            if (!criaturas.isEmpty()) {
+                Evento eventoBase = criaturas.get(new Random().nextInt(criaturas.size()));
+                if (eventoBase instanceof EventoCriatura eventoCriatura) {
+                    eventoCriatura.executarDuranteDescanso(jogador, jogador.getAmbienteAtual());
+                    historicoDeEventos.add(eventoCriatura.getNomeEvento());
+                }
+            }
+        }
+    }
+
+    public void aplicarEventoClimaticoDuranteDescanso(Personagem jogador) {
+        String nomeAmbiente = jogador.getAmbienteAtual().getClass().getSimpleName();
+        List<Evento> eventos = eventosPorAmbiente.get(nomeAmbiente);
+
+        if (eventos != null) {
+            List<Evento> climaticos = new ArrayList<>();
+
+            for (Evento e : eventos) {
+                if (e instanceof EventoClimatico) {
+                    climaticos.add(e);
+                }
+            }
+
+            if (!climaticos.isEmpty()) {
+                Evento eventoEscolhido = climaticos.get(new Random().nextInt(climaticos.size()));
+                System.out.println("\n🔸 O clima muda repentinamente durante o descanso!\n");
+                eventoEscolhido.executar(jogador, jogador.getAmbienteAtual());
+                historicoDeEventos.add(eventoEscolhido.getNomeEvento());
+            }
+        }
+    }
 
 }

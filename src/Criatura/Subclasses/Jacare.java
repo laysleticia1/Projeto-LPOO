@@ -29,4 +29,13 @@ public class Jacare extends Criatura {
     public void fugir() {
         System.out.println("O jacaré mergulha silenciosamente, desaparecendo nas águas turvas.");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nVocê acorda com o estalo de mandíbulas perto demais...");
+        System.out.println("Um Jacaré tenta arrastá-lo durante o descanso!");
+        jogador.diminuirVida(20);
+        System.out.println("Você perdeu 20 de vida");
+    }
+
 }

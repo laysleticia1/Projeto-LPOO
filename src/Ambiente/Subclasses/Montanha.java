@@ -90,7 +90,7 @@ public class Montanha extends Ambiente {
         double chanceEncontrar = Math.random();
         if (chanceEncontrar < 0.2) return null; // 20% de chance de não encontrar nada
 
-        int opcao = (int) (Math.random() * 8); // aumentamos para 6 opções
+        int opcao = (int) (Math.random() * 9); // aumentamos para 6 opções
         switch (opcao) {
             case 0:
                 return new Material("Rocha Metálica", "Mineral", 1.8, 4, 75);
@@ -108,6 +108,8 @@ public class Montanha extends Ambiente {
                 return new Alimentos("Frutas Secas Silvestres", 0.3, 4, 10, "Fruta Seca", 7);
             case 7:
                 return new Alimentos("Fruta Podre", 0.3, 1, -20, "Fruta", 1);
+            case 8:
+                return new Material("Sucata", "Metal Enferrujado", 1.0, 3, 40);
             default:
             return null;
         }

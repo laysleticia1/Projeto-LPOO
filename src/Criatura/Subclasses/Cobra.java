@@ -31,4 +31,13 @@ public class Cobra extends Criatura {
     public void fugir() {
         System.out.println("A Cobra desliza entre as pedras e some em meio à vegetação rasteira.\n");
     }
+
+    @Override
+    public void ataqueDuranteDescanso(Personagem jogador) {
+        System.out.println("\nEm meio ao silêncio do descanso, algo desliza por seu braço...");
+        System.out.println("Uma Cobra o pica repentinamente!");
+        jogador.diminuirVida(10);
+        System.out.println("Você perdeu 10 de vida");
+    }
+
 }

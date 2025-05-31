@@ -26,6 +26,16 @@ public class Armas extends Item {
         }
     }
 
+    public void exibirDetalhes() {
+        System.out.println("⚔ Informações da arma:");
+        System.out.println("• Nome: " + getNome());
+        System.out.println("• Peso: " + getPeso());
+        System.out.println("• Durabilidade: " + getDurabilidade());
+        System.out.println("• Tipo: " + tipo);
+        System.out.println("• Dano: " + dano);
+        System.out.println("• Alcance: " + alcance);
+    }
+
     //Getters and Setters
     public void setTipo(String tipo) {
         this.tipo = tipo;

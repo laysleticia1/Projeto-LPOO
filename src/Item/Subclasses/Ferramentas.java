@@ -23,6 +23,16 @@ public class Ferramentas extends Item {
         }
     }
 
+    public void exibirDetalhes() {
+        System.out.println("🛠 Informações da ferramenta:");
+        System.out.println("• Nome: " + getNome());
+        System.out.println("• Peso: " + getPeso());
+        System.out.println("• Durabilidade: " + getDurabilidade());
+        System.out.println("• Eficiência: " + eficiencia);
+    }
+
+    //Getters and Setters
+
     public String getTipo() {
         return tipo;
     }

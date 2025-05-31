@@ -3,6 +3,7 @@ package Personagem.Superclasse;
 import Ambiente.Superclasse.Ambiente;
 import Excecoes.InventarioCheioException;
 import Personagem.Inventario.Inventario;
+import Personagem.Subclasses.*;
 import Item.Superclasse.Item;
 import Interface.Movivel;
 import Excecoes.FomeSedeSanidadeException;
@@ -209,14 +210,22 @@ public class Personagem implements Movivel {
             System.out.println("Jogador está se curando");
         }
     }
-    public void descansar () {
+    public void descansar() {
         if (getEnergia() >= 0 && getEnergia() <= 100) {
-            this.energia += 15;
-            if (getEnergia() > 100) {
+            this.energia += 20;
+            if (this.energia > 100) {
                 this.energia = 100;
             }
         }
+
+        if (getSanidade() >= 0 && getSanidade() <= 100) {
+            this.sanidade += 10;
+            if (this.sanidade > 100) {
+                this.sanidade = 100;
+            }
+        }
     }
+
 
     public void getStatus () {
         System.out.println ("Nome: " + getNome());
@@ -241,9 +250,8 @@ public class Personagem implements Movivel {
     }
 
     public void consumirRecursosBasicos() {
-        diminuirEnergia(5);
-        diminuirFome(4);
-        diminuirSede(3);
+        diminuirFome(3);
+        diminuirSede(4);
 
         System.out.println("\n🔋 Consumo diário aplicado:");
         System.out.println("Vida: " + vida);
@@ -255,31 +263,31 @@ public class Personagem implements Movivel {
 
     public void verificarFomeSedeSanidade() throws FomeSedeSanidadeException {
         boolean perdeuVida = false;
-        StringBuilder mensagem = new StringBuilder();
-        if (this.fome <= 0) {
-            this.vida -= 10;
+
+        if (fome <= 0) {
+            vida -= 10;
+            System.out.println("⚠️ Sua fome chegou a zero! Você perdeu 10 de vida.");
             perdeuVida = true;
-            mensagem.append("\nVocê está com fome extrema! Perdeu 10 de vida.\n");
         }
-        if (this.sede <= 0) {
-            this.vida -= 10;
+        if (sede <= 0) {
+            vida -= 10;
+            System.out.println("⚠️ Sua sede chegou a zero! Você perdeu 10 de vida.");
             perdeuVida = true;
-            mensagem.append("\nVocê está desidratado! Perdeu 10 de vida.\n");
         }
         if (sanidade <= 0) {
-            this.vida -= 10;
+            vida -= 10;
+            System.out.println("⚠️ Sua sanidade chegou a zero! Você perdeu 10 de vida.");
             perdeuVida = true;
-            mensagem.append("\nVocê está mentalmente instável! Perdeu 10 de vida.\n");
         }
-        if (this.vida <= 0) {
-            throw new RuntimeException("\nVocê morreu por perder toda a vida.");
-        }
+
         if (perdeuVida) {
-            throw new FomeSedeSanidadeException(mensagem.toString());
+            System.out.println("❤️ Vida atual: " + vida);
+        }
+
+        if (vida <= 0) {
+            throw new FomeSedeSanidadeException("Você morreu por falta de recursos básicos.");
         }
     }
-
-
 
     // Getters e Setters
     public String getNome () {

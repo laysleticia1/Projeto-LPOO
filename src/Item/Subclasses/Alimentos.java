@@ -16,6 +16,14 @@ public class Alimentos extends Item {
         this.validade = validade;
     }
 
+    public void exibirDetalhes() {
+        System.out.println("Informações do alimento:");
+        System.out.println("• Nome: " + getNome());
+        System.out.println("• Peso: " + getPeso());
+        System.out.println("• Durabilidade: " + getDurabilidade());
+        System.out.println("• Valor Nutricional: " + valorNutricional);
+    }
+
     public void usar(Personagem alvo) {
         if (getDurabilidade() > 0) {
             setDurabilidade(getDurabilidade() - 1);
@@ -25,6 +33,7 @@ public class Alimentos extends Item {
             System.out.println("Este alimento está estragado.");
         }
     }
+
 
     //Gettes and Setters
     public String getTipo() {

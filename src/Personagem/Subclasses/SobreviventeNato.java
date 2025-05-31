@@ -10,7 +10,7 @@ import Personagem.Inventario.Inventario;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
-
+import java.util.Scanner;
 
 public class SobreviventeNato extends Personagem {
 
@@ -35,9 +35,9 @@ public class SobreviventeNato extends Personagem {
         }
 
         // Bônus de recuperação ou efeito especial
-        System.out.println("Você se sente um pouco mais seguro. (+10 de sanidade e energia)");
-        restaurarSanidade(10);
-        restaurarEnergia(10);
+        System.out.println("Você se sente um pouco mais seguro. (+15 de sanidade e +25 de energia)");
+        restaurarSanidade(15);
+        restaurarEnergia(25);
     }
 
     public void fabricarLanca() {
@@ -74,8 +74,6 @@ public class SobreviventeNato extends Personagem {
 
     public void cacarAnimais() {
         Ambiente ambiente = getAmbienteAtual();
-
-        // Lista de alimentos possíveis: nome, peso, durabilidade, valorNutricional, tipo, validade
         List<Alimentos> opcoes = new ArrayList<>();
 
         if (ambiente instanceof Floresta) {
@@ -98,16 +96,20 @@ public class SobreviventeNato extends Personagem {
             return;
         }
 
-        // Sorteio do alimento
         Alimentos carneObtida = opcoes.get(new Random().nextInt(opcoes.size()));
+        System.out.println("Você caçou e obteve: " + carneObtida.getNome());
+        carneObtida.exibirDetalhes();
 
-        System.out.println(getNome() + " caçou um/a " + carneObtida.getTipo() + " e obteve " + carneObtida.getNome() + ".");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Deseja adicionar ao inventário? (s/n): ");
+        String resposta = scanner.nextLine().trim().toLowerCase();
 
-        try {
-            getInventario().adicionarItem(carneObtida);
-        } catch (InventarioCheioException e) {
-            System.out.println("❌ Inventário cheio. Não foi possível adicionar a carne.");
+        if (resposta.equals("s")) {
+            this.adicionarAoInventario(carneObtida);
+            System.out.println(carneObtida.getNome() + " adicionada ao inventário com sucesso.");
+        } else {
+            System.out.println("Você optou por deixar a carne para trás.");
         }
-    }
 
+    }
 }

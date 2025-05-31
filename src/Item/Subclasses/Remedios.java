@@ -32,6 +32,16 @@ public class Remedios extends Item implements Curavel, Usavel{
                 ". Uma sensação de alívio percorre seu corpo, restaurando " +
                 cura + " pontos de vida.");
     }
+
+    public void exibirDetalhes() {
+        System.out.println("Informações do remédio:");
+        System.out.println("• Nome: " + getNome());
+        System.out.println("• Tipo: " + tipo);
+        System.out.println("• Efeito: " + efeito);
+    }
+
+
+    // Getters and Setters
     public String getTipo() {
         return tipo;
     }
