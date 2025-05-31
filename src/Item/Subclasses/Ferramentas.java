@@ -22,4 +22,17 @@ public class Ferramentas extends Item {
             System.out.println("A ferramenta quebrou.");
         }
     }
+
+    public String getTipo() {
+        return tipo;
+    }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    public int getEficiencia() {
+        return eficiencia;
+    }
+    public void setEficiencia(int eficiencia) {
+        this.eficiencia = eficiencia;
+    }
 }

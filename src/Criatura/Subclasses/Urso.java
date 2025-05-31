@@ -12,18 +12,21 @@ public class Urso extends Criatura {
 
     public void atacar(Personagem alvo) {
         alvo.diminuirVida (15);
-        System.out.println("O urso se levanta e desfere um ataque violento!");
-        System.out.println("Você perdeu 15 de vida.\n");
+        System.out.println("Um urso imenso ruge e desfere uma patada devastadora contra seu peito!");
+        System.out.println("Você perdeu 15 de vida.");
     }
-
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirVida(7);
+        System.out.println("Um urso imenso ruge e desfere uma patada devastadora contra seu peito!");
+    }
     public void acaoEspecial(Personagem jogador) {
         System.out.println("O urso solta um rugido que estremece a floresta, fazendo você congelar de medo.");
-        System.out.println("Você perdeu 10 sanidade.\n");
+        System.out.println("Você perdeu 10 sanidade.");
         jogador.diminuirSanidade(10);
     }
 
     public void fugir() {
-        System.out.println("Ferido, o urso recua entre os arbustos e desaparece na floresta\n");
+        System.out.println("Ferido, o urso recua entre os arbustos e desaparece na floresta");
     }
 
 }

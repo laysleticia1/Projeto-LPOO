@@ -5,11 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import Ambiente.Superclasse.Ambiente;
-import Ambiente.Subclasses.Caverna;
-import Ambiente.Subclasses.Floresta;
-import Ambiente.Subclasses.LagoRio;
-import Ambiente.Subclasses.Montanha;
-import Ambiente.Subclasses.Ruinas;
+import Ambiente.Subclasses.*;
 import Excecoes.AmbienteInacessivelException;
 import Excecoes.InventarioCheioException;
 import Excecoes.FomeSedeSanidadeException;
@@ -17,7 +13,8 @@ import Gerenciadores.GerenciadorDeAmbientes;
 import Gerenciadores.GerenciadorDeEventos;
 import Evento.Subclasses.Específicos.*;
 import Personagem.Superclasse.Personagem;
-import Item.Superclasse.Item;
+import Item.Superclasse.*;
+import Item.Subclasses.*;
 import Personagem.Subclasses.*;
 
 public class Jogo {
@@ -133,7 +130,6 @@ public class Jogo {
     }
 
     private void configurarEventos() {
-        gerenciadorEventos.adicionarEvento(new CristalAzul());
         gerenciadorEventos.adicionarEvento(new EmboscadaLobos());
         gerenciadorEventos.adicionarEvento(new EnchenteRapida());
         gerenciadorEventos.adicionarEvento(new PoeiraToxica());
@@ -161,6 +157,7 @@ public class Jogo {
             System.out.println("5 - Realizar ações");
             System.out.println("6 - Explorar o ambiente");
             System.out.println("7 - Ação especial da sua classe");
+            System.out.println("8 - Remover item do inventário");
             System.out.println("0 - Sair do jogo");
 
             int escolhaMenu = scanner.nextInt();
@@ -185,21 +182,23 @@ public class Jogo {
                     case 5 -> {
                         realizarAcoes();
                         jogador.diminuirFome(3);
-                        jogador.diminuirSede(5);
+                        jogador.diminuirSede(4);
                     }
                     case 6 -> {
                         explorarAmbiente();
                         jogador.diminuirFome(3);
-                        jogador.diminuirSede(5);
+                        jogador.diminuirSede(4);
                     }
                     case 7 -> {
                         if (jogador instanceof Rastreador rastreador) {
                             System.out.println("1 - Identificar pegadas");
                             System.out.println("2 - Farejar trilha");
+                            System.out.println("3 - Procurar recursos no ambiente");
                             int escolha = scanner.nextInt();
                             scanner.nextLine();
                             if (escolha == 1) rastreador.identificarPegadas(jogador.getAmbienteAtual());
                             else if (escolha == 2) rastreador.farejarTrilha(jogador.getAmbienteAtual());
+                            else if (escolha == 3) rastreador.procurarRecursos(jogador.getAmbienteAtual(), jogador);
                             else System.out.println("Opção inválida.");
                         } else if (jogador instanceof Mecanico mecanico) {
                             System.out.println("1 - Consertar equipamento");
@@ -227,18 +226,23 @@ public class Jogo {
                         } else if (jogador instanceof SobreviventeNato sobrevivente) {
                             System.out.println("1 - Montar abrigo improvisado");
                             System.out.println("2 - Fabricar lança");
-                            System.out.println("3 - Caçar pequenos animais");
+                            System.out.println("3 - Caçar animais");
                             int escolha = scanner.nextInt();
                             scanner.nextLine();
                             if (escolha == 1) sobrevivente.montarAbrigoImprovisado(jogador.getAmbienteAtual());
                             else if (escolha == 2) sobrevivente.fabricarLanca();
-                            else if (escolha == 3) sobrevivente.cacarPequenosAnimais();
+                            else if (escolha == 3) sobrevivente.cacarAnimais();
                             else System.out.println("Opção inválida.");
                         } else {
                             System.out.println("Sua classe não possui ações especiais definidas.");
                         }
-                        jogador.diminuirFome(3);
+                        jogador.diminuirFome(2);
                         jogador.diminuirSede(3);
+                    }
+                    case 8 -> {
+                        System.out.print("Digite o nome do item que deseja remover: ");
+                        String itemRemover = scanner.nextLine();
+                        jogador.getInventario().removerItem(itemRemover);
                     }
 
                     case 0 -> {
@@ -265,7 +269,7 @@ public class Jogo {
     }
 
     private void explorarAmbiente() {
-        System.out.println("\nVocê decide explorar a área ao redor...");
+        System.out.print("\nVocê decide explorar a área ao redor...");
         jogador.getAmbienteAtual().explorar(jogador);
     }
 
@@ -281,38 +285,70 @@ public class Jogo {
         switch (escolha) {
             case 1 -> {
                 if (ambiente instanceof Floresta) {
-                    System.out.println("Você coleta frutas frescas da floresta.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Frutas", 0.5, 3));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Frutas.");
+                    System.out.println("Você encontra frutas frescas da floresta.");
+                    Alimentos frutas = new Alimentos("Frutas", 0.5, 3, 15, "Fruta", 3);
+                    System.out.print("Deseja coletar " + frutas.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(frutas);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Frutas.");
+                        }
+                    } else {
+                        System.out.println("Você deixou as frutas para trás.");
                     }
-                    jogador.restaurarFome(10);
+
                 } else if (ambiente instanceof Montanha) {
                     System.out.println("Você escala e encontra uma caverna para abrigo.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Pedra Afiada", 1.0, 1));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Pedra Afiada.");
+                    Material pedra = new Material("Pedra Afiada", "Pedra", 1.0, 1, 30);
+                    System.out.print("Deseja coletar " + pedra.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(pedra);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Pedra Afiada.");
+                        }
+                    } else {
+                        System.out.println("Você deixou a pedra para trás.");
                     }
+
                 } else if (ambiente instanceof LagoRio) {
-                    System.out.println("Você bebe água do lago, se hidratando e recuperando energia.");
-                    jogador.restaurarEnergia(5);
+                    System.out.println("Você bebe água do lago, se hidratando e recuperando energia e sede.");
+                    jogador.restaurarEnergia(15);
                     jogador.restaurarSede(15);
+
                 } else if (ambiente instanceof Caverna) {
                     System.out.println("Você acende tochas e encontra minérios.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Minério Brilhante", 2.0, 1));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Minério Brilhante.");
+                    Material minerio = new Material("Minério Brilhante", "Cristal", 2.0, 1, 50);
+                    System.out.print("Deseja coletar " + minerio.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(minerio);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Minério Brilhante.");
+                        }
+                    } else {
+                        System.out.println("Você deixou o minério para trás.");
                     }
+
                 } else if (ambiente instanceof Ruinas) {
-                    System.out.println("Você vasculha e encontra um mapa antigo.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Mapa Antigo", 0.7, 1));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Mapa Antigo.");
+                    System.out.println("Você vasculha e encontra uma bolacha antiga e rachada.");
+                    Alimentos bolacha = new Alimentos("Bolacha Rachada", 0.3, 1, -5, "Industrial", 1);
+                    System.out.print("Deseja coletar " + bolacha.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(bolacha);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Bolacha Rachada.");
+                        }
+                    } else {
+                        System.out.println("Você deixou a bolacha para trás.");
                     }
+
                 } else {
                     System.out.println("Você observa atentamente o local.");
                 }
@@ -323,25 +359,45 @@ public class Jogo {
                     System.out.println("Você monta um abrigo improvisado com galhos.");
                 } else if (ambiente instanceof Montanha) {
                     System.out.println("Você encontra restos de equipamentos congelados.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Equipamento Congelado", 3.0, 1));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Equipamento Congelado.");
+                    Item equipamento = new Item("Equipamento Congelado", 3.0, 1);
+                    System.out.print("Deseja coletar " + equipamento.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(equipamento);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Equipamento Congelado.");
+                        }
+                    } else {
+                        System.out.println("Você deixou o equipamento para trás.");
                     }
                 } else if (ambiente instanceof LagoRio) {
                     System.out.println("Você pesca um peixe pequeno.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Peixe", 1.2, 1));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Peixe.");
+                    Alimentos peixe = new Alimentos("Peixe", 1.2, 1, 20, "Peixe", 2);
+                    System.out.print("Deseja coletar " + peixe.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(peixe);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Peixe.");
+                        }
+                    } else {
+                        System.out.println("Você deixou o peixe para trás.");
                     }
-                    jogador.restaurarFome(10);
                 } else if (ambiente instanceof Caverna) {
                     System.out.println("Você encontra carvão e ferramentas antigas.");
-                    try {
-                        jogador.getInventario().adicionarItem(new Item("Carvão", 1.0, 2));
-                    } catch (InventarioCheioException e) {
-                        System.out.println("Inventário cheio! Não foi possível adicionar Carvão.");
+                    Item carvao = new Item("Carvão", 1.0, 2);
+                    System.out.print("Deseja coletar " + carvao.getNome() + "? (s/n): ");
+                    String resposta = scanner.nextLine().trim().toLowerCase();
+                    if (resposta.equals("s") || resposta.equals("sim")) {
+                        try {
+                            jogador.getInventario().adicionarItem(carvao);
+                        } catch (InventarioCheioException e) {
+                            System.out.println("Inventário cheio! Não foi possível adicionar Carvão.");
+                        }
+                    } else {
+                        System.out.println("Você deixou o carvão para trás.");
                     }
                 } else if (ambiente instanceof Ruinas) {
                     System.out.println("Você estuda símbolos e ganha conhecimento.");
@@ -355,12 +411,7 @@ public class Jogo {
                 String itemUsar = scanner.nextLine();
                 jogador.usarItem(itemUsar);
 
-                if (itemUsar.equalsIgnoreCase("Água")) {
-                    jogador.restaurarSede(15);
-                    System.out.println("Você bebeu água e recuperou a sede.");
-                }
             }
-
 
             case 4 -> {
                 System.out.println("Você decide apenas descansar e observar o ambiente.");

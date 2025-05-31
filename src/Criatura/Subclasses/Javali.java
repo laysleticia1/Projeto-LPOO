@@ -16,7 +16,10 @@ public class Javali extends Criatura {
         System.out.println("O Javali investe com força, atingindo seu tronco com suas presas afiadas!");
         System.out.println("Você perdeu 14 de vida.");
     }
-
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirVida(6);
+        System.out.println("O Javali investe com força, atingindo seu tronco com suas presas afiadas!");
+    }
     @Override
     public void acaoEspecial(Personagem jogador) {
         jogador.diminuirSanidade(6);

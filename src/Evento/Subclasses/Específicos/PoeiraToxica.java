@@ -24,7 +24,6 @@ public class PoeiraToxica extends EventoDoencaFerimento {
         System.out.println("Condição: Intoxicação respiratória");
         System.out.println("Sintomas: Tontura, náusea e perda de foco");
         System.out.println("Cura: Uso de máscara ou repouso");
-        System.out.println("Impacto: " + getImpacto());
 
         jogador.setVida(jogador.getVida() - 10);
         jogador.setSanidade(jogador.getSanidade() - 5);

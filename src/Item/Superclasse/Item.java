@@ -1,6 +1,8 @@
 package Item.Superclasse;
 
+import Interface.Usavel;
 import Personagem.Inventario.*;
+import Personagem.Superclasse.*;
 
 public class Item {
     private String nome;
@@ -13,8 +15,13 @@ public class Item {
     this.peso = peso;
     this.durabilidade = durabilidade;
     }
-    public void usar (){
+
+    public void usar() {
+        this.durabilidade--;
+        if (durabilidade < 0) durabilidade = 0;
     }
+
+    //Getters and Setters
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;
     }

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import Excecoes.InventarioCheioException;
 import Item.Superclasse.Item;
 import java.util.Random;
+import Personagem.Superclasse.*;
+import Personagem.Subclasses.*;
+import Item.Superclasse.*;
+import Item.Subclasses.*;
 
 public class Inventario {
     private ArrayList<Item> listaDeItens;
@@ -58,7 +62,7 @@ public class Inventario {
     }
 
 
-    public void usarItem(String nomeItem) {
+    public void usarItem(String nomeItem, Personagem jogador) {
         Item itemParaUsar = null;
 
         for (Item item : listaDeItens) {
@@ -70,19 +74,35 @@ public class Inventario {
 
         if (itemParaUsar != null) {
             System.out.println("Você usou o item: " + itemParaUsar.getNome());
-            itemParaUsar.usar(); // Reduz 1 de durabilidade
+
+            if (itemParaUsar instanceof Alimentos a) {
+                int valor = a.getValorNutricional();
+                jogador.restaurarFome(valor);
+                jogador.restaurarSanidade(2);
+            } else if (itemParaUsar instanceof Agua ag) {
+                double hidr = ag.getVolume();
+                jogador.restaurarSede((int) hidr);
+                jogador.restaurarSanidade(1);
+            } else if (itemParaUsar instanceof Remedios r) {
+                jogador.restaurarVida(10);
+                jogador.restaurarSanidade(5);
+            }
+
+            itemParaUsar.usar();
             System.out.println("Durabilidade restante: " + itemParaUsar.getDurabilidade());
 
             if (itemParaUsar.getDurabilidade() <= 0) {
                 listaDeItens.remove(itemParaUsar);
                 pesoTotal -= itemParaUsar.getPeso();
-                System.out.println(itemParaUsar.getNome() + " foi completamente consumido/a e removido/a do inventário.");
+                System.out.println(itemParaUsar.getNome() + " foi completamente consumido e removido do inventário.");
             }
 
         } else {
             System.out.println("Item não encontrado no inventário.");
         }
     }
+
+
 
     public void listarItens() {
         if (listaDeItens.isEmpty()) {

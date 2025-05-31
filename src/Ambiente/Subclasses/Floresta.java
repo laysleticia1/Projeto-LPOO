@@ -35,6 +35,42 @@ public class Floresta extends Ambiente {
         Item recurso = coletarItemAleatorio();
         if (recurso != null) {
             System.out.println("\nVocê encontrou: " + recurso.getNome());
+            System.out.println("\n🔍 Detalhes do item:");
+
+            if (recurso instanceof Material m) {
+                System.out.println("- Tipo: " + m.getTipo());
+                System.out.println("- Peso: " + m.getPeso() + " kg");
+                System.out.println("- Durabilidade: " + m.getDurabilidade());
+                System.out.println("- Resistência: " + m.getResistencia());
+            } else if (recurso instanceof Agua a) {
+                System.out.println("- Tipo: Água");
+                System.out.println("- Pureza: " + a.getPureza());
+                System.out.println("- Volume: " + a.getPeso() + " L");
+                System.out.println("- Risco de contaminação: " + (a.getChanceContaminacao() * 100) + "%");
+            } else if (recurso instanceof Ferramentas f) {
+                System.out.println("- Tipo: " + f.getTipo());
+                System.out.println("- Durabilidade: " + f.getDurabilidade());
+                System.out.println("- Eficácia: " + f.getEficiencia());
+                System.out.println("- Peso: " + f.getPeso() + " kg");
+            } else if (recurso instanceof Armas arma) {
+                System.out.println("- Tipo: " + arma.getTipo());
+                System.out.println("- Dano: " + arma.getDano());
+                System.out.println("- Durabilidade: " + arma.getDurabilidade());
+                System.out.println("- Alcance: " + arma.getAlcance());
+            } else if (recurso instanceof Alimentos alimento) {
+                System.out.println("- Tipo: " + alimento.getTipo());
+                System.out.println("- Peso: " + alimento.getPeso() + " kg");
+                System.out.println("- Valor Nutricional: " + alimento.getValorNutricional());
+                System.out.println("- Validade: " + alimento.getValidade() + " dia/s");
+                System.out.println("- Durabilidade: " + alimento.getDurabilidade());
+            } else if (recurso instanceof Remedios r) {
+                System.out.println("- Nome: " + r.getNome());
+                System.out.println("- Tipo: " + r.getTipo());
+                System.out.println("- Efeito: " + r.getEfeito());
+            } else {
+                System.out.println("- Peso: " + recurso.getPeso());
+                System.out.println("- Durabilidade: " + recurso.getDurabilidade());
+            }
             System.out.print("Deseja adicionar este item ao seu inventário? (s/n): ");
             Scanner scanner = new Scanner(System.in);
             String resposta = scanner.nextLine().trim().toLowerCase();
@@ -60,12 +96,12 @@ public class Floresta extends Ambiente {
         double chanceEncontrar = Math.random();
         if (chanceEncontrar < 0.4) return null;
 
-        int opcao = (int) (Math.random() * 6);
+        int opcao = (int) (Math.random() * 8);
         switch (opcao) {
             case 0:
-                return new Alimentos("Cogumelo Nutritivo", 0.3, 1, 150, "Fungo", 2);
+                return new Alimentos("Cogumelo Nutritivo", 0.3, 1, 20, "Fungo", 2);
             case 1:
-                return new Alimentos("Fruta Selvagem", 0.2, 2, 100, "Fruta", 3);
+                return new Alimentos("Nozes Silvestres", 0.4, 3, 12, "Semente", 5);
             case 2:
                 return new Material("Galho de Árvore", "Madeira", 0.5, 3, 30);
             case 3:
@@ -74,8 +110,12 @@ public class Floresta extends Ambiente {
                 return new Remedios("Pomada de Folhas", "Fitoterápico", "Cura pequenos ferimentos e alivia irritações");
             case 5:
                 return new Armas("Faca de Caça", 1.0, 4, "Curta", 20, 2);
+            case 6:
+                return new Alimentos("Bagas Amargas", 0.2, 2, -10, "Fruta", 1);
+            case 7:
+                return new Alimentos("Mel Silvestre", 0.3, 5, 20, "Doce Natural", 10);
             default:
-                return null;
+            return null;
         }
     }
 

@@ -13,14 +13,18 @@ public class Sanguessuga extends Criatura {
     public void atacar(Personagem jogador) {
         jogador.diminuirVida(6);
         System.out.println("A Sanguessuga se prende à sua pele e começa a sugar seu sangue!");
-        System.out.println("Você perdeu 6 de vida.\n");
+        System.out.println("Você perdeu 6 de vida.");
+    }
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirVida(3);
+        System.out.println("A Sanguessuga se prende à sua pele e começa a sugar seu sangue!");
     }
 
     @Override
     public void acaoEspecial(Personagem jogador) {
         jogador.diminuirVida(4);
         System.out.println("A ferida causada pela Sanguessuga infecciona, causando dor intensa.");
-        System.out.println("Você perdeu 4 de vida.\n");
+        System.out.println("Você perdeu 4 de vida.");
     }
 
     @Override

@@ -26,7 +26,6 @@ public class TempestadeMontanha extends EventoClimatico {
         System.out.println("Tipo: Tempestade elétrica");
         System.out.println("Duração: 3 turnos");
         System.out.println("Efeito: Dificulta locomoção e ações físicas");
-        System.out.println("Impacto: " + getImpacto());
 
         jogador.setEnergia(jogador.getEnergia() - 10);
         System.out.println("O personagem perdeu 10 de energia.");

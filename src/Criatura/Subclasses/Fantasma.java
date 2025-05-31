@@ -12,14 +12,18 @@ public class Fantasma extends Criatura {
 
     public void atacar(Personagem alvo) {
         alvo.diminuirSanidade(12);
-        System.out.println("O fantasma emite um grito agudo que ecoa em sua mente!");
-        System.out.println("Você perdeu 12 de sanidade.\n");
+        System.out.println("Um grito fantasmagórico ecoa... uma presença invisível invade sua mente.");
+        System.out.println("Você perdeu 12 de sanidade.");
+    }
+    public void ataqueReduzido(Personagem jogador) {
+        jogador.diminuirSanidade(5);
+        System.out.println("Um grito fantasmagórico ecoa... uma presença invisível invade sua mente.");
     }
 
     public void acaoEspecial(Personagem jogador) {
         System.out.println("O Fantasma atravessa seu corpo, drenando sua energia vital.");
         jogador.diminuirVida(10);
-        System.out.println("Você perdeu 10 de vida.\n");
+        System.out.println("Você perdeu 10 de vida.");
     }
 
     public void fugir() {

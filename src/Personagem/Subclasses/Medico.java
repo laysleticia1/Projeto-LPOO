@@ -31,7 +31,7 @@ public class Medico extends Personagem implements Curavel {
         }
 
         if (remedio != null) {
-            inventario.usarItem(remedio.getNome());
+            inventario.usarItem(remedio.getNome(),this);
             this.restaurarVida(25);
             System.out.println("Você usou um " + remedio.getNome() + " e recuperou 25 de vida.");
         } else {
@@ -54,8 +54,8 @@ public class Medico extends Personagem implements Curavel {
         }
 
         if (agua != null && alimento != null) {
-            inventario.usarItem("Água");
-            inventario.usarItem("Frutas Silvestres");
+            inventario.usarItem("Água", this);
+            inventario.usarItem("Frutas Silvestres", this);
 
             Remedios remedio = new Remedios("Remédio Natural", "Fitoterápico", "Alivia dores leves e melhora a sanidade");
             try {
