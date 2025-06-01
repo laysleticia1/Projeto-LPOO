@@ -24,9 +24,8 @@ public class EnchenteRapida extends EventoClimatico {
         System.out.println("Evento: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Tipo de clima: Enchente");
-        System.out.println("Duração: " + getDuracao() + " turnos");
+        System.out.println("Duração: " + getDuracao() + " turno/s");
         System.out.println("Efeito: " + getEfeitoNoAmbiente());
-        System.out.println("Impacto: " + getImpacto());
 
         jogador.setEnergia(jogador.getEnergia() - 7);
         jogador.setVelocidade(jogador.getVelocidade() - 2);

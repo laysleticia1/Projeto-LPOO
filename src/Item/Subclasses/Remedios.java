@@ -5,12 +5,12 @@ import Personagem.Superclasse.Personagem;
 import Interface.Usavel;
 import Interface.Curavel;
 
-public class Remedios extends Item implements Usavel, Curavel{
+public class Remedios extends Item implements Curavel, Usavel{
     private String tipo;
     private String efeito;
 
-    public Remedios(String tipo, String efeito) {
-        super("Remédio",0.5, 1);
+    public Remedios(String nome, String tipo, String efeito) {
+        super(nome,0.5, 1);
         this.tipo = tipo;
         this.efeito = efeito;
     }
@@ -32,6 +32,16 @@ public class Remedios extends Item implements Usavel, Curavel{
                 ". Uma sensação de alívio percorre seu corpo, restaurando " +
                 cura + " pontos de vida.");
     }
+
+    public void exibirDetalhes() {
+        System.out.println("Informações do remédio:");
+        System.out.println("• Nome: " + getNome());
+        System.out.println("• Tipo: " + tipo);
+        System.out.println("• Efeito: " + efeito);
+    }
+
+
+    // Getters and Setters
     public String getTipo() {
         return tipo;
     }
