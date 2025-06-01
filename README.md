@@ -31,5 +31,5 @@ Bem-vindo ao **Última Fronteira**, um jogo de sobrevivência baseado em texto e
 `git clone https://github.com/seu-usuario/UltimaFronteira.git`
 
 2. Abra o projeto em uma IDE como IntelliJ ou Eclipse
-3. Execute o Main.java
+3. Execute o main.Main.java
 
