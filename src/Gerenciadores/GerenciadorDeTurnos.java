@@ -40,7 +40,7 @@ public class GerenciadorDeTurnos {
 
             // Verifica subida de nível
             if (turnoAtual > turnosParaProximoNivel) {
-                subirNivel();
+                subirNivel(personagem);
             }
 
             // ✅ Verifica vitória
@@ -75,10 +75,11 @@ public class GerenciadorDeTurnos {
         eventosAtivos.removeAll(eventosParaRemover);
     }
 
-    private void subirNivel() {
+    private void subirNivel(Personagem personagem) {
         nivelAtual++;
         turnosParaProximoNivel += nivelAtual * 5; // Ex: 5, 10, 15...
         System.out.println("\n🎉 PARABÉNS! Você subiu para o nível " + nivelAtual + "!");
+        personagem.setNivel(nivelAtual);
     }
 
     private boolean verificarVitoria(Personagem jogador) {

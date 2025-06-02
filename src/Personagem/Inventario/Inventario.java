@@ -1,4 +1,3 @@
-
 package Personagem.Inventario;
 
 import Item.Superclasse.Item;
@@ -33,7 +32,7 @@ public class Inventario {
 
         quantidadeAtual++;
         pesoTotal += item.getPeso();
-        System.out.println("✅ Item adicionado ao inventário: " + item.getNome());
+        // Mensagem de item adicionado agora é responsabilidade de quem chama este método.
         return true;
     }
 

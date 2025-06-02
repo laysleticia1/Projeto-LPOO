@@ -11,9 +11,9 @@ public class Item {
 
     // Construtor
     public Item (String nome, double peso, int durabilidade) {
-    this.nome = nome;
-    this.peso = peso;
-    this.durabilidade = durabilidade;
+        this.nome = nome;
+        this.peso = peso;
+        this.durabilidade = durabilidade;
     }
 
     public void usar() {

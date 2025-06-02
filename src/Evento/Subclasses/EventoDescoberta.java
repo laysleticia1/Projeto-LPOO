@@ -26,7 +26,6 @@ public class EventoDescoberta extends Evento {
         System.out.println(getDescricao());
         System.out.println("Tipo de Descoberta: " + tipoDeDescoberta);
         System.out.println("Recursos: " + recursosEncontrados);
-        System.out.println("Condição Especial: " + condicaoEspecial);
 
         if (getImpacto().equalsIgnoreCase("inventario")) {
             Item itemDescoberto = null;

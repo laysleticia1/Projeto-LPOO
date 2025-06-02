@@ -104,7 +104,7 @@ public class SobreviventeNato extends Personagem {
         System.out.print("Deseja adicionar ao inventário? (s/n): ");
         String resposta = scanner.nextLine().trim().toLowerCase();
 
-        if (resposta.equals("s")) {
+        if (resposta.equalsIgnoreCase("s") || resposta.equalsIgnoreCase("sim")) {
             this.adicionarAoInventario(carneObtida);
             System.out.println(carneObtida.getNome() + " adicionada ao inventário com sucesso.");
         } else {
