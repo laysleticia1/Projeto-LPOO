@@ -2,6 +2,7 @@ package UI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder; // Import para TitledBorder
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,10 +31,11 @@ public class TelaClasse extends JPanel {
     private static final String MEDICO = "Médico";
     private static final String SOBREVIVENTE_NATO = "Sobrevivente Nato";
 
+    // Cores e Fontes (ajuste conforme sua arte)
     private Color corTextoDescricao = new Color(175, 144, 40);
     private Font fonteDescricao = new Font("Serif", Font.ITALIC, 16);
-    private Font fonteBotoesNavegacao = new Font("SansSerif", Font.BOLD, 18); // Aumentei um pouco para o "Criar Personagem"
-    private Color corTextoBotoesNav = new Color(230, 220, 200); // Usaremos esta para o texto do botão
+    private Font fonteBotoesNavegacao = new Font("SansSerif", Font.BOLD, 18);
+    private Color corTextoBotoesNav = new Color(230, 220, 200);
 
     public TelaClasse(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
         this.controlador = ctrl;
@@ -43,7 +45,8 @@ public class TelaClasse extends JPanel {
             System.err.println("TelaClasse ERRO: Controlador é null!");
         }
 
-        String nomeArquivoBackground = "escolhaClasse.png"; // << SEU ARQUIVO DE IMAGEM DE FUNDO
+        // << NOME DO SEU ARQUIVO DE ARTE DE FUNDO PARA ESTA TELA >>
+        String nomeArquivoBackground = "escolhaClasse.png"; // ou .png, conforme seu arquivo
 
         try {
             URL imgUrl = getClass().getResource("/Resources/" + nomeArquivoBackground);
@@ -59,17 +62,20 @@ public class TelaClasse extends JPanel {
         }
 
         setPreferredSize(new Dimension(800, 600));
-        setLayout(null);
+        setLayout(null); // Layout nulo para posicionamento manual
 
+        // Populando descrições
         descricoesClasses.put(RASTREADOR, "Mestre em seguir trilhas e identificar perigos na natureza. Encontra recursos com mais facilidade.");
         descricoesClasses.put(MECANICO, "Engenhoso com ferramentas e sucata. Consegue consertar e criar dispositivos úteis para sobrevivência.");
         descricoesClasses.put(MEDICO, "Especialista em primeiros socorros e tratamento de ferimentos. Consegue usar ervas para criar remédios.");
         descricoesClasses.put(SOBREVIVENTE_NATO, "Resistente e adaptável. Possui habilidades instintivas para montar abrigos e fabricar itens básicos.");
         descricoesClasses.put("", "Selecione uma classe ao lado para ver sua descrição detalhada.");
 
+
         // --- Botões Transparentes para as Classes ---
         // << VOCÊ PRECISA MEDIR E AJUSTAR X, Y, LARGURA, ALTURA PARA CADA BOTÃO DE CLASSE >>
-        criarBotaoClasse(RASTREADOR, 60, 160, 170, 170);
+        // Os valores abaixo são exemplos e precisam ser ajustados para sua arte "escolhaClasse.jpg"
+        criarBotaoClasse(RASTREADOR, 60, 160, 170, 170);  // (Nome, X, Y, Largura, Altura)
         criarBotaoClasse(MECANICO, 240, 160, 170, 170);
         criarBotaoClasse(MEDICO, 60, 340, 170, 170);
         criarBotaoClasse(SOBREVIVENTE_NATO, 240, 340, 170, 170);
@@ -82,45 +88,45 @@ public class TelaClasse extends JPanel {
         areaDescricaoClasse.setLineWrap(true);
         areaDescricaoClasse.setEditable(false);
         areaDescricaoClasse.setOpaque(false);
-        areaDescricaoClasse.setMargin(new Insets(15, 20, 15, 20));
+        areaDescricaoClasse.setMargin(new Insets(15, 20, 15, 20)); // Margens internas
 
         scrollDescricao = new JScrollPane(areaDescricaoClasse);
         scrollDescricao.setOpaque(false);
         scrollDescricao.getViewport().setOpaque(false);
-        scrollDescricao.setBounds(455, 190, 285, 280); // << AJUSTE AQUI: Posição e Tamanho
-        scrollDescricao.setBorder(BorderFactory.createEmptyBorder());
+        // << AJUSTE AQUI >>: Posição (X,Y) e Tamanho (Largura, Altura) da área de descrição
+        scrollDescricao.setBounds(455, 190, 285, 280);
+        scrollDescricao.setBorder(BorderFactory.createEmptyBorder()); // Ou uma borda estilizada
         add(scrollDescricao);
 
+
         // --- Botões de Navegação (Criar Personagem e Voltar) ---
+        // Usar getPreferredSize() para obter as dimensões do painel para cálculo
         int painelPrefWidth = getPreferredSize().width;
         int painelPrefHeight = getPreferredSize().height;
 
         int alturaBotaoNav = 40;
-        int larguraBotaoNavCriar = 240; // Um pouco mais largo para "Criar Personagem"
-        int larguraBotaoNavVoltar = 120; // Menor para "Voltar"
+        int larguraBotaoNavCriar = 240;
+        int larguraBotaoNavVoltar = 120;
         int margemInferiorNav = 25;
         int yBotoesNav = painelPrefHeight - alturaBotaoNav - margemInferiorNav;
         int margemLateralNav = 30;
 
-        // Botão Criar Personagem (AGORA SÓ TEXTO)
+        // Botão Criar Personagem (estilizado para ser apenas texto)
         botaoCriarPersonagem = new JButton("Criar Personagem");
         botaoCriarPersonagem.setFont(fonteBotoesNavegacao);
-        botaoCriarPersonagem.setForeground(corTextoBotoesNav); // Cor do texto
-        botaoCriarPersonagem.setOpaque(false);                 // Não pinta o fundo
-        botaoCriarPersonagem.setContentAreaFilled(false);      // Não preenche a área de conteúdo
-        botaoCriarPersonagem.setBorderPainted(false);          // Sem borda
+        botaoCriarPersonagem.setForeground(corTextoBotoesNav);
+        botaoCriarPersonagem.setOpaque(false);
+        botaoCriarPersonagem.setContentAreaFilled(false);
+        botaoCriarPersonagem.setBorderPainted(false);
         botaoCriarPersonagem.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // Adiciona um padding para o texto não ficar colado se houver alguma interação visual de clique
         botaoCriarPersonagem.setBorder(new EmptyBorder(5,10,5,10));
-
-
         int xBotaoCriar = painelPrefWidth - larguraBotaoNavCriar - margemLateralNav;
         botaoCriarPersonagem.setBounds(xBotaoCriar, yBotoesNav, larguraBotaoNavCriar, alturaBotaoNav);
         add(botaoCriarPersonagem);
 
-        // Botão Voltar (Mantém estilo sutil)
+        // Botão Voltar (estilo sutil)
         botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 16)); // Fonte um pouco diferente para diferenciar
+        botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 16));
         botaoVoltar.setOpaque(false);
         botaoVoltar.setContentAreaFilled(false);
         botaoVoltar.setBorderPainted(false);
@@ -152,18 +158,53 @@ public class TelaClasse extends JPanel {
                 boolean sucesso = meuJogo.iniciarNovaPartida(nomePersonagem, classeSelecionadaAtual);
                 if (sucesso) {
                     String textoIntro = meuJogo.getTextoIntroducao();
+
+                    // --- JOptionPane Estilizado ---
                     JTextArea textAreaIntro = new JTextArea(textoIntro);
                     textAreaIntro.setWrapStyleWord(true);
                     textAreaIntro.setLineWrap(true);
                     textAreaIntro.setEditable(false);
-                    textAreaIntro.setOpaque(false);
-                    textAreaIntro.setBackground(new Color(0,0,0,0));
-                    JScrollPane scrollPaneIntro = new JScrollPane(textAreaIntro);
-                    scrollPaneIntro.setPreferredSize(new Dimension(500, 300));
-                    scrollPaneIntro.setBorder(null);
-                    JOptionPane.showMessageDialog(TelaClasse.this, scrollPaneIntro, "Introdução", JOptionPane.INFORMATION_MESSAGE, null);
+                    textAreaIntro.setFont(new Font("Serif", Font.ITALIC, 16)); // Fonte estilizada
+                    textAreaIntro.setForeground(new Color(80, 50, 30));      // Cor do texto (ex: marrom escuro)
+                    textAreaIntro.setMargin(new Insets(10, 15, 10, 15));    // Margens internas
+                    textAreaIntro.setOpaque(true); // Para a cor de fundo do JTextArea ser visível
+                    textAreaIntro.setBackground(new Color(245, 240, 220)); // Ex: Fundo bege claro para o texto
 
-                    controlador.irParaPainelJogo();
+                    JScrollPane scrollPaneIntro = new JScrollPane(textAreaIntro);
+                    scrollPaneIntro.setPreferredSize(new Dimension(550, 350)); // Tamanho do pop-up
+
+                    // Estilizando o Título da Borda do JScrollPane
+                    TitledBorder titledBorder = BorderFactory.createTitledBorder("Introdução da Aventura");
+                    titledBorder.setTitleFont(new Font("Serif", Font.BOLD, 18));
+                    titledBorder.setTitleColor(new Color(70, 40, 20));
+                    // Se quiser uma linha de borda diferente para o TitledBorder:
+                    // titledBorder.setBorder(BorderFactory.createLineBorder(new Color(150, 120, 90)));
+                    scrollPaneIntro.setBorder(titledBorder);
+
+                    // Esconder barras de rolagem do JScrollPane da introdução
+                    scrollPaneIntro.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED); // Ou NEVER
+                    scrollPaneIntro.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+                    // Garante que o texto comece do topo
+                    SwingUtilities.invokeLater(() -> {
+                        textAreaIntro.setCaretPosition(0);
+                        if (scrollPaneIntro.getVerticalScrollBar() != null) {
+                            scrollPaneIntro.getVerticalScrollBar().setValue(0);
+                        }
+                    });
+
+                    // Exemplo de como customizar o botão OK (opcional, requer cuidado com UIManager)
+                    // Object[] options = {"OK"};
+                    // UIManager.put("Button.font", new Font("SansSerif", Font.BOLD, 14));
+                    // JOptionPane.showOptionDialog(TelaClasse.this, scrollPaneIntro, "Início da Jornada",
+                    //                            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    //                            null, options, options[0]);
+                    // UIManager.put("Button.font", UIManager.getLookAndFeelDefaults().getFont("Button.font")); // Restaura
+
+                    // Usando showMessageDialog padrão, que é mais simples
+                    JOptionPane.showMessageDialog(TelaClasse.this, scrollPaneIntro, "Início da Jornada", JOptionPane.INFORMATION_MESSAGE, null);
+
+                    controlador.irParaTelaNarrativa(); // Navega para a TelaNarrativa
                 } else {
                     JOptionPane.showMessageDialog(TelaClasse.this, "Ocorreu um erro ao iniciar a partida.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
@@ -199,8 +240,6 @@ public class TelaClasse extends JPanel {
                 areaDescricaoClasse.setText(descricoesClasses.getOrDefault(nomeClasse, "Descrição não disponível."));
                 areaDescricaoClasse.setCaretPosition(0);
                 System.out.println("Classe selecionada: " + nomeClasse);
-                // Aqui você pode adicionar um feedback visual para a classe selecionada,
-                // por exemplo, mudando a borda de um painel ao redor da arte da classe, etc.
             }
         });
         add(botao);
@@ -227,7 +266,7 @@ public class TelaClasse extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.WHITE);
             g.setFont(new Font("SansSerif", Font.BOLD, 16));
-            g.drawString("Imagem de fundo (escolhaClasse.png) não carregada.", 50, getHeight() / 2);
+            g.drawString("Imagem de fundo (escolhaClasse) não carregada.", 50, getHeight() / 2);
         }
     }
 }

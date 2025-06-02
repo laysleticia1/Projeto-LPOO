@@ -4,44 +4,35 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.net.URL;
-import java.awt.Graphics2D; // Adicionado para consistência, embora já usado em paintComponent
-import java.awt.RenderingHints; // Adicionado para consistência
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 public class TelaDetalhePersonagem extends JPanel {
-    private GerenciadorUI controlador;
-    private Image artePersonagemImg; // Para a arte específica do personagem selecionado
-    private Image backgroundImage;   // Para a imagem de fundo DESTA TELA
+    private GerenciadorUI controlador; // << AJUSTADO para GerenciadorUI
+    private Image artePersonagemImg;
+    private Image backgroundImage;
     private int personagemIdAtual;
 
     private JLabel nomePersonagemLabel;
     private JTextArea descricaoPersonagemArea;
-    private JLabel arteLabel;
+    private JLabel arteLabel; // Usaremos JLabel para exibir a arte do personagem
 
     private final int LARGURA_MAX_ARTE_DETALHE = 380;
     private final int ALTURA_MAX_ARTE_DETALHE = 480;
 
-    // Cores e Fontes
-    private Color corTextoBegeClaro = new Color(220, 210, 200); // Para textos gerais
-    private Color corNomePersonagem = new Color(230, 200, 180); // Destaque para o nome
+    private Color corTextoBegeClaro = new Color(220, 210, 200);
+    private Color corNomePersonagem = new Color(230, 200, 180);
     private Font fonteBotaoRodape = new Font("SansSerif", Font.BOLD, 16);
 
-
-    public TelaDetalhePersonagem(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
+    public TelaDetalhePersonagem(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) { // << AJUSTADO para GerenciadorUI
         this.controlador = ctrl;
 
-        // << COLOQUE AQUI O NOME DO SEU ARQUIVO DE IMAGEM DE FUNDO PARA ESTA TELA >>
-        String nomeArquivoBgTelaDetalhe = "backDescricao.png"; // Exemplo
-
+        String nomeArquivoBgTelaDetalhe = "backDescricao.png"; // << SEU ARQUIVO DE IMAGEM DE FUNDO
         try {
             URL imgUrlBg = getClass().getResource("/Resources/" + nomeArquivoBgTelaDetalhe);
             if (imgUrlBg == null) imgUrlBg = getClass().getResource(nomeArquivoBgTelaDetalhe);
-
-            if (imgUrlBg != null) {
-                this.backgroundImage = new ImageIcon(imgUrlBg).getImage();
-            } else {
-                System.err.println("AVISO: Imagem de fundo da TelaDetalhePersonagem '" + nomeArquivoBgTelaDetalhe + "' não encontrada.");
-                this.backgroundImage = null; // Continuará sem imagem de fundo se não encontrar
-            }
+            if (imgUrlBg != null) this.backgroundImage = new ImageIcon(imgUrlBg).getImage();
+            else System.err.println("AVISO: Imagem de fundo da TelaDetalhePersonagem '" + nomeArquivoBgTelaDetalhe + "' não encontrada.");
         } catch (Exception e) {
             e.printStackTrace();
             this.backgroundImage = null;
@@ -49,24 +40,19 @@ public class TelaDetalhePersonagem extends JPanel {
 
         setLayout(new BorderLayout(15, 15));
         setPreferredSize(new Dimension(800, 600));
-        // A cor de fundo sólida só será visível se a imagem de fundo não carregar
         setBackground(new Color(30, 30, 30));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 15, 20)); // Ajuste de margens
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 15, 20));
 
-        // --- Painel da Arte do Personagem (Centro) ---
-        arteLabel = new JLabel();
+        arteLabel = new JLabel(); // JLabel para a arte específica do personagem
         arteLabel.setHorizontalAlignment(SwingConstants.CENTER);
         arteLabel.setVerticalAlignment(SwingConstants.CENTER);
-        // É importante que o arteLabel seja transparente se a arte do personagem tiver fundo transparente
-        // e você quiser que o backgroundImage da tela apareça. JLabels são opacos por padrão.
-        // Se a arte do personagem preencher todo o espaço, não precisa se preocupar.
-        // arteLabel.setOpaque(false); // Descomente se necessário
+        arteLabel.setPreferredSize(new Dimension(LARGURA_MAX_ARTE_DETALHE, ALTURA_MAX_ARTE_DETALHE));
         add(arteLabel, BorderLayout.CENTER);
 
-        // --- Painel de Informações (Direita) ---
         JPanel painelDireita = new JPanel(new BorderLayout(10, 10));
-        painelDireita.setOpaque(false); // Para que o backgroundImage da tela apareça
-        painelDireita.setPreferredSize(new Dimension(340, 0)); // Largura ajustada
+        painelDireita.setOpaque(false);
+        painelDireita.setPreferredSize(new Dimension(340, 0));
+        add(painelDireita, BorderLayout.EAST);
 
         nomePersonagemLabel = new JLabel("Nome do Jogador", SwingConstants.CENTER);
         nomePersonagemLabel.setFont(new Font("Serif", Font.BOLD, 28));
@@ -86,15 +72,13 @@ public class TelaDetalhePersonagem extends JPanel {
         scrollDescricao.getViewport().setOpaque(false);
         scrollDescricao.setBorder(BorderFactory.createEmptyBorder());
         painelDireita.add(scrollDescricao, BorderLayout.CENTER);
-        add(painelDireita, BorderLayout.EAST);
 
-        // --- Painel do Rodapé para Botões de Navegação ---
         JPanel painelRodape = new JPanel(new BorderLayout());
         painelRodape.setOpaque(false);
-        painelRodape.setBorder(new EmptyBorder(15, 0, 5, 0)); // Margem acima e abaixo do rodapé
+        painelRodape.setBorder(new EmptyBorder(15, 0, 5, 0));
+        add(painelRodape, BorderLayout.SOUTH);
 
-        // Botão Voltar (Rodapé Esquerdo)
-        JButton botaoVoltar = new JButton("Voltar");
+        JButton botaoVoltar = new JButton("Escolher Outro"); // Texto pode ser "Voltar" também
         botaoVoltar.setFont(fonteBotaoRodape);
         botaoVoltar.setOpaque(false);
         botaoVoltar.setContentAreaFilled(false);
@@ -102,44 +86,33 @@ public class TelaDetalhePersonagem extends JPanel {
         botaoVoltar.setForeground(corTextoBegeClaro);
         botaoVoltar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoVoltar.setBorder(new EmptyBorder(5,10,5,10));
-        botaoVoltar.addActionListener(e -> controlador.irParaTelaPersonagem());
+        botaoVoltar.addActionListener(e -> controlador.irParaTelaPersonagem()); // Chamada correta
         JPanel painelBotaoVoltar = new JPanel(new FlowLayout(FlowLayout.LEFT, 0,0));
         painelBotaoVoltar.setOpaque(false);
         painelBotaoVoltar.add(botaoVoltar);
         painelRodape.add(painelBotaoVoltar, BorderLayout.WEST);
 
-        // Botão Confirmar Personagem (Rodapé Direito)
         JButton botaoConfirmarPersonagem = new JButton("Confirmar Personagem");
         botaoConfirmarPersonagem.setFont(fonteBotaoRodape);
-        // Estilo para o botão confirmar (pode ser diferente do voltar)
-        // botaoConfirmarPersonagem.setBackground(new Color(70, 90, 120));
-        // botaoConfirmarPersonagem.setForeground(Color.WHITE);
         botaoConfirmarPersonagem.addActionListener(e -> controlador.personagemConfirmado(personagemIdAtual));
         JPanel painelBotaoConfirmar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0,0));
         painelBotaoConfirmar.setOpaque(false);
         painelBotaoConfirmar.add(botaoConfirmarPersonagem);
         painelRodape.add(painelBotaoConfirmar, BorderLayout.EAST);
-
-        add(painelRodape, BorderLayout.SOUTH);
     }
 
     public void mostrarDetalhes(int personagemId) {
         this.personagemIdAtual = personagemId;
 
-        // << VOCÊ PRECISA PREENCHER ESTES ARRAYS COM OS DADOS REAIS >>
+        // << PREENCHA COM SEUS DADOS REAIS >>
         String[] artesEspecificasFiles = {
-                "p1.png", "p2.png", "p3.png",
-                "p4.png", "p5.png", "p6.png"
+                "p1.png", "p2.png", "p3.png", "p4.png", "p5.png", "p6.png" // Nomes dos seus arquivos de arte
         };
-        String[] nomesArquetipos = {
-                "Guerreiro das Montanhas", "Feiticeira da Floresta", "Rastreador Silencioso",
-                "Engenheira de Sucata", "Sábio do Lago", "Exploradora das Ruínas"
+        String[] nomesArquetipos = { // Nomes dos TIPOS de personagem
+                "Arquétipo 1", "Arquétipo 2", "Arquétipo 3", "Arquétipo 4", "Arquétipo 5", "Arquétipo 6"
         };
         String[] descricoesArquetipos = {
-                "Vindo das cordilheiras implacáveis...", "Envolta nos mistérios da floresta...",
-                "Movendo-se como uma sombra...", "Com uma mente brilhante...",
-                "Das profundezas tranquilas...", "Destemida e curiosa..."
-                // << COLOQUE AS DESCRIÇÕES COMPLETAS AQUI >>
+                "Descrição do Arquétipo 1...", "Descrição do Arquétipo 2...", // etc.
         };
 
         String nomeDoJogadorEscolhido = controlador.getNomePersonagemAtual();
@@ -167,6 +140,9 @@ public class TelaDetalhePersonagem extends JPanel {
                         newHeight = ALTURA_MAX_ARTE_DETALHE;
                         newWidth = (newHeight * originalWidth) / originalHeight;
                     }
+
+                    if (newWidth <= 0) newWidth = 1; // Evita erro
+                    if (newHeight <= 0) newHeight = 1; // Evita erro
 
                     artePersonagemImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
                     arteLabel.setIcon(new ImageIcon(artePersonagemImg));
@@ -202,15 +178,11 @@ public class TelaDetalhePersonagem extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Desenha a imagem de fundo da TELA
         if (this.backgroundImage != null) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             g2d.drawImage(this.backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
             g2d.dispose();
-        } else {
-            // Fallback se a imagem de fundo da TELA não carregar
-            // A cor de fundo definida no setBackground() do construtor será usada.
         }
     }
 }

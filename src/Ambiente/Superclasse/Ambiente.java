@@ -1,14 +1,18 @@
 package Ambiente.Superclasse;
 
-import java.util.Collections;
 import Personagem.Superclasse.Personagem;
 import java.util.ArrayList;
+import java.util.Collections;
 import Item.Superclasse.*;
-import Item.Subclasses.*;
 import Interface.Exploravel;
 import Interface.Coletavel;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import java.net.URL;
+import Item.Subclasses.*;
 import Evento.Superclasse.*;
 import Evento.Subclasses.*;
+
 
 public abstract class Ambiente implements Exploravel, Coletavel {
     private String nome;
@@ -18,14 +22,22 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     private double probabilidadeDeEventos;
     private String condicaoClimatica;
 
-    //Construtor
-    public Ambiente(String nome, String descricao, int dificuldadeExploracao, ArrayList<String> recursosDisponiveis, double probabilidadeEventos, String condicaoClimatica) {
+
+    protected String caminhoImagemAmbiente;
+    protected transient Image imagemAmbienteCarregada;
+
+
+    public Ambiente(String nome, String descricao, int dificuldadeExploracao,
+                    ArrayList<String> recursosDisponiveis, double probabilidadeEventos,
+                    String condicaoClimatica, String caminhoImagem) { // Novo parâmetro
         this.nome = nome;
         this.descricao = descricao;
         this.dificuldadeExploracao = dificuldadeExploracao;
         this.recursosDisponiveis = recursosDisponiveis;
-        this.probabilidadeDeEventos = probabilidadeDeEventos;
+        this.probabilidadeDeEventos = probabilidadeEventos;
         this.condicaoClimatica = condicaoClimatica;
+        this.caminhoImagemAmbiente = caminhoImagem;
+        this.imagemAmbienteCarregada = null;
     }
 
     public abstract void explorar(Personagem jogador);
@@ -37,15 +49,36 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     }
 
     public String coletarRecursoAleatorio() {
-        if (recursosDisponiveis.isEmpty()) return "nada";
+        if (recursosDisponiveis == null || recursosDisponiveis.isEmpty()) return "nada por perto"; // Checagem de nulo adicionada
 
-        Collections.shuffle(recursosDisponiveis); // embaralha a lista
-        return recursosDisponiveis.get(0);        // pega o primeiro após embaralhar
+        Collections.shuffle(recursosDisponiveis);
+        return recursosDisponiveis.get(0);
     }
 
     public abstract Item coletarItemAleatorio();
 
-    // Getter e Setters
+    // --- NOVO MÉTODO PARA OBTER A IMAGEM DO AMBIENTE ---
+    public Image getImagemAmbiente() {
+        if (imagemAmbienteCarregada == null && caminhoImagemAmbiente != null && !caminhoImagemAmbiente.isEmpty()) {
+            try {
+                URL imgUrl = getClass().getResource(caminhoImagemAmbiente);
+
+                if (imgUrl != null) {
+                    imagemAmbienteCarregada = new ImageIcon(imgUrl).getImage();
+                    System.out.println("Imagem do ambiente '" + nome + "' carregada de: " + imgUrl.getPath());
+                } else {
+                    System.err.println("ERRO ao carregar imagem do ambiente '" + nome + "': Arquivo não encontrado em " + caminhoImagemAmbiente);
+
+                }
+            } catch (Exception e) {
+                System.err.println("Exceção ao carregar imagem do ambiente '" + nome + "' de " + caminhoImagemAmbiente);
+                e.printStackTrace();
+                imagemAmbienteCarregada = null;
+            }
+        }
+        return imagemAmbienteCarregada;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -93,9 +126,8 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     public void setCondicaoClimatica(String condicao) {
         this.condicaoClimatica = condicao;
     }
+
     public boolean estaAcessivel(){
-        return this.dificuldadeExploracao <= 70;
+        return this.dificuldadeExploracao <= 70; // Exemplo, pode ser mais complexo
     }
 }
-
-
