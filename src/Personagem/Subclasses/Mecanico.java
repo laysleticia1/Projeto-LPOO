@@ -15,7 +15,7 @@ public class Mecanico extends Personagem {
     }
 
     public void consertarEquipamento() {
-        List<Item> itens = getInventario().getItens();
+        List<Item> itens = getInventario().getTodosItens();
 
         Item ferramentaOuMaterial = null;
 
@@ -59,7 +59,7 @@ public class Mecanico extends Personagem {
         Ferramentas ferramenta = null;
         Armas arma = null;
 
-        for (Item item : inventario.getArrayInventario()) {
+        for (Item item : inventario.getTodosItens()) {
             if (item instanceof Ferramentas && ferramenta == null) {
                 ferramenta = (Ferramentas) item;
             } else if (item instanceof Armas && arma == null) {
