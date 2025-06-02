@@ -553,4 +553,9 @@ public class Jogo {
     public Personagem getJogador() {
         return jogador;
     }
+
+    // Dentro da classe Jogo.java
+    public GerenciadorDeAmbientes getGerenciadorDeAmbientes() {
+        return this.gerenciador;
+    }
 }

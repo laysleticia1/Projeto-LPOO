@@ -38,7 +38,7 @@ public class GerenciadorDeAmbientes {
         }
     }
 
-    //Método para a lista de ambientes disponíveis
+    //Método para a lista de Resources.ambientes disponíveis
     public ArrayList<Ambiente> getAmbientes() {
         return ambientesDisponiveis;
     }

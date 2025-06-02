@@ -1,35 +1,35 @@
 package Ambiente.Subclasses;
 
 import Ambiente.Superclasse.Ambiente;
+import Personagem.Superclasse.Personagem;
+import Item.Superclasse.Item;
+import Item.Subclasses.*;
+import Gerenciadores.GerenciadorDeEventos;
 import java.util.ArrayList;
 import java.util.Arrays;
-import Evento.Superclasse.*;
-import Evento.Subclasses.*;
-import Personagem.Superclasse.*;
-import Personagem.Subclasses.*;
-import Item.Superclasse.*;
-import Item.Subclasses.*;
-import Gerenciadores.*;
 import java.util.Scanner;
-import java.util.List;
-import java.util.Random;
 
 public class Caverna extends Ambiente {
-    private String luminosidade;
-    private String criaturas;
-    private String hidratacao;
+    private String luminosidadeAmbiente;
+    private String tipoDeCriaturas;
+    private String fonteDeHidratacao;
 
-    //Construtor
     public Caverna() {
-        super("Caverna", "Local subterrâneo, escuro e silencioso. Túneis estreitos e paredes úmidas escondem rochas valiosas, minérios raros, mas também perigos ocultos. Um ambiente hostil, mas promissor.", 7, new ArrayList<>(Arrays.asList("Rochas e minérios raros")), 0.65, "Úmido e escuro");
-        this.luminosidade = "Pouca luz";
-        this.criaturas = "Presença de criaturas desconhecidas...";
-        this.hidratacao = "Água de gotejamento";
-
+        super("Caverna Escura",
+                "Local subterrâneo, escuro e silencioso. Túneis estreitos e paredes úmidas escondem rochas valiosas, minérios raros, mas também perigos ocultos.",
+                7,
+                new ArrayList<>(Arrays.asList("Minério de Ferro", "Cristais", "Fungos Luminosos")),
+                0.65,
+                "Úmido, Frio e Escuro",
+                "/Resources/Ambientes/caverna.png");
+        this.luminosidadeAmbiente = "Penumbra, requer fonte de luz para exploração profunda.";
+        this.tipoDeCriaturas = "Morcegos, aranhas gigantes e criaturas adaptadas à escuridão.";
+        this.fonteDeHidratacao = "Gotejamento de água das estalactites, pureza duvidosa.";
     }
 
+    @Override
     public void explorar(Personagem jogador) {
-        System.out.println("Você adentra a escuridão úmida de uma caverna profunda...");
+        System.out.println("\nVocê adentra a escuridão úmida da caverna...");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -70,7 +70,8 @@ public class Caverna extends Ambiente {
             } else {
                 System.out.println("- Peso: " + recurso.getPeso());
                 System.out.println("- Durabilidade: " + recurso.getDurabilidade());
-            }            System.out.print("Deseja adicionar este item ao seu inventário? (s/n): ");
+            }
+            System.out.print("Deseja adicionar este item ao seu inventário? (s/n): ");
             Scanner sc = new Scanner(System.in);
             String resposta = sc.nextLine().trim().toLowerCase();
             if (resposta.equals("s") || resposta.equals("sim")) {
@@ -83,38 +84,47 @@ public class Caverna extends Ambiente {
                 System.out.println("Você deixou o item para trás.");
             }
         } else {
-            System.out.println("\nA caverna não revelou nada desta vez.");
+            System.out.println("\nA caverna não revelou segredos desta vez.");
         }
 
-        GerenciadorDeEventos gerenciador = new GerenciadorDeEventos();
-        gerenciador.aplicarEventoAleatorioPorAmbiente(jogador);
+        GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
     }
 
     @Override
     public Item coletarItemAleatorio() {
         double chanceEncontrar = Math.random();
-        if (chanceEncontrar < 0.5) return null; // 50% de chance de não encontrar nada
+        if (chanceEncontrar < 0.5) return null;
 
         int opcao = (int) (Math.random() * 9);
         switch (opcao) {
             case 0:
-                return new Ferramentas("Lanterna Improvisada", 1.5, 3, 30);
+                return new Ferramentas("Tocha Simples", 1.5, 3, 30);
             case 1:
                 return new Material("Cristal de Caverna", "Mineral", 0.8, 2, 90);
             case 2:
-                return new Agua("Água do gotejamento de Rocha", 0.4, 1, "Duvidosa", 0.5, 0.7);
+                return new Agua("Água de Gotejamento", 0.4, 1, "Duvidosa", 0.5, 0.7);
             case 3:
-                return new Armas("Picareta Afiada", 2.0, 4, "Pesada", 25, 1);
+                return new Armas("Picareta Enferrujada", 2.0, 2, "Pesada", 20, 1); // Dano ligeiramente menor
+            case 4: // Antiga PedrasPreciosas, agora Material
+                return new Material("Pequeno Cristal Brilhante", "Gema", 0.1, 1, 10);
             case 5:
-                return new Alimentos("Cogumelo Venenoso", 0.3, 1, -25, "Fungo", 1);
+                return new Alimentos("Cogumelo Sombrio", 0.3, 1, -15, "Fungo", 1); // Efeito negativo
             case 6:
-                return new Alimentos("Musgo Nutritivo", 0.2, 1, 6, "Vegetal", 2);
+                return new Alimentos("Musgo de Parede", 0.2, 1, 5, "Vegetal", 2);
             case 7:
-                return new Alimentos("Insetos de Caverna", 0.1, 3, 14, "Inseto", 7);
+                return new Alimentos("Larvas Translúcidas", 0.1, 3, 12, "Inseto", 4);
             case 8:
-                return new Material("Sucata", "Metal Enferrujado", 1.0, 3, 40);
+                return new Material("Sucata Variada", "Metal Enferrujado", 1.0, 3, 40);
             default:
-            return null;
+                return null;
         }
     }
+
+    public String getLuminosidadeAmbiente() { return luminosidadeAmbiente; }
+    public void setLuminosidadeAmbiente(String luminosidadeAmbiente) { this.luminosidadeAmbiente = luminosidadeAmbiente; }
+    public String getTipoDeCriaturas() { return tipoDeCriaturas; }
+    public void setTipoDeCriaturas(String tipoDeCriaturas) { this.tipoDeCriaturas = tipoDeCriaturas; }
+    public String getFonteDeHidratacao() { return fonteDeHidratacao; }
+    public void setFonteDeHidratacao(String fonteDeHidratacao) { this.fonteDeHidratacao = fonteDeHidratacao; }
 }

@@ -42,7 +42,7 @@ public class TelaPersonagem extends JPanel {
         setPreferredSize(new Dimension(800, 600)); // Tamanho do painel
 
         // --- Título "SELECIONE SEU PERSONAGEM" ---
-        // Este título já está na sua arte "Personagens.jpg", então não precisamos de um JLabel para ele.
+        // Este título já está na sua arte "Personagens.png", então não precisamos de um JLabel para ele.
 
         // --- Botões Transparentes para os Personagens ---
         // Os valores abaixo são ESTIMATIVAS. Você DEVE ajustá-los baseados na sua arte.
