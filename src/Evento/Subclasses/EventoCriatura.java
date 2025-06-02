@@ -39,13 +39,13 @@ public class EventoCriatura extends Evento {
         System.out.println("3 - Lança um último olhar de desespero e corre com tudo que resta em direção à saída");
         System.out.println("4 - Permanecer parado, observando a criatura... talvez entenda seu padrão de ataque");
 
-        System.out.print("\n🗡Sua escolha: ");
+        System.out.print("\nSua escolha: ");
         int escolha = scanner.nextInt();
         scanner.nextLine();
 
         switch (escolha) {
             case 1:
-                System.out.println("\n🗡Com sangue nos olhos, você revida com um golpe instintivo!");
+                System.out.println("\nCom sangue nos olhos, você revida com um golpe instintivo!");
                 criatura.fugir();
                 break;
 
