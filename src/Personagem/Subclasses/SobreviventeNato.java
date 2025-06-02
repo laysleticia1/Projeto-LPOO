@@ -45,7 +45,7 @@ public class SobreviventeNato extends Personagem {
 
         // Verifica se tem "Sucata"
         Item sucata = null;
-        for (Item item : inventario.getArrayInventario()) {
+        for (Item item : inventario.getTodosItens()) {
             if (item.getNome().equalsIgnoreCase("Sucata")) {
                 sucata = item;
                 break;

@@ -1,98 +1,79 @@
+
 package Personagem.Inventario;
 
-import java.util.ArrayList;
-
-import Excecoes.InventarioCheioException;
 import Item.Superclasse.Item;
-import java.util.Random;
-import Personagem.Superclasse.*;
-import Personagem.Subclasses.*;
-import Item.Superclasse.*;
-import Item.Subclasses.*;
-import java.util.List;
+import Item.Subclasses.Alimentos;
+import Item.Subclasses.Agua;
+import Item.Subclasses.Remedios;
+import Personagem.Superclasse.Personagem;
+import java.util.*;
+import Excecoes.InventarioCheioException;
 
 public class Inventario {
-    private ArrayList<Item> listaDeItens;
-    private double pesoTotal;
-    private double espacoDisponivel;
-    private List<Item> itens = new ArrayList<>();
+    private final int capacidadeMaxima;
+    private int quantidadeAtual;
+    private final Map<String, List<Item>> itensPorCategoria;
+    private double pesoTotal = 0;
+    private double espacoDisponivel = 100.0; // valor fictício, pode ser ajustado
 
-    public Inventario() {
-        this.listaDeItens = new ArrayList<>();
-        this.pesoTotal = 0;
-        this.espacoDisponivel = 15; // capacidade máxima
+    public Inventario(int capacidadeMaxima) {
+        this.capacidadeMaxima = capacidadeMaxima;
+        this.quantidadeAtual = 0;
+        this.itensPorCategoria = new TreeMap<>();
     }
 
-    public void adicionarItem(Item item) throws InventarioCheioException {
-        if (pesoTotal + item.getPeso() <= espacoDisponivel) {
-            listaDeItens.add(item);
-            pesoTotal += item.getPeso();
-            System.out.println(item.getNome() + " foi adicionado/a ao inventário.");
-        } else {
-            throw new InventarioCheioException("Não há espaço suficiente para carregar "+ item.getNome() + ".");
+    public boolean adicionarItem(Item item) throws InventarioCheioException {
+        if (quantidadeAtual >= capacidadeMaxima) {
+            throw new InventarioCheioException("❌ Inventário cheio! Não é possível adicionar o item: " + item.getNome());
         }
+
+        String categoria = item.getClass().getSimpleName();
+        itensPorCategoria.putIfAbsent(categoria, new ArrayList<>());
+        itensPorCategoria.get(categoria).add(item);
+
+        quantidadeAtual++;
+        pesoTotal += item.getPeso();
+        System.out.println("✅ Item adicionado ao inventário: " + item.getNome());
+        return true;
     }
 
-    public void removerItem(String nomeItem) {
-        Item itemParaRemover = null;
-        for (Item item : listaDeItens) {
-            if (item.getNome().equalsIgnoreCase(nomeItem)) {
-                itemParaRemover = item;
-                break;
-            }
-        }
-
-        if (itemParaRemover != null) {
-            listaDeItens.remove(itemParaRemover);
-            pesoTotal -= itemParaRemover.getPeso();
-            System.out.println(nomeItem + " foi removido do inventário.");
-        } else {
-            System.out.println("Item não encontrado.");
-        }
-    }
-
-    public void removerItem(Item item) {
-        if (listaDeItens.remove(item)) {
-            pesoTotal -= item.getPeso();
-            System.out.println(item.getNome() + " foi removido do inventário.");
-        } else {
-            System.out.println("Item não encontrado.");
-        }
-    }
-
-    public void removerItemAleatorio() {
-        if (listaDeItens.isEmpty()) {
-            System.out.println("O inventário está vazio. Nenhum item foi removido.");
+    public void listarItens() {
+        if (quantidadeAtual == 0) {
+            System.out.println("O inventário está vazio.");
             return;
         }
 
-        int indice = new Random().nextInt(listaDeItens.size());
-        Item removido = listaDeItens.remove(indice);
-        pesoTotal -= removido.getPeso();
-        System.out.println("O item \"" + removido.getNome() + "\" foi removido do inventário.");
+        System.out.println("Itens no Inventário:");
+        for (Map.Entry<String, List<Item>> entrada : itensPorCategoria.entrySet()) {
+            System.out.println("🔸 Categoria: " + entrada.getKey());
+            for (Item item : entrada.getValue()) {
+                item.exibirDetalhes();
+            }
+        }
+        System.out.printf("Peso total: %.2f / %.2f\n", pesoTotal, espacoDisponivel);
     }
-
 
     public void usarItem(String nomeItem, Personagem jogador) {
         Item itemParaUsar = null;
 
-        for (Item item : listaDeItens) {
-            if (item.getNome().equalsIgnoreCase(nomeItem)) {
-                itemParaUsar = item;
-                break;
+        for (List<Item> lista : itensPorCategoria.values()) {
+            for (Item item : lista) {
+                if (item.getNome().equalsIgnoreCase(nomeItem)) {
+                    itemParaUsar = item;
+                    break;
+                }
             }
+            if (itemParaUsar != null) break;
         }
 
         if (itemParaUsar != null) {
             System.out.println("Você usou o item: " + itemParaUsar.getNome());
 
             if (itemParaUsar instanceof Alimentos a) {
-                int valor = a.getValorNutricional();
-                jogador.restaurarFome(valor);
+                jogador.restaurarFome(a.getValorNutricional());
                 jogador.restaurarSanidade(2);
             } else if (itemParaUsar instanceof Agua ag) {
-                double hidr = ag.getVolume();
-                jogador.restaurarSede((int) hidr);
+                jogador.restaurarSede((int) ag.getVolume());
                 jogador.restaurarSanidade(1);
             } else if (itemParaUsar instanceof Remedios r) {
                 jogador.restaurarVida(10);
@@ -103,55 +84,58 @@ public class Inventario {
             System.out.println("Durabilidade restante: " + itemParaUsar.getDurabilidade());
 
             if (itemParaUsar.getDurabilidade() <= 0) {
-                listaDeItens.remove(itemParaUsar);
+                removerItem(itemParaUsar);
                 pesoTotal -= itemParaUsar.getPeso();
                 System.out.println(itemParaUsar.getNome() + " foi completamente consumido e removido do inventário.");
             }
-
         } else {
             System.out.println("Item não encontrado no inventário.");
         }
     }
 
-    public void listarItens() {
-        if (listaDeItens.isEmpty()) {
-            System.out.println("Inventário vazio.");
-        } else {
-            System.out.println("Itens no inventário:");
-            for (Item item : listaDeItens) {
-                System.out.println("- " + item.getNome() + " (peso: " + item.getPeso() + ")");
+    public boolean removerItem(Item item) {
+        String categoria = item.getClass().getSimpleName();
+        List<Item> lista = itensPorCategoria.get(categoria);
+
+        if (lista != null && lista.remove(item)) {
+            quantidadeAtual--;
+            if (lista.isEmpty()) {
+                itensPorCategoria.remove(categoria);
             }
-            System.out.printf("Peso total: %.2f / %.2f\n", pesoTotal, espacoDisponivel);
+            System.out.println("Item removido: " + item.getNome());
+            return true;
         }
+
+        System.out.println("❌ Item não encontrado no inventário.");
+        return false;
     }
 
-    // Getters e Setters
-    public double getEspacoDisponivel() {
-        return espacoDisponivel;
-    }
-
-    public void setEspacoDisponivel(double espacoDisponivel) {
-        this.espacoDisponivel = espacoDisponivel;
-    }
-
-    public double getPesoTotal() {
-        return pesoTotal;
-    }
-
-    public ArrayList<Item> getArrayInventario() {
-        return listaDeItens;
-    }
-
-    public void setArrayInventario(ArrayList<Item> novaLista) {
-        this.listaDeItens = novaLista;
-        this.pesoTotal = 0;
-        for (Item item : novaLista) {
-            this.pesoTotal += item.getPeso();
+    public boolean removerItem(String nomeItem) {
+        for (List<Item> lista : itensPorCategoria.values()) {
+            for (Item item : lista) {
+                if (item.getNome().equalsIgnoreCase(nomeItem)) {
+                    return removerItem(item);
+                }
+            }
         }
+        System.out.println("❌ Item com nome '" + nomeItem + "' não encontrado.");
+        return false;
     }
 
-    public List<Item> getItens() {
-        return itens;
+    public List<Item> getTodosItens() {
+        List<Item> todos = new ArrayList<>();
+        for (List<Item> lista : itensPorCategoria.values()) {
+            todos.addAll(lista);
+        }
+        return todos;
     }
 
+    //Getters and Setters
+    public int getQuantidadeAtual() {
+        return quantidadeAtual;
+    }
+
+    public int getCapacidadeMaxima() {
+        return capacidadeMaxima;
+    }
 }

@@ -21,6 +21,10 @@ public class Item {
         if (durabilidade < 0) durabilidade = 0;
     }
 
+    public void exibirDetalhes() {
+        System.out.println("Item genérico: " + nome);
+    }
+
     //Getters and Setters
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;

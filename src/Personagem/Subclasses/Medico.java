@@ -23,7 +23,7 @@ public class Medico extends Personagem implements Curavel {
         Inventario inventario = getInventario();
         Item remedio = null;
 
-        for (Item item : inventario.getArrayInventario()) {
+        for (Item item : inventario.getTodosItens()) {
             if (item.getNome().equalsIgnoreCase("Remédio Natural") || item.getNome().equalsIgnoreCase("Remédio")) {
                 remedio = item;
                 break;
@@ -44,7 +44,7 @@ public class Medico extends Personagem implements Curavel {
         Item agua = null;
         Item alimento = null;
 
-        for (Item item : inventario.getArrayInventario()) {
+        for (Item item : inventario.getTodosItens()) {
             if (item.getNome().equalsIgnoreCase("Água") && agua == null) {
                 agua = item;
             }

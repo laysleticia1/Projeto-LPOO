@@ -32,7 +32,7 @@ public class Personagem implements Movivel {
         sede = 100;
         energia = 100;
         sanidade = 100;
-        this.inventario = new Inventario();
+        this.inventario = new Inventario(15);
         x = 0;
         y = 0;
         velocidade = 10;
@@ -245,7 +245,7 @@ public class Personagem implements Movivel {
         try{
             inventario.adicionarItem(item);
         } catch (InventarioCheioException e) {
-            System.out.println("Inventário cheio! " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
