@@ -35,7 +35,7 @@ public class TelaMapa extends JPanel {
             this.imagemMapa = null;
         }
 
-        setLayout(new BorderLayout());
+        setLayout(null);
         setPreferredSize(new Dimension(800, 600));
 
         // Painel Central (vazio e transparente) para ocupar a região CENTER
@@ -67,18 +67,8 @@ public class TelaMapa extends JPanel {
             }
         });
 
-        // Painel para o botão, para controlar o espaçamento no rodapé
-        JPanel painelBotao = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Botão centralizado horizontalmente
-        painelBotao.setOpaque(false); // Transparente para o mapa de fundo aparecer
-
-        // << AJUSTE AQUI O EMPTYBORDER DO PAINEL DO BOTÃO >>
-        // (topo, esquerda, baixo, direita)
-        // Aumente 'topo' para mais espaço entre o mapa e o botão.
-        // Diminua 'baixo' para o botão ficar mais próximo da borda inferior da tela.
-        painelBotao.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0)); // Ex: 20px acima, 20px abaixo
-        painelBotao.add(botaoContinuarParaJogo);
-
-        add(painelBotao, BorderLayout.SOUTH);
+        botaoContinuarParaJogo.setBounds(510, 55, 300, 50); // <<🔺 Aqui você modifica X, Y, largura, altura
+        add(botaoContinuarParaJogo);
     }
 
     public void prepararTela() {
