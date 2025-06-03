@@ -26,13 +26,12 @@ public class TelaNome extends JPanel {
         campoNome = new JTextField();
         campoNome.setFont(new Font("SansSerif", Font.BOLD, 22));
         campoNome.setHorizontalAlignment(JTextField.CENTER);
-        campoNome.setOpaque(true);
-        campoNome.setBackground(new Color(0, 0, 0, 80)); // Preto com transparência
+        campoNome.setOpaque(false);
+        campoNome.setBackground(new Color(0, 0, 0, 0)); // Sem fundo
         campoNome.setForeground(Color.WHITE);
         campoNome.setCaretColor(Color.WHITE);
-        campoNome.setBorder(null);
+        campoNome.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE)); // apenas uma linha branca abaixo
         add(campoNome);
-
 
         // Botão confirmar
         botaoConfirmar = new JButton();
@@ -54,15 +53,14 @@ public class TelaNome extends JPanel {
         // Botão voltar
         botaoVoltar = new JButton("Voltar");
         botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 18));
-        botaoVoltar.setOpaque(true);
-        botaoVoltar.setBackground(new Color(0, 0, 0, 80)); // Preto com transparência
-        botaoVoltar.setForeground(Color.WHITE); // Texto branco
+        botaoVoltar.setContentAreaFilled(false);
+        botaoVoltar.setBorderPainted(false);
         botaoVoltar.setFocusPainted(false);
-        botaoVoltar.setBorder(null);
+        botaoVoltar.setOpaque(false);
+        botaoVoltar.setForeground(Color.WHITE); // Texto branco visível
         botaoVoltar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoVoltar.addActionListener(e -> controlador.irParaMenuInicial());
         add(botaoVoltar);
-
     }
 
     @Override
@@ -70,12 +68,11 @@ public class TelaNome extends JPanel {
         super.doLayout();
 
         setCoordenadas(
-                410, 470, 700, 70,     // Campo de nome (mantém o mesmo)
+                410, 500, 700, 70,     // Campo de nome (mantém o mesmo)
                 500, 810, 520, 130,     // NOVO tamanho do botão CONFIRMAR
                 50, 960, 120, 35       // Botão voltar
         );
     }
-
 
     public void setCoordenadas(int xCampo, int yCampo, int wCampo, int hCampo,
                                int xConfirmar, int yConfirmar, int wConfirmar, int hConfirmar,
@@ -121,5 +118,4 @@ public class TelaNome extends JPanel {
     public void resetarTela() {
         campoNome.setText("");
     }
-
 }
