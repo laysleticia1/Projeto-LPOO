@@ -75,7 +75,7 @@ public class TelaNarrativa extends JPanel {
         // A LARGURA e ALTURA devem ser MENORES que as dimensões totais do seu pergaminho.png
         // para que as bordas enroladas do pergaminho fiquem "fora" desta área de texto.
         // Exemplo: Para um pergaminho que ocupa quase 800x600, a área de texto pode ser:
-        scrollPane.setPreferredSize(new Dimension(500, 350)); // Ex: Largura 500, Altura 350
+        scrollPane.setPreferredSize(new Dimension(700, 350)); // Ex: Largura 500, Altura 350
 
         // Painel para centralizar o scrollPane (área de texto)
         JPanel painelTextoCentralizado = new JPanel(new GridBagLayout());
@@ -144,6 +144,7 @@ public class TelaNarrativa extends JPanel {
                 • Myndros: planícies alagadas, com águas traiçoeiras e criaturas ocultas.
                 • Narzug: uma fenda profunda, tóxica e cheia de sons perturbadores.
                 • Thargor: ruínas da antiga capital, assombradas por vozes, visões e mistérios.
+               
                Você desperta no chão frio, sem memórias claras, cercado por um silêncio que observa. Não sabe como chegou aqui. Só sabe de uma coisa:
                Você está dentro da Última Fronteira.
                E a única escolha que resta…
