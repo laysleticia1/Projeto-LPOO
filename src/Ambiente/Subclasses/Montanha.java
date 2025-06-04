@@ -16,13 +16,8 @@ public class Montanha extends Ambiente {
     private String vegetacaoTipica;
 
     public Montanha() {
-        super("Montanhas Rochosas",
-                "Local elevado e desafiador. A montanha apresenta terreno acidentado, variações bruscas de temperatura e ventos intensos. Esconde valiosos minérios e pedras preciosas entre os riscos naturais.",
-                8,
-                new ArrayList<>(Arrays.asList("Minério de Prata", "Pedras Preciosas", "Ervas Raras de Altitude")),
-                0.6,
-                "Frio e com ventos fortes",
-                "/Resources/Ambientes/montanha.png");
+        super("Montanhas de Vhaldrak",
+                "Local elevado e desafiador. A montanha apresenta terras geladas e traiçoeiras, com penhascos irregulares e ventos cortantes que ecoam antigos lamentos. Entre nevascas e perigos constantes, jazem minérios raros e pedras preciosas — recompensas guardadas pelo frio e pela morte.", 8, new ArrayList<>(Arrays.asList("Minério de Prata", "Pedras Preciosas", "Ervas Raras de Altitude")), 0.6, "Frio e com ventos fortes", "/Resources/Ambientes/montanha.png");
         this.terrenoEspecifico = "Rochoso, íngreme e com precipícios.";
         this.vegetacaoTipica = "Escassa, composta por arbustos resistentes e líquens.";
     }

@@ -148,4 +148,14 @@ public class GerenciadorUI {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new GerenciadorUI());
     }
+    public void mudarAmbienteViaUI(String nomeAmbiente) {
+        try {
+            meuJogo.mudarAmbiente(nomeAmbiente);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(window,
+                    "Erro ao mudar de ambiente: " + e.getMessage(),
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

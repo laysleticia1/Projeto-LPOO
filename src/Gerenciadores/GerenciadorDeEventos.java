@@ -320,6 +320,8 @@ public class GerenciadorDeEventos {
                     EventoClimatico eventoClimaticoEscolhido = climaticosNoAmbiente.get(sorteador.nextInt(climaticosNoAmbiente.size()));
                     if (sorteador.nextDouble() < eventoClimaticoEscolhido.getProbabilidadeDeOcorrencia()) {
                         areaLog.append("\n🔸 O clima muda repentinamente durante o seu descanso!\n");
+                        // Considerar se EventoClimatico deveria ter um executarDuranteDescansoInterface específico
+                        // ou se executarInterface é suficiente.
                         eventoClimaticoEscolhido.executarInterface(jogador, ambienteAtual, areaLog);
                         historicoDeEventos.add(eventoClimaticoEscolhido.getNomeEvento());
                         algumEventoOcorreu = true;

@@ -17,13 +17,7 @@ public class LagoRio extends Ambiente {
     private String caracteristicaTerrenoMargem;
 
     public LagoRio() {
-        super("Lago Sereno",
-                "Local de águas calmas e cristalinas. Um lago ou rio que oferece oportunidades de hidratação, pesca e travessia. A presença de peixes e algas torna o ambiente fértil e estratégico.",
-                2, // Dificuldade baixa
-                new ArrayList<>(Arrays.asList("Água Fresca", "Peixes Comestíveis", "Algas Nutritivas", "Pedras Lisas")),
-                0.35, // Probabilidade de Eventos
-                "Ameno e Refrescante",
-                "/Resources/Ambientes/lagorio.png"); // Caminho da imagem
+        super("Planícies de Myndros", "Um paraíso aquático sereno, mas sob as águas calmas espreitam redemoinhos, toxinas e predadores invisíveis. Rica em peixes e pontos de hidratação, é um lugar fértil — e mortal para os despreparados.", 2, new ArrayList<>(Arrays.asList("Água Fresca", "Peixes Comestíveis", "Algas Nutritivas", "Pedras Lisas")), 0.35, "Ameno e Refrescante", "/Resources/Ambientes/lagorio.png");
         this.qualidadeAgua = "Majoritariamente potável, mas algumas áreas podem estar estagnadas.";
         this.vidaAquatica = "Cardumes de peixes pequenos, alguns peixes maiores e plantas aquáticas.";
         this.caracteristicaTerrenoMargem = "Areia fina e seixos rolados, com vegetação ribeirinha.";

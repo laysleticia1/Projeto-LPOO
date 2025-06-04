@@ -3,6 +3,8 @@ package Jogo;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.List; // Adicionado pela branch main e mantido
+import javax.swing.*; // Adicionado pela branch main e mantido
 
 import Ambiente.Superclasse.Ambiente;
 import Ambiente.Subclasses.*;
@@ -11,12 +13,13 @@ import Excecoes.InventarioCheioException;
 import Excecoes.FomeSedeSanidadeException;
 import Gerenciadores.GerenciadorDeAmbientes;
 import Gerenciadores.GerenciadorDeEventos;
+import Gerenciadores.GerenciadorDeTurnos; // Mantido (coberto pelo wildcard abaixo ou explícito)
 import Evento.Subclasses.Específicos.*;
 import Personagem.Superclasse.Personagem;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
 import Personagem.Subclasses.*;
-import Gerenciadores.*; // Wildcard para GerenciadorDeTurnos se estiver em Gerenciadores
+import Gerenciadores.*; // Wildcard mantido, cobre GerenciadorDeTurnos também
 
 public class Jogo {
     private Scanner scanner = new Scanner(System.in);
@@ -144,6 +147,12 @@ public class Jogo {
         if (gerenciadorEventos == null) {
             gerenciadorEventos = new GerenciadorDeEventos(); // Garante que não é nulo
         }
+        // Adicionar eventos específicos que são gerenciados centralmente, se houver.
+        // A inicialização principal dos eventos por ambiente já ocorre no construtor de GerenciadorDeEventos.
+        // Esta seção pode ser para eventos globais ou para garantir que certos eventos específicos
+        // sejam adicionados à lista 'eventosDisponiveis' se essa lista ainda for usada para algo.
+        // No entanto, a lógica principal de eventos agora usa 'eventosPorAmbiente'.
+        // Se estes são eventos que não se encaixam em 'eventosPorAmbiente', esta é a maneira de adicioná-los.
         gerenciadorEventos.adicionarEvento(new EmboscadaLobos());
         gerenciadorEventos.adicionarEvento(new EnchenteRapida());
         gerenciadorEventos.adicionarEvento(new PoeiraToxica());
@@ -228,8 +237,7 @@ public class Jogo {
                         break;
                     case 7:
                         realizarAcoes();
-                        jogador.diminuirFome(3);
-                        jogador.diminuirSede(4);
+                        // Custos de fome/sede já são aplicados dentro de realizarAcoes()
                         if (!gerenciadorDeTurnos.executarTurno(jogador, true)) return;
                         break;
                     case 8:
@@ -305,11 +313,12 @@ public class Jogo {
                 jogador.verificarFomeSedeSanidade();
             } catch (FomeSedeSanidadeException e) {
                 System.out.println(e.getMessage());
+                System.out.println("O jogador não resistiu. Fim de jogo.");
                 return;
             } catch (RuntimeException e) {
                 System.out.println("Um erro inesperado ocorreu: " + e.getMessage());
                 e.printStackTrace();
-                System.out.println("O jogador não resistiu.");
+                System.out.println("O jogador não resistiu. Fim de jogo.");
                 return;
             }
         }
@@ -318,7 +327,14 @@ public class Jogo {
     private void explorarAmbiente() {
         System.out.print("\nVocê decide explorar a área ao redor...");
         if (jogador != null && jogador.getAmbienteAtual() != null) {
-            jogador.getAmbienteAtual().explorar(jogador);
+            // A lógica de evento de exploração agora é mais robusta no GerenciadorDeEventos
+            if (gerenciadorEventos != null) {
+                gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
+            } else {
+                System.out.println(" (Gerenciador de eventos não disponível para esta ação).");
+            }
+            // A exploração específica do ambiente (se houver) ainda pode ser chamada
+            // jogador.getAmbienteAtual().explorar(jogador); // Se Ambiente.explorar() tiver lógica adicional
         } else {
             System.out.println("Erro: Jogador ou Ambiente atual não definido para exploração.");
         }
@@ -410,27 +426,20 @@ public class Jogo {
             jogador.verificarFomeSedeSanidade();
         } catch (FomeSedeSanidadeException e) {
             System.out.println(e.getMessage());
+            System.out.println("O jogador não resistiu. Fim de jogo.");
+            // Considerar se o loop deve terminar aqui, talvez retornando do método loopJogo()
         } catch (RuntimeException e) { // Captura mais genérica para outros erros inesperados
-            System.out.println(e.getMessage());
-            System.out.println("O jogador não resistiu.");
-            return; // Considerar se o loop deve terminar aqui
+            System.out.println("Um erro inesperado ocorreu: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println("O jogador não resistiu. Fim de jogo.");
+            // Considerar se o loop deve terminar aqui
         }
     }
 
     private void adicionarItemColetado(Item item) {
         if (jogador == null || item == null) return;
         System.out.println("🔸 Item encontrado: " + item.getNome());
-
-        // Para exibir detalhes, Item precisaria de um método getDescricaoItem() ou similar,
-        // ou as subclasses precisariam de seus próprios métodos exibirDetalhes.
-        // if (item instanceof Consumivel) {
-        //      ((Consumivel) item).exibirDetalhesConsumivel();
-        // } else if (item instanceof Material) {
-        //      ((Material) item).exibirDetalhesMaterial();
-        // } else {
-        //     item.exibirDetalhes(); // Supondo que Item tem um exibirDetalhes()
-        // }
-        System.out.println("Descrição: " + item.getDescricaoItem()); // Assumindo que Item tem getDescricaoItem()
+        System.out.println("Descrição: " + item.getDescricaoItem());
 
         System.out.print("Deseja coletar " + item.getNome() + "? (s/n): ");
         String resposta = scanner.nextLine().trim().toLowerCase();
@@ -438,7 +447,6 @@ public class Jogo {
             try {
                 if (jogador.getInventario() != null) {
                     jogador.getInventario().adicionarItem(item);
-                    // A mensagem de sucesso/falha já deve estar em adicionarItem
                 }
             } catch (InventarioCheioException e) {
                 System.out.println(e.getMessage());
@@ -467,11 +475,11 @@ public class Jogo {
 
             if (opcao == 0) break;
 
-            Ambiente destino = gerenciador.getAmbientePorIndice(opcao -1); // getAmbientePorIndice precisa existir em GerenciadorDeAmbientes
+            Ambiente destino = gerenciador.getAmbientePorIndice(opcao -1);
             if(destino != null) {
                 try {
                     gerenciador.mudarAmbiente(jogador, destino);
-                    if (jogador.getAmbienteAtual() == destino) break; // Sai do loop se mudou
+                    if (jogador.getAmbienteAtual() == destino) break; 
                 } catch (AmbienteInacessivelException e) {
                     System.out.println("⚠️ " + e.getMessage());
                 }
@@ -479,24 +487,29 @@ public class Jogo {
                 System.out.println("Opção inválida.");
             }
 
-            System.out.println("\nDeseja tentar se mover para outro ambiente listado? (Sim/Não)");
-            String resposta = scanner.nextLine();
-            if (!resposta.equalsIgnoreCase("Sim")) break;
+            // Removido o loop de confirmação redundante para simplificar
+            // O jogador pode simplesmente escolher "Mudar de ambiente" novamente se a tentativa falhar.
+            // System.out.println("\nDeseja tentar se mover para outro ambiente listado? (Sim/Não)");
+            // String resposta = scanner.nextLine();
+            // if (!resposta.equalsIgnoreCase("Sim")) break;
         }
     }
 
+    //Interface (Marcação da branch main mantida)
     public boolean iniciarNovaPartida(String nome, String classe) {
         try {
             switch (classe) {
                 case "Rastreador": jogador = new Rastreador(nome); break;
-                case "Mecânico": jogador = new Mecanico(nome); break; // Corrigido para Mecanico (sem acento) se for o nome da classe
-                case "Médico": jogador = new Medico(nome); break; // Corrigido para Medico se for o nome da classe
+                case "Mecânico": jogador = new Mecanico(nome); break; 
+                case "Médico": jogador = new Medico(nome); break; 
                 case "Sobrevivente Nato": jogador = new SobreviventeNato(nome); break;
                 default:
                     System.err.println("Classe inválida fornecida para iniciarNovaPartida: " + classe);
                     return false;
             }
-            configurarAmbientes(); // Precisa garantir que 'jogador' já existe aqui
+            // É crucial que 'jogador' seja inicializado ANTES de configurarAmbientes,
+            // pois configurarAmbientes() usa 'jogador' para definir o ambiente inicial.
+            configurarAmbientes(); 
             configurarEventos();
             if (this.gerenciadorEventos != null) {
                 gerenciadorDeTurnos = new GerenciadorDeTurnos(this.gerenciadorEventos);
@@ -532,8 +545,305 @@ public class Jogo {
         return this.gerenciador;
     }
 
-    // MÉTODO GETTER ADICIONADO:
-    public GerenciadorDeEventos getGerenciadorDeEventos() {
+    public GerenciadorDeEventos getGerenciadorDeEventos() { // Adicionado pela branch eventos_interface e mantido
         return this.gerenciadorEventos;
+    }
+
+    // Métodos da branch main para interface gráfica
+    public Ambiente getAmbientePorNome(String nome) {
+        if (gerenciador == null || gerenciador.getAmbientes() == null) return null;
+        for (Ambiente ambiente : gerenciador.getAmbientes()) { // Usando o getter do gerenciador
+            if (ambiente.getNome().equalsIgnoreCase(nome)) {
+                return ambiente;
+            }
+        }
+        return null;
+    }
+
+    // Este método parece ser uma versão para console, a versão de interface é mudarAmbienteViaInterface
+    public void mudarAmbiente(String nomeAmbiente) throws AmbienteInacessivelException {
+        Ambiente novoAmbiente = getAmbientePorNome(nomeAmbiente);
+        if (novoAmbiente == null) {
+            throw new AmbienteInacessivelException("Ambiente '" + nomeAmbiente + "' não encontrado.");
+        }
+        if (jogador == null) {
+             throw new IllegalStateException("Jogador não inicializado para mudar de ambiente.");
+        }
+        gerenciador.mudarAmbiente(jogador, novoAmbiente); // Usa o método do GerenciadorDeAmbientes
+    }
+
+    public void mudarAmbienteViaInterface(String nomeAmbiente, JTextArea areaLog, JLabel imagemAmbiente) throws AmbienteInacessivelException {
+        if (jogador == null) {
+            areaLog.append("Erro: Jogador não inicializado.\n");
+            throw new IllegalStateException("Jogador não inicializado para mudar de ambiente via interface.");
+        }
+        Ambiente novoAmbiente = getAmbientePorNome(nomeAmbiente);
+        if (novoAmbiente == null) {
+            areaLog.append("Ambiente '" + nomeAmbiente + "' não encontrado.\n");
+            throw new AmbienteInacessivelException("Ambiente '" + nomeAmbiente + "' não encontrado.");
+        }
+
+        gerenciador.mudarAmbienteInterface(jogador, novoAmbiente, areaLog); // Usando o método de interface do GerenciadorDeAmbientes
+
+        // A lógica de custo de fome/sede e atualização do log/imagem já está em mudarAmbienteInterface
+        // do GerenciadorDeAmbientes, mas podemos adicionar custos específicos do Jogo aqui se necessário.
+        // getJogador().diminuirFome(8); // Exemplo: Custo adicional do Jogo
+        // getJogador().diminuirSede(10); // Exemplo: Custo adicional do Jogo
+
+        // A atualização da imagem deve ocorrer após a mudança bem-sucedida.
+        // O método mudarAmbienteInterface já deve ter atualizado o ambiente do jogador.
+        Ambiente ambienteAtualizado = jogador.getAmbienteAtual();
+        if (ambienteAtualizado != null && imagemAmbiente != null && ambienteAtualizado.getCaminhoImagem() != null) {
+             try {
+                ImageIcon icon = new ImageIcon(ambienteAtualizado.getCaminhoImagem());
+                if (icon.getImageLoadStatus() == java.awt.MediaTracker.ERRORED) {
+                    areaLog.append("Aviso: Imagem para " + ambienteAtualizado.getNome() + " não encontrada em '" + ambienteAtualizado.getCaminhoImagem() + "'.\n");
+                }
+                imagemAmbiente.setIcon(icon);
+            } catch (Exception e) {
+                areaLog.append("Erro ao carregar imagem para " + ambienteAtualizado.getNome() + ": " + e.getMessage() + "\n");
+            }
+        } else if (imagemAmbiente != null) {
+             imagemAmbiente.setIcon(null); // Limpa a imagem se não houver caminho ou ambiente
+        }
+         // Atualizar turno
+        if (gerenciadorDeTurnos != null) {
+            if (!gerenciadorDeTurnos.executarTurnoInterface(jogador, true, areaLog)) {
+                // Lógica para fim de jogo se executarTurnoInterface retornar false
+                areaLog.append("O jogo terminou devido às condições do jogador.\n");
+            }
+        }
+    }
+
+    public Ambiente getAmbienteAtual() {
+        return jogador != null ? jogador.getAmbienteAtual() : null;
+    }
+
+    // Este método parece ser um placeholder ou uma simplificação.
+    // A lógica real de executarAcaoInterface deveria chamar métodos mais específicos.
+    public void executarAcaoInterface(int escolha, JTextArea areaLog) {
+        Ambiente ambiente = jogador.getAmbienteAtual();
+        // Esta lógica deve ser expandida para chamar as ações reais com base na 'escolha'
+        // e no 'ambiente', similar ao método 'realizarAcoes' do console.
+        areaLog.append("Ação " + escolha + " selecionada (lógica a ser implementada).\n");
+    }
+
+    public List<String> getAcoesComunsDisponiveis(Personagem jogador) {
+        List<String> acoes = new ArrayList<>();
+        if (jogador == null) return acoes; // Adicionado para segurança
+        Ambiente ambiente = jogador.getAmbienteAtual();
+        if (ambiente == null) return acoes; // Adicionado para segurança
+
+
+        if (ambiente instanceof Floresta) {
+            acoes.add("Coletar frutas");
+            acoes.add("Coletar madeira e cipós");
+        } else if (ambiente instanceof Montanha) {
+            acoes.add("Escalar para encontrar abrigo natural"); // Mantido texto original
+            acoes.add("Procurar itens congelados no alto"); // Mantido texto original
+        } else if (ambiente instanceof LagoRio) {
+            acoes.add("Beber água diretamente"); // Mantido texto original
+            acoes.add("Pescar");
+        } else if (ambiente instanceof Caverna) {
+            acoes.add("Acender tochas e explorar"); // Mantido texto original
+            acoes.add("Buscar minerais úteis"); // Mantido texto original
+        } else if (ambiente instanceof Ruinas) {
+            acoes.add("Vasculhar ruínas por suprimentos antigos"); // Mantido texto original
+            acoes.add("Analisar símbolos misteriosos"); // Mantido texto original
+        } else {
+            acoes.add("Explorar o local"); // Ação genérica
+        }
+        // Ação "Usar item" é geralmente separada, mas pode ser listada aqui se desejado.
+        // acoes.add("Usar item");
+        return acoes;
+    }
+
+    public void executarAcaoComumInterface(String nomeAcao, JTextArea areaLog) {
+        if (jogador == null || jogador.getAmbienteAtual() == null) {
+            areaLog.append("Erro: Jogador ou ambiente não definido.\n");
+            return;
+        }
+        Ambiente ambiente = jogador.getAmbienteAtual();
+        boolean acaoRealizada = false;
+
+        try {
+            if (ambiente instanceof Floresta) {
+                if (nomeAcao.equals("Coletar frutas")) {
+                    areaLog.append("Você encontra frutas frescas da floresta.\n");
+                    Alimentos frutas = new Alimentos("Frutas Silvestres", 0.5, 20, 10, "Fruta", 3);
+                    adicionarItemColetadoInterface(frutas, areaLog); acaoRealizada = true;
+                } else if (nomeAcao.equals("Coletar madeira e cipós")) {
+                    areaLog.append("Você coleta madeira resistente e cipós.\n");
+                    Material madeira = new Material("Madeira Resistente", "Recurso de construção", 2.0, 1, 30);
+                    Material cipo = new Material("Cipó Resistente", "Material para amarras", 0.8, 1, 15);
+                    adicionarItemColetadoInterface(madeira, areaLog);
+                    adicionarItemColetadoInterface(cipo, areaLog); acaoRealizada = true;
+                }
+            } else if (ambiente instanceof Montanha) {
+                if (nomeAcao.equals("Escalar para encontrar abrigo natural")) {
+                     areaLog.append("Você escala e encontra uma pedra afiada.\n");
+                    Material pedra = new Material("Pedra Afiada", "Ferramenta básica", 1.0, 1, 30);
+                    adicionarItemColetadoInterface(pedra, areaLog); acaoRealizada = true;
+                } else if (nomeAcao.equals("Procurar itens congelados no alto")) {
+                    areaLog.append("Você encontra um pedaço de couro antigo preservado no gelo.\n");
+                    Material couro = new Material("Couro Antigo Congelado", "Material para vestimentas", 1.2, 1, 45);
+                    adicionarItemColetadoInterface(couro, areaLog); acaoRealizada = true;
+                }
+            } else if (ambiente instanceof LagoRio) {
+                if (nomeAcao.equals("Beber água diretamente")) {
+                    areaLog.append("Você bebe água fresca do lago/rio, se hidratando.\n");
+                    jogador.restaurarSede(25);
+                    jogador.restaurarEnergia(5); acaoRealizada = true;
+                } else if (nomeAcao.equals("Pescar")) {
+                    areaLog.append("Você tenta pescar... e consegue um pequeno peixe!\n");
+                    Alimentos peixe = new Alimentos("Peixe Pequeno Cru", 0.4, 15, 5, "Carne de Peixe", 1);
+                    adicionarItemColetadoInterface(peixe, areaLog); acaoRealizada = true;
+                }
+            } else if (ambiente instanceof Caverna) {
+                 if (nomeAcao.equals("Acender tochas e explorar")) {
+                    areaLog.append("Você acende uma tocha e encontra um veio de minério brilhante.\n");
+                    Material minerio = new Material("Minério Brilhante", "Recurso valioso", 2.0, 1, 50);
+                    adicionarItemColetadoInterface(minerio, areaLog); acaoRealizada = true;
+                } else if (nomeAcao.equals("Buscar minerais úteis")) {
+                    areaLog.append("Você busca por minerais e encontra alguns fragmentos de carvão.\n");
+                    Material carvao = new Material("Carvão", "Combustível", 0.5, 5, 20);
+                    adicionarItemColetadoInterface(carvao, areaLog); acaoRealizada = true;
+                }
+            } else if (ambiente instanceof Ruinas) {
+                if (nomeAcao.equals("Vasculhar ruínas por suprimentos antigos")) {
+                    areaLog.append("Você vasculha os escombros e encontra uma antiga ração de emergência.\n");
+                    Alimentos racao = new Alimentos("Ração de Emergência Antiga", 0.3, 30, 5, "Industrializado", 100);
+                    adicionarItemColetadoInterface(racao, areaLog); acaoRealizada = true;
+                } else if (nomeAcao.equals("Analisar símbolos misteriosos")) {
+                     areaLog.append("Você analisa símbolos misteriosos e sente sua mente se expandir, mas também um arrepio...\n");
+                    jogador.restaurarSanidade(5);
+                    jogador.diminuirEnergia(5); acaoRealizada = true;
+                }
+            } else { // Ambiente genérico ou ação "Explorar o local"
+                 if (nomeAcao.equals("Explorar o local")) {
+                    areaLog.append("Você observa atentamente o ambiente.\n");
+                    // A exploração pode ou não resultar em itens, ou pode disparar eventos.
+                    // Se GerenciadorDeEventos.dispararEventoExploracaoInterface for o principal,
+                    // esta ação pode ser apenas um gatilho para isso.
+                    if (gerenciadorEventos != null) {
+                        gerenciadorEventos.dispararEventoExploracaoInterface(jogador, areaLog);
+                    }
+                    acaoRealizada = true;
+                }
+            }
+
+
+            if (acaoRealizada) {
+                jogador.diminuirFome(5);
+                jogador.diminuirSede(7);
+                jogador.verificarFomeSedeSanidade(); // Verifica e lança exceção se necessário
+                 if (gerenciadorDeTurnos != null) {
+                    if (!gerenciadorDeTurnos.executarTurnoInterface(jogador, true, areaLog)) {
+                         areaLog.append("O jogo terminou devido às condições do jogador.\n");
+                    }
+                }
+            } else {
+                areaLog.append("❌ Ação '" + nomeAcao + "' não aplicável ou não reconhecida neste ambiente.\n");
+            }
+
+        } catch (InventarioCheioException | FomeSedeSanidadeException e) {
+            areaLog.append("⚠️ " + e.getMessage() + "\n");
+            if (e instanceof FomeSedeSanidadeException) {
+                 areaLog.append("O jogador não resistiu. Fim de jogo.\n");
+                 // Adicionar lógica para terminar o jogo na interface
+            }
+        } catch (Exception e) { // Captura genérica para outros erros
+            areaLog.append("🚫 Erro inesperado ao executar ação: " + e.getMessage() + "\n");
+            e.printStackTrace();
+        }
+    }
+
+    // Método auxiliar para adicionar item via interface, similar ao adicionarItemColetado
+    private void adicionarItemColetadoInterface(Item item, JTextArea areaLog) throws InventarioCheioException {
+        if (jogador == null || item == null || areaLog == null) return;
+        areaLog.append("🔸 Item encontrado: " + item.getNome() + " (" + item.getDescricaoItem() + ")\n");
+        // Na interface, a coleta pode ser automática ou pode haver um botão de confirmação.
+        // Para simplificar, vamos assumir coleta automática se a ação for escolhida.
+        if (jogador.getInventario() != null) {
+            jogador.getInventario().adicionarItem(item); // Lança InventarioCheioException se necessário
+            areaLog.append("Item '" + item.getNome() + "' adicionado ao inventário.\n");
+        } else {
+            areaLog.append("Erro: Inventário do jogador não encontrado.\n");
+        }
+    }
+
+
+    public List<String> getAcoesEspeciaisDisponiveis(Personagem jogador) {
+        List<String> acoes = new ArrayList<>();
+        if (jogador == null) return acoes; // Adicionado para segurança
+
+        if (jogador instanceof Rastreador) {
+            acoes.add("Identificar pegadas");
+            acoes.add("Farejar trilha");
+            acoes.add("Procurar recursos (especial)"); // Diferenciar de ação comum de explorar
+        } else if (jogador instanceof Mecanico) {
+            acoes.add("Consertar equipamento");
+            acoes.add("Melhorar arma");
+        } else if (jogador instanceof Medico) {
+            acoes.add("Auto-curar ferimentos leves"); // Nome mais descritivo
+            acoes.add("Preparar remédio natural");
+        } else if (jogador instanceof SobreviventeNato) {
+            acoes.add("Fabricar lança");
+            acoes.add("Caçar animais (especial)");
+        }
+        return acoes;
+    }
+
+    public void executarAcaoEspecialInterface(String nomeAcao, JTextArea areaLog) {
+         if (jogador == null || areaLog == null) {
+            if (areaLog != null) areaLog.append("Erro: Jogador não inicializado.\n");
+            return;
+        }
+        boolean acaoRealizada = false;
+        try {
+            if (jogador instanceof Rastreador rastreador) {
+                switch (nomeAcao) {
+                    case "Identificar pegadas": rastreador.identificarPegadasInterface(jogador.getAmbienteAtual(), areaLog); acaoRealizada = true; break;
+                    case "Farejar trilha": rastreador.farejarTrilhaInterface(jogador.getAmbienteAtual(), areaLog); acaoRealizada = true; break;
+                    case "Procurar recursos (especial)": rastreador.procurarRecursosInterface(jogador.getAmbienteAtual(), jogador, areaLog); acaoRealizada = true; break;
+                }
+            } else if (jogador instanceof Mecanico mecanico) {
+                switch (nomeAcao) {
+                    case "Consertar equipamento": mecanico.consertarEquipamentoInterface(areaLog); acaoRealizada = true; break;
+                    case "Melhorar arma": mecanico.melhorarArmaInterface(areaLog); acaoRealizada = true; break;
+                }
+            } else if (jogador instanceof Medico medico) {
+                switch (nomeAcao) {
+                    case "Auto-curar ferimentos leves": medico.autoCurarFerimentosLevesInterface(areaLog); acaoRealizada = true; break;
+                    // case "Curar outro personagem": areaLog.append("🩺 Ainda não há outro personagem para curar.\n"); break; // Se for uma opção
+                    case "Preparar remédio natural": medico.prepararRemedioNaturalInterface(areaLog); acaoRealizada = true; break;
+                }
+            } else if (jogador instanceof SobreviventeNato sobrevivente) {
+                switch (nomeAcao) {
+                    case "Fabricar lança": sobrevivente.fabricarLancaInterface(areaLog); acaoRealizada = true; break;
+                    case "Caçar animais (especial)": sobrevivente.cacarAnimaisInterface(areaLog); acaoRealizada = true; break;
+                }
+            }
+
+            if (acaoRealizada) {
+                jogador.diminuirFome(2); // Custos de ações especiais
+                jogador.diminuirSede(3);
+                jogador.verificarFomeSedeSanidade();
+                if (gerenciadorDeTurnos != null) {
+                    if (!gerenciadorDeTurnos.executarTurnoInterface(jogador, true, areaLog)) {
+                         areaLog.append("O jogo terminou devido às condições do jogador.\n");
+                    }
+                }
+            } else {
+                 areaLog.append("❌ Ação especial '" + nomeAcao + "' não reconhecida para " + jogador.getClasse() + ".\n");
+            }
+        } catch (FomeSedeSanidadeException e) {
+            areaLog.append("⚠️ " + e.getMessage() + "\n");
+            areaLog.append("O jogador não resistiu. Fim de jogo.\n");
+            // Adicionar lógica para terminar o jogo na interface
+        } catch (Exception e) { // Captura genérica para outros erros
+            areaLog.append("🚫 Erro inesperado ao executar ação especial: " + e.getMessage() + "\n");
+            e.printStackTrace();
+        }
     }
 }
