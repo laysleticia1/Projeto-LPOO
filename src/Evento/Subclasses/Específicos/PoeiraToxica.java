@@ -4,17 +4,11 @@ import Evento.Subclasses.EventoDoencaFerimento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
+import javax.swing.*;
+
 public class PoeiraToxica extends EventoDoencaFerimento {
     public PoeiraToxica() {
-        super(
-                "Poeira Tóxica Ancestral",
-                "Ao entrar em uma sala selada das ruínas, uma nuvem de poeira densa sobe e entra pelas vias respiratórias.",
-                0.4,
-                "vida",
-                "Ruinas",
-                "Respiratória",
-                "Uso de máscara ou repouso"
-        );
+        super("Poeira Tóxica Ancestral", "Ao entrar em uma sala selada das ruínas, uma nuvem de poeira densa sobe e entra pelas vias respiratórias.", 0.4, "vida", "Ruinas", "Respiratória", "Uso de máscara ou repouso");
     }
 
     @Override
@@ -34,4 +28,17 @@ public class PoeiraToxica extends EventoDoencaFerimento {
         return ambiente.getNome().equalsIgnoreCase("Ruínas");
     }
 
+    //Interface
+    public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
+        areaLog.append("Evento: " + getNomeEvento() + "\n");
+        areaLog.append(getDescricao() + "\n");
+        areaLog.append("Condição: Intoxicação respiratória\n");
+        areaLog.append("Sintomas: Tontura, náusea e perda de foco\n");
+        areaLog.append("Cura: Uso de máscara ou repouso\n");
+
+        jogador.setVida(jogador.getVida() - 10);
+        jogador.setSanidade(jogador.getSanidade() - 5);
+
+        areaLog.append("Você perdeu 10 de vida e 5 de sanidade devido à exposição à poeira tóxica.\n");
+    }
 }

@@ -5,6 +5,8 @@ import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 import Ambiente.Subclasses.*;
 
+import javax.swing.*;
+
 public class EventoDoencaFerimento extends Evento {
     private String tipoDeCondicao;
     private String curaDisponivel;
@@ -37,12 +39,10 @@ public class EventoDoencaFerimento extends Evento {
     }
 
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
-        // Pode ocorrer em Montanha ou Floresta, por exemplo
         return ambiente instanceof Montanha || ambiente instanceof Floresta;
     }
 
     //Getters and Setters
-
     public String getCuraDisponivel() {
         return curaDisponivel;
     }
@@ -57,5 +57,28 @@ public class EventoDoencaFerimento extends Evento {
 
     public void setTipoDeCondicao(String tipoDeCondicao) {
         this.tipoDeCondicao = tipoDeCondicao;
+    }
+
+    //Interface
+    public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
+        areaLog.append("🩸 Evento de Doença/Ferimento: " + getNomeEvento() + "\n");
+        areaLog.append(getDescricao() + "\n");
+        areaLog.append("Condição: " + getTipoDeCondicao() + "\n");
+        areaLog.append("Cura: " + getCuraDisponivel() + "\n");
+
+        switch (getImpacto().trim().toLowerCase()) {
+            case "vida":
+                jogador.diminuirVida(15);
+                areaLog.append("Você perdeu 15 de vida!\n");
+                break;
+            case "sanidade":
+                jogador.diminuirSanidade(15);
+                areaLog.append("Você perdeu 15 de sanidade!\n");
+                break;
+            case "energia":
+                jogador.diminuirEnergia(15);
+                areaLog.append("Você perdeu 15 de energia!\n");
+                break;
+        }
     }
 }

@@ -5,19 +5,12 @@ import Evento.Subclasses.EventoCriatura;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
+import javax.swing.*;
+
 public class EmboscadaLobos extends EventoCriatura {
 
     public EmboscadaLobos() {
-        super(
-                "Emboscada de Lobos",
-                "Uma alcateia de lobos famintos salta dos arbustos, cercando o jogador.",
-                0.6,
-                "Causa dano e reduz sanidade",
-                "Floresta",
-                new Lobo(),
-                3,
-                "Lutar, fugir ou se esconder"
-        );
+        super("Emboscada de Lobos", "Uma alcateia de lobos famintos salta dos arbustos, cercando o jogador.", 0.6, "Causa dano e reduz sanidade", "Floresta", new Lobo(), 3, "Lutar, fugir ou se esconder");
     }
 
     @Override
@@ -36,4 +29,14 @@ public class EmboscadaLobos extends EventoCriatura {
         return ambiente.getNome().equalsIgnoreCase("Floresta");
     }
 
+    //Interface
+    public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
+        areaLog.append("Evento: " + getNomeEvento() + "\n");
+        areaLog.append(getDescricao() + "\n");
+        areaLog.append("Criatura: Lobos famintos\n");
+
+        jogador.diminuirVida(12);
+        jogador.setSanidade(jogador.getSanidade() - 5);
+        areaLog.append("Você recebeu 12 de dano e perdeu 5 de sanidade.\n");
+    }
 }

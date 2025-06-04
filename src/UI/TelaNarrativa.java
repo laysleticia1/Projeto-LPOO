@@ -146,6 +146,7 @@ public class TelaNarrativa extends JPanel {
                 • Thargor: ruínas da antiga capital, assombradas por vozes, visões e mistérios.
                
                Você desperta no chão frio, sem memórias claras, cercado por um silêncio que observa. Não sabe como chegou aqui. Só sabe de uma coisa:
+               
                Você está dentro da Última Fronteira.
                E a única escolha que resta…
                É sobreviver.

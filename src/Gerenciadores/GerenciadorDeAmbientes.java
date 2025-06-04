@@ -5,6 +5,8 @@ import Personagem.Superclasse.Personagem;
 import java.util.ArrayList;
 import Excecoes.AmbienteInacessivelException;
 
+import javax.swing.*;
+
 public class GerenciadorDeAmbientes {
     private ArrayList<Ambiente> ambientesDisponiveis = new ArrayList<>();
     private ArrayList<String> historicoDeMovimentacao = new ArrayList<>();
@@ -38,12 +40,35 @@ public class GerenciadorDeAmbientes {
         }
     }
 
-    //Método para a lista de Resources.ambientes disponíveis
+    //Interface
+
+    public void mudarAmbienteInterface(Personagem jogador, Ambiente novoAmbiente, JTextArea areaLog) throws AmbienteInacessivelException {
+        if (jogador.getAmbienteAtual() != null && jogador.getAmbienteAtual().getNome().equals(novoAmbiente.getNome())) {
+            areaLog.append("Você já está nesse ambiente!\n");
+            return;
+        }
+
+        if (!novoAmbiente.estaAcessivel()) {
+            throw new AmbienteInacessivelException("O ambiente " + novoAmbiente.getNome() + " está inacessível no momento");
+        }
+
+        jogador.moverParaAmbiente(novoAmbiente);
+        historicoDeMovimentacao.add(novoAmbiente.getNome());
+
+        areaLog.append("Descrição: " + novoAmbiente.getDescricao() + "\n");
+        areaLog.append("Energia restante após se mover: " + jogador.getEnergia() + "\n");
+    }
+
+    public void mostrarHistoricoInterface(JTextArea areaLog) {
+        areaLog.append("\nHistórico de movimentação:\n");
+        for (String nome : historicoDeMovimentacao) {
+            areaLog.append("- " + nome + "\n");
+        }
+    }
+
     public ArrayList<Ambiente> getAmbientes() {
         return ambientesDisponiveis;
     }
-
-    //Método para registrar o ambiente inicial no histórico
     public void registrarAmbienteInicial(Ambiente ambiente){
         historicoDeMovimentacao.add(ambiente.getNome());
     }

@@ -1,13 +1,20 @@
+
 package UI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultCaret; // Para auto-scroll do log
 import java.awt.*;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Jogo.Jogo;
 import Personagem.Superclasse.Personagem;
+import Personagem.Subclasses.*;
+import Personagem.Inventario.*;
 import Ambiente.Superclasse.Ambiente;
 // GerenciadorDeAmbientes não será diretamente acessado aqui para respeitar a não-modificação de Jogo.java
 
@@ -26,6 +33,7 @@ public class PainelJogo extends JPanel {
     private JPanel painelVisaoAmbiente;
 
     // Botões de Ação Principais
+    private JButton botaoMapa;
     private JButton botaoExplorar;
     private JButton botaoMudarAmbiente;
     private JButton botaoRealizarAcao;
@@ -129,11 +137,12 @@ public class PainelJogo extends JPanel {
         botaoRealizarAcao = new JButton("Ações");
         botaoVerInventario = new JButton("Inventário");
         botaoSairDoJogo = new JButton("Sair");
+        botaoMapa = new JButton("Mapa");
 
         Font fonteBotaoAcao = new Font("SansSerif", Font.BOLD, 13);
         Dimension tamanhoBotaoAcao = new Dimension(130, 30);
 
-        for (JButton btn : new JButton[]{botaoExplorar, botaoMudarAmbiente, botaoRealizarAcao, botaoVerInventario, botaoSairDoJogo}) {
+        for (JButton btn : new JButton[]{botaoExplorar, botaoMudarAmbiente, botaoRealizarAcao, botaoVerInventario, botaoMapa, botaoSairDoJogo}) {
             btn.setFont(fonteBotaoAcao);
             btn.setPreferredSize(tamanhoBotaoAcao);
             btn.setBackground(new Color(80, 80, 100));
@@ -194,10 +203,14 @@ public class PainelJogo extends JPanel {
 
         botaoVerInventario.addActionListener(e -> {
             if (meuJogo != null && meuJogo.getJogador() != null) {
-                adicionarLog("Verificando o inventário...");
-                // Este método em Personagem.java imprime no console.
-                meuJogo.getJogador().visualizarInventario();
-                JOptionPane.showMessageDialog(this, "Seu inventário foi listado no console.", "Inventário", JOptionPane.INFORMATION_MESSAGE);
+                Inventario inv = meuJogo.getJogador().getInventario();
+                PainelInventario painel = new PainelInventario(inv);
+                JDialog janela = new JDialog(SwingUtilities.getWindowAncestor(this), "Inventário", Dialog.ModalityType.APPLICATION_MODAL);
+                janela.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                janela.setContentPane(painel);
+                janela.pack();
+                janela.setLocationRelativeTo(this);
+                janela.setVisible(true);
             }
         });
 
@@ -209,6 +222,8 @@ public class PainelJogo extends JPanel {
                 System.exit(0);
             }
         });
+
+        botaoMapa.addActionListener(e -> mostrarMapa());
     }
 
     public void adicionarLog(String mensagem) {
@@ -269,4 +284,23 @@ public class PainelJogo extends JPanel {
             labelStatusSanidade.setText("Sanidade: ERRO");
         }
     }
+
+    private void mostrarMapa() {
+        JDialog dialogoMapa = new JDialog(SwingUtilities.getWindowAncestor(this), "Mapa de Velkaria", Dialog.ModalityType.APPLICATION_MODAL);
+        dialogoMapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialogoMapa.setSize(1000, 700); // Tamanho fixo
+        dialogoMapa.setLocationRelativeTo(this);
+
+        try {
+            BufferedImage imagemOriginal = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Resources/mapa2.png"));
+            Image imagemRedimensionada = imagemOriginal.getScaledInstance(1000, 700, Image.SCALE_SMOOTH);
+            JLabel labelImagem = new JLabel(new ImageIcon(imagemRedimensionada));
+            dialogoMapa.setContentPane(new JPanel(new BorderLayout()));
+            dialogoMapa.getContentPane().add(labelImagem, BorderLayout.CENTER);
+            dialogoMapa.setVisible(true);
+        } catch (IOException | NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

@@ -5,6 +5,8 @@ import Personagem.Superclasse.Personagem;
 import Interface.Usavel;
 import Interface.Curavel;
 
+import javax.swing.*;
+
 public class Remedios extends Item implements Curavel, Usavel{
     private String tipo;
     private String efeito;
@@ -40,6 +42,14 @@ public class Remedios extends Item implements Curavel, Usavel{
         System.out.println("• Efeito: " + efeito);
     }
 
+    @Override
+    public String exibirDetalhesInterface() {
+        return "Remédio: " + getNome() +
+                "\nTipo: " + tipo +
+                "\nEfeito: " + efeito +
+                "\nPeso: " + getPeso() +
+                "\nDurabilidade: " + getDurabilidade();
+    }
 
     // Getters and Setters
     public String getTipo() {

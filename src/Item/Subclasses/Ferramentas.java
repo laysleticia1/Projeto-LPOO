@@ -31,6 +31,14 @@ public class Ferramentas extends Item {
         System.out.println("• Eficiência: " + eficiencia);
     }
 
+    @Override
+    public String exibirDetalhesInterface() {
+        return "Ferramenta: " + getNome() +
+                "\nPeso: " + getPeso() +
+                "\nDurabilidade: " + getDurabilidade() +
+                "\nEficiência: " + eficiencia;
+    }
+
     //Getters and Setters
 
     public String getTipo() {

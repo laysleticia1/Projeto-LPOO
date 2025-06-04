@@ -133,8 +133,9 @@ public class Inventario {
     public int getQuantidadeAtual() {
         return quantidadeAtual;
     }
-
     public int getCapacidadeMaxima() {
         return capacidadeMaxima;
     }
+    public Map<String, List<Item>> getItensPorCategoria() {return itensPorCategoria;}
+    public double getPesoTotal() {return pesoTotal;}
 }

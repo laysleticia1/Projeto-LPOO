@@ -39,8 +39,18 @@ public class Agua extends Item {
         System.out.println("• Peso: " + getPeso());
         System.out.println("• Durabilidade: " + getDurabilidade());
         System.out.println("• Pureza: " + pureza);
-        System.out.println("• Volume: " + volume + "ml");
+        System.out.println("• Volume: " + volume + "L");
         System.out.println("• Chance de contaminação: " + chanceContaminacao + "%");
+    }
+
+    @Override
+    public String exibirDetalhesInterface() {
+        return "Água: " + getNome() +
+                "\nPeso: " + getPeso() +
+                "\nDurabilidade: " + getDurabilidade() +
+                "\nPureza: " + pureza +
+                "\nVolume: " + volume + " L" +
+                "\nChance de Contaminação: " + chanceContaminacao + "%";
     }
 
     //Getters and Setters
