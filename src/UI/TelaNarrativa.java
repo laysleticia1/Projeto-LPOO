@@ -118,7 +118,7 @@ public class TelaNarrativa extends JPanel {
                 • Vhaldrak: montanhas congeladas, cheias de ecos de guerra e predadores famintos.
                 • Elvaron: floresta viva, densa e enlouquecedora, onde poucos retornam.
                 • Myndros: planícies alagadas, com águas traiçoeiras e criaturas ocultas.
-                • Narzug: uma fenda profunda, tóxica e cheia de sons perturbadores.
+                • Narzug: uma fissura profunda, tóxica e cheia de sons perturbadores.
                 • Thargor: ruínas da antiga capital, assombradas por vozes, visões e mistérios.
                
                Você desperta no chão frio, sem memórias claras, cercado por um silêncio que observa. Não sabe como chegou aqui. Só sabe de uma coisa:

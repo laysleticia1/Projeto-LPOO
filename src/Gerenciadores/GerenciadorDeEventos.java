@@ -191,7 +191,7 @@ public class GerenciadorDeEventos {
 
     public void aplicarEventoDuranteDescansoInterface(Personagem jogador, Ambiente ambienteAtual, JTextArea areaLog) {
         for (Evento evento : eventosDisponiveis) {
-            if (evento instanceof Evento.Subclasses.EventoCriatura criatura) {
+            if (evento instanceof EventoCriatura criatura) {
                 if (criatura.podeOcorrerNoAmbiente(ambienteAtual)) {
                     if (new Random().nextDouble() < evento.getProbabilidadeDeOcorrencia()) {
                         criatura.executarDuranteDescansoInterface(jogador, ambienteAtual, areaLog);
