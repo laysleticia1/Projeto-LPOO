@@ -147,7 +147,18 @@ public class GerenciadorDeTurnos {
             return true;
         }
         return false;
+
     }
 
+    public boolean verificarStatusCriticoInterface(Personagem personagem, JTextArea areaLog) {
+        try {
+            personagem.verificarFomeSedeSanidadeInterface(areaLog);
+            return true; // Sobreviveu
+        } catch (FomeSedeSanidadeException e) {
+            areaLog.append("☠️ " + e.getMessage() + "\n");
+            areaLog.append("☠️ Fim de jogo.\n");
+            return false; // Morreu
+        }
+    }
 
 }

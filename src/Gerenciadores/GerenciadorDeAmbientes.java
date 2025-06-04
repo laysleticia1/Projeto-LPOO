@@ -10,6 +10,7 @@ import javax.swing.*;
 public class GerenciadorDeAmbientes {
     private ArrayList<Ambiente> ambientesDisponiveis = new ArrayList<>();
     private ArrayList<String> historicoDeMovimentacao = new ArrayList<>();
+    private Ambiente ambienteAtual;
 
     public void adicionarAmbiente(Ambiente ambiente) {
         ambientesDisponiveis.add(ambiente);
@@ -72,5 +73,11 @@ public class GerenciadorDeAmbientes {
     public void registrarAmbienteInicial(Ambiente ambiente){
         historicoDeMovimentacao.add(ambiente.getNome());
     }
+    public Ambiente getAmbienteAtual() {
+        return ambienteAtual;
+    }
+
 }
+
+
 

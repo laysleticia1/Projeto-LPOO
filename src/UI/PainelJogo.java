@@ -23,6 +23,7 @@ public class PainelJogo extends JPanel {
     private Jogo meuJogo;
 
     // Componentes de Status
+    private JLabel labelStatusNivel;
     private JLabel labelStatusVida;
     private JLabel labelStatusFome;
     private JLabel labelStatusSede;
@@ -43,6 +44,7 @@ public class PainelJogo extends JPanel {
     // Área de Log
     private JTextArea areaLog;
     private JScrollPane scrollLog;
+    private JLabel imagemAmbiente;
 
     public PainelJogo(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
         this.controlador = ctrl;
@@ -57,27 +59,26 @@ public class PainelJogo extends JPanel {
         setBorder(new EmptyBorder(10, 10, 10, 10));
         setBackground(new Color(40, 40, 45));
 
-        // --- PAINEL DE STATUS (NORTE) ---
         JPanel painelStatus = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
         painelStatus.setOpaque(false);
         Font fonteStatus = new Font("SansSerif", Font.BOLD, 14);
         Color corStatus = new Color(210, 210, 210);
 
+        labelStatusNivel = new JLabel("Nível: ...");
         labelStatusVida = new JLabel("Vida: ...");
         labelStatusFome = new JLabel("Fome: ...");
         labelStatusSede = new JLabel("Sede: ...");
         labelStatusEnergia = new JLabel("Energia: ...");
         labelStatusSanidade = new JLabel("Sanidade: ...");
 
-        for (JLabel lbl : new JLabel[]{labelStatusVida, labelStatusFome, labelStatusSede, labelStatusEnergia, labelStatusSanidade}) {
+        for (JLabel lbl : new JLabel[]{labelStatusNivel, labelStatusVida, labelStatusFome, labelStatusSede, labelStatusEnergia, labelStatusSanidade}) {
             lbl.setFont(fonteStatus);
             lbl.setForeground(corStatus);
             painelStatus.add(lbl);
         }
         add(painelStatus, BorderLayout.NORTH);
 
-        // --- PAINEL DE VISÃO DO AMBIENTE (CENTRO) ---
-        painelVisaoAmbiente = new JPanel() {
+        painelVisaoAmbiente = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -88,30 +89,32 @@ public class PainelJogo extends JPanel {
                 String nomeAmbiente = "Desconhecido";
                 if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
                     Ambiente ambiente = meuJogo.getJogador().getAmbienteAtual();
-                    // Assumindo que você ajustou Ambiente.java para ter getImagemAmbiente()
                     imgAmbiente = ambiente.getImagemAmbiente();
                     nomeAmbiente = ambiente.getNome();
                 }
 
-                if (imgAmbiente != null) {
-                    g2d.drawImage(imgAmbiente, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    g2d.setColor(new Color(20,20,20));
-                    g2d.fillRect(0,0,getWidth(),getHeight());
+                if (imgAmbiente == null) {
+                    g2d.setColor(new Color(20, 20, 20));
+                    g2d.fillRect(0, 0, getWidth(), getHeight());
                     g2d.setColor(Color.LIGHT_GRAY);
                     g2d.setFont(new Font("SansSerif", Font.ITALIC, 16));
                     String msgErro = "Arte do ambiente '" + nomeAmbiente + "' não carregada.";
                     FontMetrics fm = g2d.getFontMetrics();
                     int msgWidth = fm.stringWidth(msgErro);
-                    g2d.drawString(msgErro, (getWidth() - msgWidth) / 2 , getHeight() / 2);
+                    g2d.drawString(msgErro, (getWidth() - msgWidth) / 2, getHeight() / 2);
                 }
+
                 g2d.dispose();
             }
         };
         painelVisaoAmbiente.setBackground(Color.BLACK);
+
+        imagemAmbiente = new JLabel();
+        imagemAmbiente.setHorizontalAlignment(SwingConstants.CENTER);
+        imagemAmbiente.setVerticalAlignment(SwingConstants.CENTER);
+        painelVisaoAmbiente.add(imagemAmbiente, BorderLayout.CENTER);
         add(painelVisaoAmbiente, BorderLayout.CENTER);
 
-        // --- PAINEL DE LOG E AÇÕES (SUL) ---
         JPanel painelInferior = new JPanel(new BorderLayout(0, 5));
         painelInferior.setOpaque(false);
 
@@ -161,6 +164,8 @@ public class PainelJogo extends JPanel {
             if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
                 Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
                 adicionarLog("Você explora " + ambienteAtual.getNome() + "...");
+                // A lógica de explorar em Ambiente.java imprime no console.
+                // A UI não terá um retorno direto além do que o método em Ambiente fizer.
                 ambienteAtual.explorar(meuJogo.getJogador());
                 meuJogo.getJogador().consumirRecursosBasicos();
                 atualizarTela();
@@ -168,35 +173,105 @@ public class PainelJogo extends JPanel {
         });
 
         botaoMudarAmbiente.addActionListener(e -> {
-            adicionarLog("Tentando mudar de ambiente...");
-            JOptionPane.showMessageDialog(this,
-                    "A escolha de ambiente pela UI requer ajustes na classe Jogo.java\n" +
-                            "para expor os destinos ou processar a escolha.\n" +
-                            "(A lógica de console 'menuAmbientes' existe em Jogo.java)",
-                    "Mudar de Ambiente", JOptionPane.INFORMATION_MESSAGE);
-            // Para fins de teste, você poderia chamar um método público em Jogo que usa o scanner,
-            // mas isso não é ideal para UI.
-            // meuJogo.chamarMenuAmbientesConsole(); // Se tal método público existisse
-            atualizarTela();
+            adicionarLog("Abrindo mapa de ambientes...");
+
+            new TelaMoverAmbientes(nomeAmbienteEscolhido -> {
+                try {
+                    meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente);
+                    adicionarLog("Você se moveu para: " + nomeAmbienteEscolhido);
+                    atualizarTela(); // Atualiza status e ambiente após mudança
+                } catch (Exception ex) {
+                    adicionarLog("Erro ao mudar de ambiente: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(this,
+                            "Erro ao mudar de ambiente:\n" + ex.getMessage(),
+                            "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            });
         });
 
         botaoRealizarAcao.addActionListener(e -> {
-            adicionarLog("Quais ações realizar aqui?");
             if (meuJogo != null && meuJogo.getJogador() != null) {
-                // Este método em Jogo.java imprime as ações no console.
-                meuJogo.apresentarAcoesPorAmbiente(meuJogo.getJogador());
-                String escolhaAcaoStr = JOptionPane.showInputDialog(this, "Digite o número da ação (veja console):");
-                // Aqui precisaria de um método em Jogo.java para processar essa escolha de ação
-                // Ex: meuJogo.processarEscolhaAcao(escolhaAcaoStr);
-                adicionarLog("Ação '" + escolhaAcaoStr + "' selecionada. Lógica de processamento via UI pendente.");
-                atualizarTela();
+                String[] tipoDeAcao = {"Ação Comum", "Ação Especial"};
+                String tipoEscolhido = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Qual tipo de ação deseja realizar?",
+                        "Escolha de Ação",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        tipoDeAcao,
+                        tipoDeAcao[0]
+                );
+
+                if (tipoEscolhido == null) return;
+
+                String[] opcoes;
+
+                if (tipoEscolhido.equals("Ação Comum")) {
+                    Ambiente ambiente = meuJogo.getJogador().getAmbienteAtual();
+                    opcoes = switch (ambiente.getClass().getSimpleName()) {
+                        case "Floresta" -> new String[]{"Coletar frutas", "Coletar madeira e cipós"};
+                        case "Montanha" -> new String[]{"Escalar abrigo", "Procurar itens congelados"};
+                        case "LagoRio" -> new String[]{"Beber água", "Pescar"};
+                        case "Caverna" -> new String[]{"Acender tochas", "Buscar minérios"};
+                        case "Ruinas" -> new String[]{"Vasculhar suprimentos", "Analisar símbolos"};
+                        default -> new String[]{"Explorar o local"};
+                    };
+
+                    String acaoEscolhida = (String) JOptionPane.showInputDialog(
+                            this,
+                            "Escolha uma ação:",
+                            "Ação Comum",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            opcoes,
+                            opcoes[0]
+                    );
+
+                    if (acaoEscolhida != null) {
+                        meuJogo.executarAcaoComumInterface(acaoEscolhida, areaLog);
+                        atualizarTela();
+                    }
+
+                } else if (tipoEscolhido.equals("Ação Especial")) {
+                    Personagem jogador = meuJogo.getJogador();
+
+                    if (jogador instanceof Rastreador)
+                        opcoes = new String[]{"Identificar pegadas", "Farejar trilha", "Procurar recursos"};
+                    else if (jogador instanceof Mecanico)
+                        opcoes = new String[]{"Consertar equipamento", "Melhorar arma"};
+                    else if (jogador instanceof Medico)
+                        opcoes = new String[]{"Curar a si mesmo", "Curar outro personagem", "Preparar remédio natural"};
+                    else if (jogador instanceof SobreviventeNato)
+                        opcoes = new String[]{"Fabricar lança", "Caçar animais"};
+                    else
+                        opcoes = new String[]{"Sem ações disponíveis"};
+
+                    String acaoEspecial = (String) JOptionPane.showInputDialog(
+                            this,
+                            "Escolha uma ação especial:",
+                            "Ação Especial",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            opcoes,
+                            opcoes[0]
+                    );
+
+                    if (acaoEspecial != null) {
+                        meuJogo.executarAcaoEspecialInterface(acaoEspecial, areaLog);
+                        atualizarTela();
+                    }
+                }
             }
         });
+
+
+
 
         botaoVerInventario.addActionListener(e -> {
             if (meuJogo != null && meuJogo.getJogador() != null) {
                 Inventario inv = meuJogo.getJogador().getInventario();
-                PainelInventario painel = new PainelInventario(inv);
+                Personagem jogador = meuJogo.getJogador();
+                PainelInventario painel = new PainelInventario(inv, jogador);
                 JDialog janela = new JDialog(SwingUtilities.getWindowAncestor(this), "Inventário", Dialog.ModalityType.APPLICATION_MODAL);
                 janela.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 janela.setContentPane(painel);
@@ -228,47 +303,45 @@ public class PainelJogo extends JPanel {
 
     public void atualizarTela() {
         if (meuJogo == null || meuJogo.getJogador() == null) {
-            if(painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
-            // Atualizar labels de status para "N/A" ou similar
+            labelStatusNivel.setText("Nível: N/A");
             labelStatusVida.setText("Vida: N/A");
             labelStatusFome.setText("Fome: N/A");
             labelStatusSede.setText("Sede: N/A");
             labelStatusEnergia.setText("Energia: N/A");
             labelStatusSanidade.setText("Sanidade: N/A");
+            if (imagemAmbiente != null) imagemAmbiente.setIcon(null);
+            if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
             return;
         }
 
         Personagem jogador = meuJogo.getJogador();
-
-        // CORRIGIDO: Exibe apenas a vida atual, pois não há getVidaMaxima() em Personagem.java
+        labelStatusNivel.setText("Nível: " + jogador.getNivel());
         labelStatusVida.setText("Vida: " + jogador.getVida());
-
         labelStatusFome.setText("Fome: " + jogador.getFome());
         labelStatusSede.setText("Sede: " + jogador.getSede());
         labelStatusEnergia.setText("Energia: " + jogador.getEnergia());
         labelStatusSanidade.setText("Sanidade: " + jogador.getSanidade());
 
-        if (painelVisaoAmbiente != null) {
-            painelVisaoAmbiente.repaint();
+        if (imagemAmbiente != null && jogador.getAmbienteAtual() != null) {
+            Image imagem = jogador.getAmbienteAtual().getImagemAmbiente();
+            imagemAmbiente.setIcon(imagem != null ? new ImageIcon(imagem) : null);
         }
+
+        if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
         this.requestFocusInWindow();
     }
 
     public void aoEntrarNaTela() {
         if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
             Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
-            if (areaLog != null) {
-                areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
-                areaLog.append("------------------------------------------------------\n");
-                areaLog.append(ambienteAtual.getDescricao() + "\n");
-                areaLog.append("Clima: " + ambienteAtual.getCondicaoClimatica() + "\n\n");
-            }
+            areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
+            areaLog.append("------------------------------------------------------\n");
+            areaLog.append(ambienteAtual.getDescricao() + "\n");
+            areaLog.append("Clima: " + ambienteAtual.getCondicaoClimatica() + "\n\n");
             atualizarTela();
         } else {
-            if (areaLog != null) {
-                areaLog.setText("ERRO CRÍTICO AO CARREGAR O JOGO! PERSONAGEM OU AMBIENTE NULO.");
-            }
-            // Labels de status podem ser setados para erro também
+            areaLog.setText("ERRO CRÍTICO AO CARREGAR O JOGO! PERSONAGEM OU AMBIENTE NULO.");
+            labelStatusNivel.setText("Nível: ERRO");
             labelStatusVida.setText("Vida: ERRO");
             labelStatusFome.setText("Fome: ERRO");
             labelStatusSede.setText("Sede: ERRO");
@@ -292,6 +365,31 @@ public class PainelJogo extends JPanel {
             dialogoMapa.setVisible(true);
         } catch (IOException | NullPointerException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void realizarAcaoComumUI() {
+        if (meuJogo != null && meuJogo.getJogador() != null) {
+            java.util.List<String> acoes = meuJogo.getAcoesComunsDisponiveis(meuJogo.getJogador());
+            String escolha = (String) JOptionPane.showInputDialog(this, "Escolha uma ação comum:",
+                    "Ação Comum", JOptionPane.PLAIN_MESSAGE, null,
+                    acoes.toArray(), acoes.get(0));
+            if (escolha != null) {
+                meuJogo.executarAcaoComumInterface(escolha, areaLog);
+                atualizarTela();
+            }
+        }
+    }
+
+    private void realizarAcaoEspecialUI() {
+        if (meuJogo != null && meuJogo.getJogador() != null) {
+            java.util.List<String> acoes = meuJogo.getAcoesEspeciaisDisponiveis(meuJogo.getJogador());
+            String escolha = (String) JOptionPane.showInputDialog(this, "Escolha uma ação especial:",
+                    "Ação Especial", JOptionPane.PLAIN_MESSAGE, null,
+                    acoes.toArray(), acoes.get(0));
+            if (escolha != null) {
+                meuJogo.executarAcaoEspecialInterface(escolha, areaLog);
+                atualizarTela();
+            }
         }
     }
 

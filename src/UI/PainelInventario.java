@@ -10,16 +10,15 @@ import Excecoes.InventarioCheioException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
+import java.util.List;
+import java.util.ArrayList;
 
 public class PainelInventario extends JPanel {
     private BufferedImage background;
@@ -27,12 +26,18 @@ public class PainelInventario extends JPanel {
     private int paginaAtual = 0;
     private final int ITENS_POR_PAGINA = 9;
     private List<JButton> botoesSlots = new ArrayList<>();
+    private Personagem jogador;
 
     private JLabel labelPeso;
     private JTextPane areaDescricao;
+    private JButton botaoUsar;
+    private JButton botaoRemover;
+    private Item itemSelecionado;
 
-    public PainelInventario(Inventario inventario) {
+    public PainelInventario(Inventario inventario, Personagem jogador) {
         this.inventario = inventario;
+        this.jogador = jogador;
+
         setLayout(null);
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         setPreferredSize(tela);
@@ -55,7 +60,7 @@ public class PainelInventario extends JPanel {
             int totalPaginas = (int) Math.ceil((double) inventario.getTodosItens().size() / ITENS_POR_PAGINA);
             if (paginaAtual + 1 < totalPaginas) {
                 paginaAtual++;
-                repaint();
+                renderizarSlots();
             }
         });
         add(btnProxima);
@@ -67,8 +72,10 @@ public class PainelInventario extends JPanel {
         btnAnterior.setOpaque(true);
         btnAnterior.setBorderPainted(false);
         btnAnterior.addActionListener(e -> {
-            if (paginaAtual > 0) paginaAtual--;
-            repaint();
+            if (paginaAtual > 0) {
+                paginaAtual--;
+                renderizarSlots();
+            }
         });
         add(btnAnterior);
 
@@ -85,16 +92,50 @@ public class PainelInventario extends JPanel {
         areaDescricao.setFont(new Font("Serif", Font.ITALIC, 19));
         areaDescricao.setBounds(760, 260, 430, 300);
 
-        // Alinhamento central
         StyledDocument doc = areaDescricao.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
-
         add(areaDescricao);
 
-        renderizarSlots();
+        botaoUsar = new JButton("Usar Item");
+        botaoUsar.setBounds(840, 540, 120, 30);
+        botaoUsar.setBackground(new Color(100, 70, 40));
+        botaoUsar.setForeground(Color.WHITE);
+        botaoUsar.setEnabled(false);
+        botaoUsar.addActionListener(e -> {
+            if (itemSelecionado != null) {
+                try {
+                    inventario.usarItem(itemSelecionado.getNome(), jogador);
+                    JOptionPane.showMessageDialog(this, "Você usou: " + itemSelecionado.getNome());
+                    atualizarPainel();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao usar item: " + ex.getMessage());
+                }
+            }
+        });
+        add(botaoUsar);
 
+        botaoRemover = new JButton("Remover Item");
+        botaoRemover.setBounds(980, 540, 140, 30);
+        botaoRemover.setBackground(new Color(100, 70, 40));
+        botaoRemover.setForeground(Color.WHITE);
+        botaoRemover.setEnabled(false);
+        botaoRemover.addActionListener(e -> {
+            if (itemSelecionado != null) {
+                int resposta = JOptionPane.showConfirmDialog(this,
+                        "Deseja remover " + itemSelecionado.getNome() + " do inventário?",
+                        "Remover Item", JOptionPane.YES_NO_OPTION);
+                if (resposta == JOptionPane.YES_OPTION) {
+                    inventario.removerItem(itemSelecionado.getNome());
+                    JOptionPane.showMessageDialog(this, itemSelecionado.getNome() + " foi removido.");
+                    atualizarPainel();
+                }
+            }
+        });
+        add(botaoRemover);
+
+        renderizarSlots();
     }
 
     @Override
@@ -108,7 +149,6 @@ public class PainelInventario extends JPanel {
         double capacidadeMax = inventario.getCapacidadeMaxima();
         labelPeso.setText("Peso: " + String.format("%.2f", pesoAtual) + " / " + capacidadeMax);
     }
-
 
     private void renderizarSlots() {
         for (JButton btn : botoesSlots) {
@@ -147,25 +187,11 @@ public class PainelInventario extends JPanel {
             slotBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             slotBtn.addActionListener(e -> {
-                item.exibirDetalhes(); // imprime no console
-                areaDescricao.setText(item.exibirDetalhesInterface()); // exibe na interface
+                itemSelecionado = item;
+                areaDescricao.setText(item.exibirDetalhesInterface());
+                botaoUsar.setEnabled(true);
+                botaoRemover.setEnabled(true);
             });
-
-            JPopupMenu popup = new JPopupMenu();
-            JMenuItem usar = new JMenuItem("Usar");
-            usar.addActionListener(ev -> {
-                inventario.usarItem(item.getNome(), null);
-                renderizarSlots(); // Re-renderiza após uso
-            });
-            JMenuItem remover = new JMenuItem("Remover");
-            remover.addActionListener(ev -> {
-                inventario.removerItem(item);
-                renderizarSlots(); // Re-renderiza após remoção
-            });
-            popup.add(usar);
-            popup.add(remover);
-
-            slotBtn.setComponentPopupMenu(popup);
 
             this.add(slotBtn);
             botoesSlots.add(slotBtn);
@@ -175,4 +201,11 @@ public class PainelInventario extends JPanel {
         revalidate();
     }
 
+    private void atualizarPainel() {
+        itemSelecionado = null;
+        areaDescricao.setText("");
+        botaoUsar.setEnabled(false);
+        botaoRemover.setEnabled(false);
+        renderizarSlots();
+    }
 }

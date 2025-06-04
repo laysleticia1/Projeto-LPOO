@@ -176,4 +176,37 @@ public class SobreviventeNato extends Personagem {
         }
     }
 
+    public void fabricarLancaInterface(JTextArea areaLog) {
+        Inventario inventario = getInventario();
+
+        // Verifica se tem "Sucata"
+        Item sucata = null;
+        for (Item item : inventario.getTodosItens()) {
+            if (item.getNome().equalsIgnoreCase("Sucata")) {
+                sucata = item;
+                break;
+            }
+        }
+
+        if (sucata != null) {
+            // Usa a sucata
+            inventario.usarItem("Sucata", this);
+
+            // Cria uma nova arma improvisada
+            Armas lancaImprovisada = new Armas(
+                    "Lança Improvisada", 2.5, 5, "lança", 4, 1);
+
+            try {
+                inventario.adicionarItem(lancaImprovisada);
+                areaLog.append("🛠️ Você improvisou uma lança com a sucata!\n");
+            } catch (InventarioCheioException e) {
+                areaLog.append("❌ Inventário cheio! Não foi possível adicionar a lança: " + e.getMessage() + "\n");
+            }
+
+        } else {
+            areaLog.append("⚠️ Você precisa de sucata para fabricar uma lança.\n");
+        }
+    }
+
+
 }
