@@ -9,10 +9,9 @@ public abstract class Evento implements Executavel, Condicional {
     private String nome;
     private String descricao;
     private double probabilidadeDeOcorrencia;
-    private String impacto;
-    private String condicaoDeAtivacao;
+    private String impacto; // Define o que será afetado: "vida", "sanidade", "energia", "inventario", etc.
+    private String condicaoDeAtivacao; // Em qual ambiente/condição pode ocorrer
 
-    //Construtor
     public Evento (String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao) {
         this.nome = nome;
         this.descricao = descricao;
@@ -20,6 +19,7 @@ public abstract class Evento implements Executavel, Condicional {
         this.impacto = impacto;
         this.condicaoDeAtivacao = condicaoDeAtivacao;
     }
+
     public abstract void executar(Personagem jogador, Ambiente local);
     public abstract boolean podeOcorrerNoAmbiente(Ambiente ambiente);
 
@@ -43,7 +43,7 @@ public abstract class Evento implements Executavel, Condicional {
     public String getImpacto () {
         return impacto;
     }
-    void setImpacto (String impacto) {
+    public void setImpacto (String impacto) { // Ajustado para public para consistência, se necessário externamente
         this.impacto = impacto;
     }
     public String getCondicaoDeAtivacao () {
@@ -52,7 +52,4 @@ public abstract class Evento implements Executavel, Condicional {
     public void setCondicaoDeAtivacao (String condicaoDeAtivacao) {
         this.condicaoDeAtivacao = condicaoDeAtivacao;
     }
-
-
 }
-

@@ -1,39 +1,36 @@
-
 package UI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.DefaultCaret; // Para auto-scroll do log
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import javax.imageio.ImageIO;
-import java.io.File;
+// Removido import java.io.File se não usado diretamente
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Jogo.Jogo;
 import Personagem.Superclasse.Personagem;
-import Personagem.Subclasses.*;
-import Personagem.Inventario.*;
+// Removido Personagem.Subclasses.* se não usado diretamente aqui
+import Personagem.Inventario.Inventario;
 import Ambiente.Superclasse.Ambiente;
-// GerenciadorDeAmbientes não será diretamente acessado aqui para respeitar a não-modificação de Jogo.java
+import Gerenciadores.GerenciadorDeEventos; // Import necessário
 
 public class PainelJogo extends JPanel {
     private GerenciadorUI controlador;
     private Jogo meuJogo;
 
     // Componentes de Status
-    private JLabel labelStatusNivel;
+    private JLabel labelStatusNivel; // Mantido da branch main
     private JLabel labelStatusVida;
     private JLabel labelStatusFome;
     private JLabel labelStatusSede;
     private JLabel labelStatusEnergia;
     private JLabel labelStatusSanidade;
 
-    // Painel para a visão principal (arte do ambiente)
     private JPanel painelVisaoAmbiente;
 
-    // Botões de Ação Principais
     private JButton botaoMapa;
     private JButton botaoExplorar;
     private JButton botaoMudarAmbiente;
@@ -41,7 +38,6 @@ public class PainelJogo extends JPanel {
     private JButton botaoVerInventario;
     private JButton botaoSairDoJogo;
 
-    // Área de Log
     private JTextArea areaLog;
     private JScrollPane scrollLog;
     private JLabel imagemAmbiente;
@@ -49,9 +45,13 @@ public class PainelJogo extends JPanel {
     public PainelJogo(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
         this.controlador = ctrl;
         if (this.controlador != null) {
-            this.meuJogo = controlador.getMeuJogo();
+            if (this.controlador.getMeuJogo() != null) {
+                this.meuJogo = this.controlador.getMeuJogo();
+            } else {
+                System.err.println("PainelJogo ERRO: GerenciadorUI não forneceu uma instância de Jogo!");
+            }
         } else {
-            System.err.println("PainelJogo ERRO: Controlador é null!");
+            System.err.println("PainelJogo ERRO: Controlador (GerenciadorUI) é null!");
         }
 
         setPreferredSize(new Dimension(800, 600));
@@ -78,6 +78,7 @@ public class PainelJogo extends JPanel {
         }
         add(painelStatus, BorderLayout.NORTH);
 
+        // Usando BorderLayout da branch main
         painelVisaoAmbiente = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -89,31 +90,82 @@ public class PainelJogo extends JPanel {
                 String nomeAmbiente = "Desconhecido";
                 if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
                     Ambiente ambiente = meuJogo.getJogador().getAmbienteAtual();
-                    imgAmbiente = ambiente.getImagemAmbiente();
+                    imgAmbiente = ambiente.getImagemAmbiente(); // Assumindo que Ambiente tem getImagemAmbiente() que retorna Image
                     nomeAmbiente = ambiente.getNome();
-                }
 
-                if (imgAmbiente == null) {
-                    g2d.setColor(new Color(20, 20, 20));
+                    // Lógica para desenhar a imagem do ambiente, se existir
+                    if (imgAmbiente != null) {
+                        // Calcula a proporção para manter o aspect ratio
+                        int painelW = getWidth();
+                        int painelH = getHeight();
+                        int imgW = imgAmbiente.getWidth(null);
+                        int imgH = imgAmbiente.getHeight(null);
+
+                        if (imgW <= 0 || imgH <= 0) { // Imagem inválida ou não carregada
+                             g2d.setColor(new Color(20, 20, 20));
+                            g2d.fillRect(0, 0, painelW, painelH);
+                            g2d.setColor(Color.LIGHT_GRAY);
+                            g2d.setFont(new Font("SansSerif", Font.ITALIC, 16));
+                            String msgErro = "Arte do ambiente '" + nomeAmbiente + "' com dimensões inválidas.";
+                            FontMetrics fm = g2d.getFontMetrics();
+                            int msgWidth = fm.stringWidth(msgErro);
+                            g2d.drawString(msgErro, (painelW - msgWidth) / 2, painelH / 2);
+                        } else {
+                            double painelRatio = (double) painelW / painelH;
+                            double imgRatio = (double) imgW / imgH;
+
+                            int drawW = painelW;
+                            int drawH = painelH;
+
+                            if (imgRatio > painelRatio) { // Imagem mais larga que o painel
+                                drawH = (int) (painelW / imgRatio);
+                            } else { // Imagem mais alta que o painel (ou proporção igual)
+                                drawW = (int) (painelH * imgRatio);
+                            }
+                            int x = (painelW - drawW) / 2;
+                            int y = (painelH - drawH) / 2;
+                            g2d.drawImage(imgAmbiente, x, y, drawW, drawH, this);
+                        }
+                    } else { // Se imgAmbiente for null
+                        g2d.setColor(new Color(20, 20, 20));
+                        g2d.fillRect(0, 0, getWidth(), getHeight());
+                        g2d.setColor(Color.LIGHT_GRAY);
+                        g2d.setFont(new Font("SansSerif", Font.ITALIC, 16));
+                        String msgErro = "Arte do ambiente '" + nomeAmbiente + "' não carregada.";
+                        FontMetrics fm = g2d.getFontMetrics();
+                        int msgWidth = fm.stringWidth(msgErro);
+                        g2d.drawString(msgErro, (getWidth() - msgWidth) / 2, getHeight() / 2);
+                    }
+                } else { // Se meuJogo ou jogador ou ambienteAtual for null
+                    g2d.setColor(new Color(25, 25, 25));
                     g2d.fillRect(0, 0, getWidth(), getHeight());
-                    g2d.setColor(Color.LIGHT_GRAY);
-                    g2d.setFont(new Font("SansSerif", Font.ITALIC, 16));
-                    String msgErro = "Arte do ambiente '" + nomeAmbiente + "' não carregada.";
+                    g2d.setColor(Color.DARK_GRAY);
+                    g2d.setFont(new Font("SansSerif", Font.BOLD, 18));
+                    String msg = "Jogo não iniciado ou ambiente não definido.";
                     FontMetrics fm = g2d.getFontMetrics();
-                    int msgWidth = fm.stringWidth(msgErro);
-                    g2d.drawString(msgErro, (getWidth() - msgWidth) / 2, getHeight() / 2);
+                    int msgWidth = fm.stringWidth(msg);
+                    g2d.drawString(msg, (getWidth() - msgWidth) / 2, getHeight() / 2);
                 }
-
                 g2d.dispose();
             }
         };
-        painelVisaoAmbiente.setBackground(Color.BLACK);
+        painelVisaoAmbiente.setBackground(Color.BLACK); // Cor de fundo caso a imagem não preencha tudo
 
-        imagemAmbiente = new JLabel();
+        // imagemAmbiente JLabel não é mais usado para desenhar diretamente a imagem de fundo,
+        // pois o paintComponent do painelVisaoAmbiente cuida disso.
+        // Pode ser removido ou usado para outros propósitos se necessário.
+        // Se for removido, ajuste o add(painelVisaoAmbiente, BorderLayout.CENTER);
+        // e a remoção da sua instanciação. Por ora, vou mantê-lo mas não adicioná-lo diretamente.
+        // O código original da branch 'main' adicionava um JLabel ao BorderLayout.CENTER.
+        // A lógica de desenho customizado em paintComponent é mais flexível para scaling.
+        // Para manter a estrutura da 'main' que usa um JLabel para a imagem:
+        imagemAmbiente = new JLabel(); // Instanciado, mas a imagem será setada em atualizarTela
         imagemAmbiente.setHorizontalAlignment(SwingConstants.CENTER);
         imagemAmbiente.setVerticalAlignment(SwingConstants.CENTER);
-        painelVisaoAmbiente.add(imagemAmbiente, BorderLayout.CENTER);
+        // painelVisaoAmbiente.add(imagemAmbiente, BorderLayout.CENTER); // Removido para usar paintComponent
+
         add(painelVisaoAmbiente, BorderLayout.CENTER);
+
 
         JPanel painelInferior = new JPanel(new BorderLayout(0, 5));
         painelInferior.setOpaque(false);
@@ -162,24 +214,51 @@ public class PainelJogo extends JPanel {
     private void configurarAcoes() {
         botaoExplorar.addActionListener(e -> {
             if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
-                Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
+                Personagem jogador = meuJogo.getJogador();
+                Ambiente ambienteAtual = jogador.getAmbienteAtual();
+
                 adicionarLog("Você explora " + ambienteAtual.getNome() + "...");
-                // A lógica de explorar em Ambiente.java imprime no console.
-                // A UI não terá um retorno direto além do que o método em Ambiente fizer.
-                ambienteAtual.explorar(meuJogo.getJogador());
-                meuJogo.getJogador().consumirRecursosBasicos();
+
+                // Lógica da branch eventos_interface para explorar
+                GerenciadorDeEventos gerenciadorEventos = null;
+                if (meuJogo.getGerenciadorDeEventos() != null) {
+                    gerenciadorEventos = meuJogo.getGerenciadorDeEventos();
+                } else if (controlador != null && controlador.getGerenciadorDeEventos() != null) {
+                    gerenciadorEventos = controlador.getGerenciadorDeEventos();
+                }
+
+                if (gerenciadorEventos != null) {
+                    gerenciadorEventos.dispararEventoExploracaoInterface(jogador, areaLog);
+                } else {
+                    areaLog.append("Sistema de eventos (UI) não pôde ser acionado (gerenciador não encontrado).\n");
+                }
+                // Consumir recursos básicos e atualizar tela é feito pelo GerenciadorDeTurnos chamado dentro de dispararEventoExploracaoInterface
+                // Se não for, descomentar as linhas abaixo e ajustar GerenciadorDeEventos
+                // jogador.consumirRecursosBasicos(); 
+                // areaLog.append("Recursos básicos consumidos.\n");
+
                 atualizarTela();
+            } else {
+                if (areaLog != null) {
+                    areaLog.append("Não é possível explorar agora (jogador, jogo ou ambiente atual não definido).\n");
+                }
             }
         });
 
         botaoMudarAmbiente.addActionListener(e -> {
+            // Lógica da branch main para mudar ambiente
             adicionarLog("Abrindo mapa de ambientes...");
-
-            new TelaMoverAmbientes(nomeAmbienteEscolhido -> {
+            if (meuJogo == null) {
+                adicionarLog("Instância do jogo não disponível para mover ambientes.");
+                JOptionPane.showMessageDialog(this, "Erro: Jogo não inicializado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Assegure que TelaMoverAmbientes está acessível e correta
+            new TelaMoverAmbientes(meuJogo.getGerenciadorDeAmbientes().getAmbientes(), nomeAmbienteEscolhido -> {
                 try {
                     meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente);
-                    adicionarLog("Você se moveu para: " + nomeAmbienteEscolhido);
-                    atualizarTela(); // Atualiza status e ambiente após mudança
+                    // A mensagem "Você se moveu para..." já é adicionada por mudarAmbienteViaInterface
+                    atualizarTela(); 
                 } catch (Exception ex) {
                     adicionarLog("Erro ao mudar de ambiente: " + ex.getMessage());
                     JOptionPane.showMessageDialog(this,
@@ -190,6 +269,7 @@ public class PainelJogo extends JPanel {
         });
 
         botaoRealizarAcao.addActionListener(e -> {
+            // Lógica da branch main para realizar ação
             if (meuJogo != null && meuJogo.getJogador() != null) {
                 String[] tipoDeAcao = {"Ação Comum", "Ação Especial"};
                 String tipoEscolhido = (String) JOptionPane.showInputDialog(
@@ -202,82 +282,66 @@ public class PainelJogo extends JPanel {
                         tipoDeAcao[0]
                 );
 
-                if (tipoEscolhido == null) return;
+                if (tipoEscolhido == null) return; // Usuário cancelou
 
-                String[] opcoes;
+                java.util.List<String> acoesDisponiveis;
+                String tituloDialogo;
 
                 if (tipoEscolhido.equals("Ação Comum")) {
-                    Ambiente ambiente = meuJogo.getJogador().getAmbienteAtual();
-                    opcoes = switch (ambiente.getClass().getSimpleName()) {
-                        case "Floresta" -> new String[]{"Coletar frutas", "Coletar madeira e cipós"};
-                        case "Montanha" -> new String[]{"Escalar abrigo", "Procurar itens congelados"};
-                        case "LagoRio" -> new String[]{"Beber água", "Pescar"};
-                        case "Caverna" -> new String[]{"Acender tochas", "Buscar minérios"};
-                        case "Ruinas" -> new String[]{"Vasculhar suprimentos", "Analisar símbolos"};
-                        default -> new String[]{"Explorar o local"};
-                    };
-
-                    String acaoEscolhida = (String) JOptionPane.showInputDialog(
-                            this,
-                            "Escolha uma ação:",
-                            "Ação Comum",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            opcoes,
-                            opcoes[0]
-                    );
-
-                    if (acaoEscolhida != null) {
-                        meuJogo.executarAcaoComumInterface(acaoEscolhida, areaLog);
-                        atualizarTela();
-                    }
-
-                } else if (tipoEscolhido.equals("Ação Especial")) {
-                    Personagem jogador = meuJogo.getJogador();
-
-                    if (jogador instanceof Rastreador)
-                        opcoes = new String[]{"Identificar pegadas", "Farejar trilha", "Procurar recursos"};
-                    else if (jogador instanceof Mecanico)
-                        opcoes = new String[]{"Consertar equipamento", "Melhorar arma"};
-                    else if (jogador instanceof Medico)
-                        opcoes = new String[]{"Curar a si mesmo", "Curar outro personagem", "Preparar remédio natural"};
-                    else if (jogador instanceof SobreviventeNato)
-                        opcoes = new String[]{"Fabricar lança", "Caçar animais"};
-                    else
-                        opcoes = new String[]{"Sem ações disponíveis"};
-
-                    String acaoEspecial = (String) JOptionPane.showInputDialog(
-                            this,
-                            "Escolha uma ação especial:",
-                            "Ação Especial",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            opcoes,
-                            opcoes[0]
-                    );
-
-                    if (acaoEspecial != null) {
-                        meuJogo.executarAcaoEspecialInterface(acaoEspecial, areaLog);
-                        atualizarTela();
-                    }
+                    acoesDisponiveis = meuJogo.getAcoesComunsDisponiveis(meuJogo.getJogador());
+                    tituloDialogo = "Ação Comum";
+                } else { // Ação Especial
+                    acoesDisponiveis = meuJogo.getAcoesEspeciaisDisponiveis(meuJogo.getJogador());
+                    tituloDialogo = "Ação Especial";
                 }
+
+                if (acoesDisponiveis.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Nenhuma " + tipoEscolhido.toLowerCase() + " disponível no momento.", "Sem Ações", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                String acaoEscolhida = (String) JOptionPane.showInputDialog(
+                        this,
+                        "Escolha uma " + tipoEscolhido.toLowerCase() + ":",
+                        tituloDialogo,
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        acoesDisponiveis.toArray(new String[0]),
+                        acoesDisponiveis.get(0)
+                );
+
+                if (acaoEscolhida != null) {
+                    if (tipoEscolhido.equals("Ação Comum")) {
+                        meuJogo.executarAcaoComumInterface(acaoEscolhida, areaLog);
+                    } else { // Ação Especial
+                        meuJogo.executarAcaoEspecialInterface(acaoEscolhida, areaLog);
+                    }
+                    atualizarTela();
+                }
+            } else {
+                 if (areaLog != null) areaLog.append("Jogador ou Jogo não definido para realizar ação.\n");
             }
         });
-
-
-
 
         botaoVerInventario.addActionListener(e -> {
             if (meuJogo != null && meuJogo.getJogador() != null) {
                 Inventario inv = meuJogo.getJogador().getInventario();
+                // Lógica da branch main (passa jogador)
                 Personagem jogador = meuJogo.getJogador();
-                PainelInventario painel = new PainelInventario(inv, jogador);
-                JDialog janela = new JDialog(SwingUtilities.getWindowAncestor(this), "Inventário", Dialog.ModalityType.APPLICATION_MODAL);
-                janela.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                janela.setContentPane(painel);
-                janela.pack();
-                janela.setLocationRelativeTo(this);
-                janela.setVisible(true);
+                if (inv != null) {
+                    PainelInventario painel = new PainelInventario(inv, jogador, areaLog); // Passa areaLog
+                    JDialog janela = new JDialog(SwingUtilities.getWindowAncestor(this), "Inventário", Dialog.ModalityType.APPLICATION_MODAL);
+                    janela.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    janela.setContentPane(painel);
+                    janela.pack();
+                    janela.setLocationRelativeTo(this);
+                    janela.setVisible(true);
+                    atualizarTela(); // Atualiza caso um item seja usado/removido no inventário
+                } else {
+                     adicionarLog("Inventário não disponível.");
+                }
+            } else {
+                 if (areaLog != null) areaLog.append("Jogador ou Jogo não definido para ver inventário.\n");
             }
         });
 
@@ -286,6 +350,7 @@ public class PainelJogo extends JPanel {
                     "Tem certeza que deseja sair do jogo?", "Sair do Jogo",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (confirm == JOptionPane.YES_OPTION) {
+                // Adicionar qualquer lógica de salvamento aqui antes de sair, se necessário
                 System.exit(0);
             }
         });
@@ -297,50 +362,83 @@ public class PainelJogo extends JPanel {
         if (areaLog != null) {
             areaLog.append(mensagem + "\n");
         } else {
-            System.out.println("LOG (UI): " + mensagem);
+            System.out.println("LOG (UI - areaLog nula): " + mensagem);
         }
+    }
+
+    public JTextArea getTextAreaLog() {
+        return areaLog;
     }
 
     public void atualizarTela() {
         if (meuJogo == null || meuJogo.getJogador() == null) {
+            // Lógica combinada: define N/A para todos os status
             labelStatusNivel.setText("Nível: N/A");
             labelStatusVida.setText("Vida: N/A");
             labelStatusFome.setText("Fome: N/A");
             labelStatusSede.setText("Sede: N/A");
             labelStatusEnergia.setText("Energia: N/A");
             labelStatusSanidade.setText("Sanidade: N/A");
-            if (imagemAmbiente != null) imagemAmbiente.setIcon(null);
+            
+            // Limpa a imagem do ambiente se estiver usando o JLabel para isso
+            // if (imagemAmbiente != null) imagemAmbiente.setIcon(null); 
+            
+            // Repinta o painel de visão do ambiente (que pode ter sua própria lógica de "estado nulo")
             if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
             return;
         }
 
         Personagem jogador = meuJogo.getJogador();
+        // Lógica combinada: atualiza todos os status, incluindo nível
         labelStatusNivel.setText("Nível: " + jogador.getNivel());
-        labelStatusVida.setText("Vida: " + jogador.getVida());
-        labelStatusFome.setText("Fome: " + jogador.getFome());
-        labelStatusSede.setText("Sede: " + jogador.getSede());
-        labelStatusEnergia.setText("Energia: " + jogador.getEnergia());
-        labelStatusSanidade.setText("Sanidade: " + jogador.getSanidade());
+        labelStatusVida.setText("Vida: " + jogador.getVida() + "/" + jogador.getVidaMaxima());
+        labelStatusFome.setText("Fome: " + jogador.getFome() + "/" + jogador.getFomeMaxima());
+        labelStatusSede.setText("Sede: " + jogador.getSede() + "/" + jogador.getSedeMaxima());
+        labelStatusEnergia.setText("Energia: " + jogador.getEnergia() + "/" + jogador.getEnergiaMaxima());
+        labelStatusSanidade.setText("Sanidade: " + jogador.getSanidade() + "/" + jogador.getSanidadeMaxima());
 
+        // Atualiza a imagem do ambiente diretamente no painelVisaoAmbiente
+        // Se você estiver usando um JLabel 'imagemAmbiente' dentro de 'painelVisaoAmbiente'
+        // e quiser continuar com essa abordagem, a lógica seria:
+        /*
         if (imagemAmbiente != null && jogador.getAmbienteAtual() != null) {
-            Image imagem = jogador.getAmbienteAtual().getImagemAmbiente();
-            imagemAmbiente.setIcon(imagem != null ? new ImageIcon(imagem) : null);
+            Image img = jogador.getAmbienteAtual().getImagemAmbiente(); // Supondo que retorna Image
+            if (img != null) {
+                // Redimensionar a imagem para caber no JLabel/Painel sem distorcer
+                int panelWidth = painelVisaoAmbiente.getWidth();
+                int panelHeight = painelVisaoAmbiente.getHeight();
+                if (panelWidth > 0 && panelHeight > 0) {
+                    Image scaledImg = img.getScaledInstance(panelWidth, panelHeight, Image.SCALE_SMOOTH); // Ou SCALE_DEFAULT
+                    imagemAmbiente.setIcon(new ImageIcon(scaledImg));
+                } else {
+                     imagemAmbiente.setIcon(new ImageIcon(img)); // Sem redimensionamento se o painel não tem tamanho
+                }
+            } else {
+                imagemAmbiente.setIcon(null); // Limpa se não houver imagem
+            }
         }
-
+        */
+        // Como estamos usando paintComponent para desenhar a imagem, apenas repintar é suficiente.
         if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
-        this.requestFocusInWindow();
+        
+        this.requestFocusInWindow(); // Lógica combinada
     }
 
     public void aoEntrarNaTela() {
         if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
             Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
-            areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
-            areaLog.append("------------------------------------------------------\n");
-            areaLog.append(ambienteAtual.getDescricao() + "\n");
-            areaLog.append("Clima: " + ambienteAtual.getCondicaoClimatica() + "\n\n");
+            if (areaLog != null) { // Checagem adicional para areaLog
+                areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
+                areaLog.append("------------------------------------------------------\n");
+                areaLog.append(ambienteAtual.getDescricao() + "\n");
+                areaLog.append("Clima: " + ambienteAtual.getCondicaoClimatica() + "\n\n");
+            }
             atualizarTela();
         } else {
-            areaLog.setText("ERRO CRÍTICO AO CARREGAR O JOGO! PERSONAGEM OU AMBIENTE NULO.");
+            if (areaLog != null) { // Checagem adicional para areaLog
+                areaLog.setText("ERRO CRÍTICO AO CARREGAR O JOGO! PERSONAGEM OU AMBIENTE NULO.");
+            }
+            // Lógica combinada: atualiza todos os status para ERRO
             labelStatusNivel.setText("Nível: ERRO");
             labelStatusVida.setText("Vida: ERRO");
             labelStatusFome.setText("Fome: ERRO");
@@ -353,44 +451,61 @@ public class PainelJogo extends JPanel {
     private void mostrarMapa() {
         JDialog dialogoMapa = new JDialog(SwingUtilities.getWindowAncestor(this), "Mapa de Velkaria", Dialog.ModalityType.APPLICATION_MODAL);
         dialogoMapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialogoMapa.setSize(1000, 700); // Tamanho fixo
+        dialogoMapa.setSize(1000, 700); // Tamanho padrão do mapa
         dialogoMapa.setLocationRelativeTo(this);
 
         try {
-            BufferedImage imagemOriginal = ImageIO.read(getClass().getClassLoader().getResourceAsStream("Resources/mapa2.png"));
-            Image imagemRedimensionada = imagemOriginal.getScaledInstance(1000, 700, Image.SCALE_SMOOTH);
-            JLabel labelImagem = new JLabel(new ImageIcon(imagemRedimensionada));
-            dialogoMapa.setContentPane(new JPanel(new BorderLayout()));
-            dialogoMapa.getContentPane().add(labelImagem, BorderLayout.CENTER);
+            java.net.URL imgUrl = getClass().getClassLoader().getResource("Resources/mapa2.png");
+            if (imgUrl == null) {
+                throw new IOException("Arquivo de mapa 'Resources/mapa2.png' não encontrado no classpath.");
+            }
+            BufferedImage imagemOriginal = ImageIO.read(imgUrl);
+            
+            // Painel para desenhar a imagem, permitindo redimensionamento dinâmico se a janela for redimensionável
+            JPanel painelMapa = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    if (imagemOriginal != null) {
+                        // Desenha a imagem escalada para preencher o painel mantendo a proporção
+                        int painelW = getWidth();
+                        int painelH = getHeight();
+                        int imgW = imagemOriginal.getWidth();
+                        int imgH = imagemOriginal.getHeight();
+
+                        double painelRatio = (double) painelW / painelH;
+                        double imgRatio = (double) imgW / imgH;
+
+                        int drawW = painelW;
+                        int drawH = painelH;
+
+                        if (imgRatio > painelRatio) { // Imagem mais larga
+                            drawH = (int) (painelW / imgRatio);
+                        } else { // Imagem mais alta
+                            drawW = (int) (painelH * imgRatio);
+                        }
+                        int x = (painelW - drawW) / 2;
+                        int y = (painelH - drawH) / 2;
+                        g.drawImage(imagemOriginal, x, y, drawW, drawH, this);
+                    }
+                }
+            };
+            painelMapa.setPreferredSize(new Dimension(imagemOriginal.getWidth(), imagemOriginal.getHeight())); // Define o tamanho preferido inicial
+
+            dialogoMapa.setContentPane(new JScrollPane(painelMapa)); // Adiciona scroll se a imagem for maior que a janela
+            dialogoMapa.pack(); // Ajusta o tamanho da janela ao conteúdo (se JScrollPane permitir)
+            if (dialogoMapa.getWidth() > 1000 || dialogoMapa.getHeight() > 700) { // Limita ao tamanho máximo se pack() exceder
+                 dialogoMapa.setSize(Math.min(dialogoMapa.getWidth(), 1000), Math.min(dialogoMapa.getHeight(), 700));
+            }
+             dialogoMapa.setLocationRelativeTo(this); // Centraliza novamente após pack/setSize
             dialogoMapa.setVisible(true);
+
         } catch (IOException | NullPointerException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa.", "Erro", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa: " + ex.getMessage(), "Erro de Mapa", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private void realizarAcaoComumUI() {
-        if (meuJogo != null && meuJogo.getJogador() != null) {
-            java.util.List<String> acoes = meuJogo.getAcoesComunsDisponiveis(meuJogo.getJogador());
-            String escolha = (String) JOptionPane.showInputDialog(this, "Escolha uma ação comum:",
-                    "Ação Comum", JOptionPane.PLAIN_MESSAGE, null,
-                    acoes.toArray(), acoes.get(0));
-            if (escolha != null) {
-                meuJogo.executarAcaoComumInterface(escolha, areaLog);
-                atualizarTela();
-            }
-        }
-    }
-
-    private void realizarAcaoEspecialUI() {
-        if (meuJogo != null && meuJogo.getJogador() != null) {
-            java.util.List<String> acoes = meuJogo.getAcoesEspeciaisDisponiveis(meuJogo.getJogador());
-            String escolha = (String) JOptionPane.showInputDialog(this, "Escolha uma ação especial:",
-                    "Ação Especial", JOptionPane.PLAIN_MESSAGE, null,
-                    acoes.toArray(), acoes.get(0));
-            if (escolha != null) {
-                meuJogo.executarAcaoEspecialInterface(escolha, areaLog);
-                atualizarTela();
-            }
-        }
-    }
-
+    // Os métodos realizarAcaoComumUI() e realizarAcaoEspecialUI() da branch main
+    // foram integrados na lógica do ActionListener de botaoRealizarAcao,
+    // portanto, não são adicionados aqui como métodos separados para evitar redundância.
 }

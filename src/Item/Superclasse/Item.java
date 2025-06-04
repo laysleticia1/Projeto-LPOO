@@ -11,7 +11,6 @@ public class Item {
     private double peso;
     private int durabilidade;
 
-    // Construtor
     public Item (String nome, double peso, int durabilidade) {
         this.nome = nome;
         this.peso = peso;
@@ -27,7 +26,6 @@ public class Item {
         System.out.println("Item genérico: " + nome);
     }
 
-    //Getters and Setters
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;
     }
@@ -47,16 +45,20 @@ public class Item {
         return peso;
     }
 
-    //Interface
+    public String getDescricaoItem() {
+        if (this.nome != null && !this.nome.trim().isEmpty()) {
+            return "Um item do tipo: " + this.nome + ".";
+        }
+        return "Um item misterioso.";
+    }
+
     public String exibirDetalhesInterface() {
         StringBuilder sb = new StringBuilder();
         sb.append("- ").append(nome).append("\n");
         sb.append("• Peso: ").append(peso).append("\n");
         sb.append("• Durabilidade: ").append(durabilidade).append("\n");
-
         return sb.toString();
     }
 }
-
 
 

@@ -3,8 +3,8 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 import Jogo.Jogo;
+import Gerenciadores.GerenciadorDeEventos; // ACRÉSCIMO: Import necessário
 
-// Importa todas as classes de painel
 import UI.MenuInicialPanel;
 import UI.TelaNome;
 import UI.TelaPersonagem;
@@ -39,8 +39,6 @@ public class GerenciadorUI {
     private void inicializarUI() {
         window = new JFrame("Última Fronteira");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Tela cheia (sem redimensionar)
         window.setExtendedState(JFrame.MAXIMIZED_BOTH);
         window.setResizable(false);
         window.setLocationRelativeTo(null);
@@ -69,7 +67,6 @@ public class GerenciadorUI {
         window.setVisible(true);
     }
 
-    // Métodos de navegação
     public void irParaMenuInicial() {
         mostrarTela("MENU_INICIAL");
     }
@@ -134,10 +131,19 @@ public class GerenciadorUI {
         cl.show(painelPrincipalCardLayout, nome);
     }
 
-    // Getters
     public String getNomePersonagemAtual() { return nomePersonagemAtual; }
     public int getIdPersonagemSelecionado() { return idPersonagemSelecionado; }
     public Jogo getMeuJogo() { return meuJogo; }
+    public PainelJogo getPainelJogo() { return painelJogo; } // Getter para PainelJogo, pode ser útil
+
+    // MÉTODO ADICIONADO
+    public GerenciadorDeEventos getGerenciadorDeEventos() {
+        if (this.meuJogo != null) {
+            return this.meuJogo.getGerenciadorDeEventos();
+        }
+        System.err.println("GerenciadorUI: Tentativa de obter GerenciadorDeEventos, mas a instância de Jogo (meuJogo) é nula!");
+        return null;
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new GerenciadorUI());

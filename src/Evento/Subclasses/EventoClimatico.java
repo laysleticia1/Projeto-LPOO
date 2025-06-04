@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class EventoClimatico extends Evento {
     private String tipo;
-    private int duracao;
+    private int duracao; // em turnos
     private String efeitoNoAmbiente;
 
     public EventoClimatico(String nome, String descricao, double probabilidadeDeOcorrencia, String impacto, String condicaoDeAtivacao, String tipo, int duracao, String efeitoNoAmbiente) {
@@ -18,12 +18,13 @@ public class EventoClimatico extends Evento {
         this.efeitoNoAmbiente = efeitoNoAmbiente;
     }
 
+    @Override
     public void executar(Personagem jogador, Ambiente local) {
         System.out.println("Evento Climático: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Efeito no ambiente: " + efeitoNoAmbiente);
         System.out.println("Duração: " + duracao + " turno/s.");
-        switch (getImpacto().toLowerCase()) {
+        switch (getImpacto().trim().toLowerCase()) {
             case "vida":
                 jogador.diminuirVida(15);
                 System.out.println("Você perdeu 15 de vida!");
@@ -36,14 +37,24 @@ public class EventoClimatico extends Evento {
                 jogador.diminuirEnergia(15);
                 System.out.println("Você perdeu 15 de energia!");
                 break;
+            default:
+                System.out.println("O clima afeta o ambiente: " + efeitoNoAmbiente);
+                break;
         }
     }
 
+    @Override
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
+        // Geralmente, eventos climáticos podem ocorrer em muitos lugares,
+        // mas subclasses específicas (como TempestadeMontanha) restringem isso.
         return true;
     }
 
-    public void diminuirDuracao() { duracao--;}
+    public void diminuirDuracao() {
+        if (this.duracao > 0) {
+            this.duracao--;
+        }
+    }
 
     //Getters and Setters
     public int getDuracao() {
@@ -58,19 +69,18 @@ public class EventoClimatico extends Evento {
         this.efeitoNoAmbiente = efeitoNoAmbiente;
     }
 
-
     public String getTipo() {
         return tipo;
     }
 
     //Interface
     public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
-        areaLog.append("Evento Climático: " + getNomeEvento() + "\n");
+        areaLog.append("☀️ Evento Climático: " + getNomeEvento() + "\n");
         areaLog.append(getDescricao() + "\n");
         areaLog.append("Efeito no ambiente: " + efeitoNoAmbiente + "\n");
         areaLog.append("Duração: " + duracao + " turno/s.\n");
 
-        switch (getImpacto().toLowerCase()) {
+        switch (getImpacto().trim().toLowerCase()) {
             case "vida":
                 jogador.diminuirVida(15);
                 areaLog.append("Você perdeu 15 de vida!\n");
@@ -82,6 +92,9 @@ public class EventoClimatico extends Evento {
             case "energia":
                 jogador.diminuirEnergia(15);
                 areaLog.append("Você perdeu 15 de energia!\n");
+                break;
+            default:
+                areaLog.append("O clima afeta o ambiente: " + efeitoNoAmbiente + "\n");
                 break;
         }
     }
