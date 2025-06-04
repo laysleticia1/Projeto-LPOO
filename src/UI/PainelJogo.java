@@ -152,8 +152,6 @@ public class PainelJogo extends JPanel {
             if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
                 Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
                 adicionarLog("Você explora " + ambienteAtual.getNome() + "...");
-                // A lógica de explorar em Ambiente.java imprime no console.
-                // A UI não terá um retorno direto além do que o método em Ambiente fizer.
                 ambienteAtual.explorar(meuJogo.getJogador());
                 meuJogo.getJogador().consumirRecursosBasicos();
                 atualizarTela();
@@ -162,12 +160,6 @@ public class PainelJogo extends JPanel {
 
         botaoMudarAmbiente.addActionListener(e -> {
             adicionarLog("Tentando mudar de ambiente...");
-            // Como não podemos acessar GerenciadorDeAmbientes diretamente de Jogo.java
-            // sem um getter, e não podemos adicionar métodos a Jogo.java,
-            // esta funcionalidade fica limitada na UI.
-            // Poderíamos chamar um método público em Jogo.java que internamente usa o console
-            // ou que foi adaptado para GUI.
-            // Por agora, uma mensagem:
             JOptionPane.showMessageDialog(this,
                     "A escolha de ambiente pela UI requer ajustes na classe Jogo.java\n" +
                             "para expor os destinos ou processar a escolha.\n" +

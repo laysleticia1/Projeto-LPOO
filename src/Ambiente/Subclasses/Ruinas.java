@@ -20,7 +20,7 @@ public class Ruinas extends Ambiente {
                 new ArrayList<>(Arrays.asList("Artefatos Antigos", "Fragmentos de Escrita", "Poeira Mágica")),
                 0.55, // Probabilidade de evento ligeiramente menor
                 "Seco, com ventos uivantes entre as estruturas",
-                "/Resources/Ambientes/ruinas.png"); // Caminho da imagem
+                "/Resources/Ambientes/ruina.png"); // Caminho da imagem
         this.tipoDeEstrutura = "Templos desmoronados, torres quebradas e passagens subterrâneas.";
         this.misteriosPresentes = "Inscrições em uma língua esquecida, armadilhas antigas e ecos do passado.";
     }

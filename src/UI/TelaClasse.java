@@ -30,7 +30,7 @@ public class TelaClasse extends JPanel {
     private static final String SOBREVIVENTE_NATO = "Sobrevivente Nato";
 
     private Color corTextoDescricao = new Color(175, 144, 40);
-    private Font fonteDescricao = new Font("Serif", Font.ITALIC, 16);
+    private Font fonteDescricao = new Font("Serif", Font.ITALIC, 21);
     private Font fonteBotoesNavegacao = new Font("SansSerif", Font.BOLD, 18);
     private Color corTextoBotoesNav = new Color(230, 220, 200);
 

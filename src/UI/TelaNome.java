@@ -3,39 +3,54 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL; // Necessário para getClass().getResource()
 
 public class TelaNome extends JPanel {
     private JTextField campoNome;
-    private JButton botaoConfirmar;
+    private JButton botaoConfirmar; // Este é o botão "CONFIRMAR" (laranja)
     private JButton botaoVoltar;
     private GerenciadorUI controlador;
     private Image backgroundImage;
 
+    // Dimensões base para o design (largura e altura da sua imagem de fundo 'telaDoNome.png')
+    private final int BASE_LARGURA_DESIGN = 1536; // Confirme se sua imagem tem essa largura
+    private final int BASE_ALTURA_DESIGN = 1024; // Confirme se sua imagem tem essa altura
+
     public TelaNome(JPanel painelPrincipal, GerenciadorUI controlador) {
         this.controlador = controlador;
-        setLayout(null);
+        setLayout(null); // Usando layout nulo para posicionamento manual
 
         // Carrega o fundo
         try {
-            backgroundImage = new ImageIcon(getClass().getResource("/Resources/telaDoNome.png")).getImage();
+            URL imgUrl = getClass().getResource("/Resources/telaDoNome.png");
+            if (imgUrl != null) {
+                backgroundImage = new ImageIcon(imgUrl).getImage();
+            } else {
+                System.err.println("Erro: Imagem de fundo 'telaDoNome.png' não encontrada.");
+            }
         } catch (Exception e) {
-            System.err.println("Erro ao carregar imagem de fundo");
+            e.printStackTrace();
+            System.err.println("Erro ao carregar imagem de fundo: " + e.getMessage());
         }
 
-        // Campo de nome
+        // --- CAMPO DE NOME (A BARRA PRETA ONDE SE ESCREVE) ---
         campoNome = new JTextField();
-        campoNome.setFont(new Font("SansSerif", Font.BOLD, 22));
+        campoNome.setFont(new Font("SansSerif", Font.BOLD, 28)); // Aumentado para 28
         campoNome.setHorizontalAlignment(JTextField.CENTER);
         campoNome.setOpaque(true);
-        campoNome.setBackground(new Color(0, 0, 0, 80)); // Preto com transparência
+        campoNome.setBackground(new Color(0, 0, 0, 80));
         campoNome.setForeground(Color.WHITE);
         campoNome.setCaretColor(Color.WHITE);
         campoNome.setBorder(null);
         add(campoNome);
 
+        // --- BOTÃO CONFIRMAR (O BOTÃO LARANJA NA PARTE INFERIOR) ---
+        // AQUI ESTÁ A MUDANÇA CRÍTICA: O BOTÃO NÃO TERÁ TEXTO PRÓPRIO.
+        // Ele vai confiar no texto que já está na imagem de fundo.
+        botaoConfirmar = new JButton(); // AGORA SEM NENHUM TEXTO DEFINIDO NO CONSTRUTOR DO BOTÃO
+        // Remova a linha abaixo se ela existir no seu código atual para este botão
+        // botaoConfirmar.setFont(new Font("SansSerif", Font.BOLD, 30)); // REMOVIDO, pois não terá texto
 
-        // Botão confirmar
-        botaoConfirmar = new JButton();
         botaoConfirmar.setOpaque(false);
         botaoConfirmar.setContentAreaFilled(false);
         botaoConfirmar.setBorderPainted(false);
@@ -46,68 +61,64 @@ public class TelaNome extends JPanel {
             if (!nome.isEmpty()) {
                 controlador.irParaTelaPersonagem(nome);
             } else {
-                JOptionPane.showMessageDialog(this, "Digite um nome.");
+                JOptionPane.showMessageDialog(this, "Por favor, digite um nome para continuar.", "Nome Vazio", JOptionPane.WARNING_MESSAGE);
             }
         });
         add(botaoConfirmar);
 
-        // Botão voltar
+        // --- BOTÃO VOLTAR (O PEQUENO NO CANTO INFERIOR ESQUERDO) ---
+        // Mantido o texto e o ajuste de fonte/tamanho.
         botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 18));
+        botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 20));
         botaoVoltar.setOpaque(true);
-        botaoVoltar.setBackground(new Color(0, 0, 0, 80)); // Preto com transparência
-        botaoVoltar.setForeground(Color.WHITE); // Texto branco
+        botaoVoltar.setBackground(new Color(0, 0, 0, 80));
+        botaoVoltar.setForeground(Color.WHITE);
         botaoVoltar.setFocusPainted(false);
         botaoVoltar.setBorder(null);
         botaoVoltar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoVoltar.addActionListener(e -> controlador.irParaMenuInicial());
         add(botaoVoltar);
-
     }
 
     @Override
     public void doLayout() {
         super.doLayout();
 
-        setCoordenadas(
-                410, 470, 700, 70,     // Campo de nome (mantém o mesmo)
-                500, 810, 520, 130,     // NOVO tamanho do botão CONFIRMAR
-                50, 960, 120, 35       // Botão voltar
-        );
-    }
+        double escalaX = getWidth() / (double) BASE_LARGURA_DESIGN;
+        double escalaY = getHeight() / (double) BASE_ALTURA_DESIGN;
 
+        int correcaoBarra = 0;
+        if (getTopLevelAncestor() instanceof JFrame) {
+            correcaoBarra = ((JFrame) getTopLevelAncestor()).getInsets().top;
+        }
 
-    public void setCoordenadas(int xCampo, int yCampo, int wCampo, int hCampo,
-                               int xConfirmar, int yConfirmar, int wConfirmar, int hConfirmar,
-                               int xVoltar, int yVoltar, int wVoltar, int hVoltar) {
-
-        double escalaX = getWidth() / 1536.0;
-        double escalaY = getHeight() / 1024.0;
-
-        int barra = getTopLevelAncestor() instanceof JFrame
-                ? ((JFrame) getTopLevelAncestor()).getInsets().top
-                : 30;
-
+        // --- APLICANDO COORDENADAS E TAMANHOS ESCALADOS ---
+        // Campo de nome: Altura aumentada para 100
         campoNome.setBounds(
-                (int) (xCampo * escalaX),
-                (int) ((yCampo - barra) * escalaY),
-                (int) (wCampo * escalaX),
-                (int) (hCampo * escalaY)
+                (int) (410 * escalaX),
+                (int) ((470 - correcaoBarra) * escalaY),
+                (int) (700 * escalaX),
+                (int) (100 * escalaY)
         );
 
+        // Botão confirmar (laranja): Coordenadas base (mantidas)
         botaoConfirmar.setBounds(
-                (int) (xConfirmar * escalaX),
-                (int) ((yConfirmar - barra) * escalaY),
-                (int) (wConfirmar * escalaX),
-                (int) (hConfirmar * escalaY)
+                (int) (500 * escalaX),
+                (int) ((810 - correcaoBarra) * escalaY),
+                (int) (520 * escalaX),
+                (int) (130 * escalaY)
         );
 
+        // Botão voltar: Largura e altura ajustadas
         botaoVoltar.setBounds(
-                (int) (xVoltar * escalaX),
-                (int) ((yVoltar - barra) * escalaY),
-                (int) (wVoltar * escalaX),
-                (int) (hVoltar * escalaY)
+                (int) (50 * escalaX),
+                (int) ((960 - correcaoBarra) * escalaY),
+                (int) (150 * escalaX),
+                (int) (45 * escalaY)
         );
+
+        revalidate();
+        repaint();
     }
 
     @Override
@@ -121,5 +132,4 @@ public class TelaNome extends JPanel {
     public void resetarTela() {
         campoNome.setText("");
     }
-
 }
