@@ -10,13 +10,13 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
 public class TelaNarrativa extends JPanel {
-    private Image imagemFundo; // Seu pergaminho
+    private Image imagemFundo;
     private JButton botaoContinuar;
     private JTextArea areaNarrativa;
     private JScrollPane scrollPane;
 
     public TelaNarrativa(Runnable acaoAoContinuar) {
-        // << Substitua "pergaminho.png" pelo NOME EXATO do seu arquivo de imagem >>
+
         String nomeImagemFundo = "pergaminho.png";
         try {
             URL imgUrl = getClass().getResource("/Resources/" + nomeImagemFundo);
@@ -40,57 +40,36 @@ public class TelaNarrativa extends JPanel {
         // Área de texto narrativa
         areaNarrativa = new JTextArea();
         areaNarrativa.setText(getTextoNarrativaPadrao()); // Carrega seu texto narrativo
-        areaNarrativa.setFont(new Font("Serif", Font.PLAIN, 18)); // Ajuste a fonte como desejar
+        areaNarrativa.setFont(new Font("Serif", Font.PLAIN, 21)); // Ajuste a fonte como desejar
         areaNarrativa.setForeground(new Color(50, 40, 30)); // Cor escura para texto em pergaminho claro
         areaNarrativa.setOpaque(false); // JTextArea transparente para o pergaminho aparecer atrás
         areaNarrativa.setEditable(false);
         areaNarrativa.setLineWrap(true);
         areaNarrativa.setWrapStyleWord(true);
 
-        // << PASSO 1: AJUSTE AS MARGENS INTERNAS DA JTextArea >>
-        // (topo, esquerda, baixo, direita) em pixels.
-        // Aumente os valores de 'esquerda' e 'direita' para que o bloco de texto
-        // fique mais estreito dentro da área do pergaminho.
-        // Aumente 'topo' e 'baixo' para o texto não colar nas bordas superior/inferior da área de texto.
-        areaNarrativa.setMargin(new Insets(60, 90, 60, 90)); // Exemplo: 60px topo/baixo, 90px laterais
-
-        areaNarrativa.setCaretPosition(0); // Garante que o texto comece do topo
+        areaNarrativa.setMargin(new Insets(60, 90, 60, 90));
+        areaNarrativa.setCaretPosition(0);
 
         scrollPane = new JScrollPane(areaNarrativa);
         scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false); // Viewport também transparente
+        scrollPane.getViewport().setOpaque(false);
 
-        // Para depuração visual da área do scrollPane (descomente para ver uma borda vermelha):
-        // scrollPane.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-        // Quando estiver ok, use uma borda vazia ou nenhuma:
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        // Esconder as barras de rolagem (rolagem com mouse ainda funciona)
+
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // << PASSO 2: AJUSTE AS DIMENSÕES DO JScrollPane (ÁREA DE TEXTO VISÍVEL) >>
-        // Esta dimensão define a "janela" retangular onde o texto será visível e rolável.
-        // Meça a parte central e "plana" do seu pergaminho.png onde o texto deve ficar.
-        // A LARGURA e ALTURA devem ser MENORES que as dimensões totais do seu pergaminho.png
-        // para que as bordas enroladas do pergaminho fiquem "fora" desta área de texto.
-        // Exemplo: Para um pergaminho que ocupa quase 800x600, a área de texto pode ser:
-        scrollPane.setPreferredSize(new Dimension(700, 350)); // Ex: Largura 500, Altura 350
+        scrollPane.setPreferredSize(new Dimension(700, 350));
 
-        // Painel para centralizar o scrollPane (área de texto)
         JPanel painelTextoCentralizado = new JPanel(new GridBagLayout());
         painelTextoCentralizado.setOpaque(false); // Transparente
         GridBagConstraints gbcTexto = new GridBagConstraints();
-        // gbcTexto.insets = new Insets(20,0,0,0); // Opcional: Se quiser empurrar o bloco de texto um pouco para baixo
+
         painelTextoCentralizado.add(scrollPane, gbcTexto);
 
         add(painelTextoCentralizado, BorderLayout.CENTER);
 
-        // Dentro do construtor de TelaNarrativa.java
-
-        // ... (código da área de texto e JScrollPane) ...
-
-        // Botão continuar
         botaoContinuar = new JButton("Continuar Jornada");
         botaoContinuar.setFont(new Font("Serif", Font.BOLD, 18));
         botaoContinuar.setBackground(new Color(139, 69, 19));
@@ -113,9 +92,6 @@ public class TelaNarrativa extends JPanel {
 
         JPanel painelBotao = new JPanel(new FlowLayout(FlowLayout.CENTER));
         painelBotao.setOpaque(false);
-        // << AJUSTE AQUI: Margem do painel do botão >>
-        // Diminuindo o valor 'baixo' (terceiro parâmetro) para mover o botão mais para baixo.
-        // Antes era: new EmptyBorder(10, 0, 50, 0)
         painelBotao.setBorder(new EmptyBorder(10, 0, 20, 0)); // Ex: margem inferior de 20px
         painelBotao.add(botaoContinuar);
         add(painelBotao, BorderLayout.SOUTH);
@@ -163,7 +139,7 @@ public class TelaNarrativa extends JPanel {
             g.drawImage(imagemFundo, 0, 0, getWidth(), getHeight(), this);
             g2d.dispose();
         } else {
-            // Fallback: Cor de fundo se a imagem do pergaminho não carregar
+
             g.setColor(new Color(230, 220, 190));
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.BLACK);
