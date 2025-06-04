@@ -5,24 +5,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import javax.imageio.ImageIO;
-// Removido import java.io.File se não usado diretamente
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Jogo.Jogo;
 import Personagem.Superclasse.Personagem;
-// Removido Personagem.Subclasses.* se não usado diretamente aqui
 import Personagem.Inventario.Inventario;
 import Ambiente.Superclasse.Ambiente;
-import Gerenciadores.GerenciadorDeEventos; // Import necessário
+import Gerenciadores.GerenciadorDeEventos;
 
 public class PainelJogo extends JPanel {
     private GerenciadorUI controlador;
     private Jogo meuJogo;
 
-    // Componentes de Status
-    private JLabel labelStatusNivel; // Mantido da branch main
+    private JLabel labelStatusNivel;
     private JLabel labelStatusVida;
     private JLabel labelStatusFome;
     private JLabel labelStatusSede;
@@ -78,7 +75,6 @@ public class PainelJogo extends JPanel {
         }
         add(painelStatus, BorderLayout.NORTH);
 
-        // Usando BorderLayout da branch main
         painelVisaoAmbiente = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -86,86 +82,73 @@ public class PainelJogo extends JPanel {
                 Graphics2D g2d = (Graphics2D) g.create();
                 g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-                Image imgAmbiente = null;
-                String nomeAmbiente = "Desconhecido";
+                Image imgAmbienteAtual = null;
+                String nomeAmbienteAtualStr = "Desconhecido";
                 if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
-                    Ambiente ambiente = meuJogo.getJogador().getAmbienteAtual();
-                    imgAmbiente = ambiente.getImagemAmbiente(); // Assumindo que Ambiente tem getImagemAmbiente() que retorna Image
-                    nomeAmbiente = ambiente.getNome();
+                    Ambiente ambienteObj = meuJogo.getJogador().getAmbienteAtual();
+                    imgAmbienteAtual = ambienteObj.getImagemAmbiente();
+                    nomeAmbienteAtualStr = ambienteObj.getNome();
 
-                    // Lógica para desenhar a imagem do ambiente, se existir
-                    if (imgAmbiente != null) {
-                        // Calcula a proporção para manter o aspect ratio
+                    if (imgAmbienteAtual != null) {
                         int painelW = getWidth();
                         int painelH = getHeight();
-                        int imgW = imgAmbiente.getWidth(null);
-                        int imgH = imgAmbiente.getHeight(null);
+                        int imgW = imgAmbienteAtual.getWidth(null);
+                        int imgH = imgAmbienteAtual.getHeight(null);
 
-                        if (imgW <= 0 || imgH <= 0) { // Imagem inválida ou não carregada
-                             g2d.setColor(new Color(20, 20, 20));
+                        if (imgW <= 0 || imgH <= 0) {
+                            g2d.setColor(new Color(20, 20, 20));
                             g2d.fillRect(0, 0, painelW, painelH);
                             g2d.setColor(Color.LIGHT_GRAY);
                             g2d.setFont(new Font("SansSerif", Font.ITALIC, 16));
-                            String msgErro = "Arte do ambiente '" + nomeAmbiente + "' com dimensões inválidas.";
+                            String msgErroDim = "Arte do ambiente '" + nomeAmbienteAtualStr + "' com dimensões inválidas.";
                             FontMetrics fm = g2d.getFontMetrics();
-                            int msgWidth = fm.stringWidth(msgErro);
-                            g2d.drawString(msgErro, (painelW - msgWidth) / 2, painelH / 2);
+                            int msgWidth = fm.stringWidth(msgErroDim);
+                            g2d.drawString(msgErroDim, (painelW - msgWidth) / 2, painelH / 2);
                         } else {
                             double painelRatio = (double) painelW / painelH;
                             double imgRatio = (double) imgW / imgH;
-
                             int drawW = painelW;
                             int drawH = painelH;
 
-                            if (imgRatio > painelRatio) { // Imagem mais larga que o painel
+                            if (imgRatio > painelRatio) {
                                 drawH = (int) (painelW / imgRatio);
-                            } else { // Imagem mais alta que o painel (ou proporção igual)
+                            } else {
                                 drawW = (int) (painelH * imgRatio);
                             }
                             int x = (painelW - drawW) / 2;
                             int y = (painelH - drawH) / 2;
-                            g2d.drawImage(imgAmbiente, x, y, drawW, drawH, this);
+                            g2d.drawImage(imgAmbienteAtual, x, y, drawW, drawH, this);
                         }
-                    } else { // Se imgAmbiente for null
+                    } else {
                         g2d.setColor(new Color(20, 20, 20));
                         g2d.fillRect(0, 0, getWidth(), getHeight());
                         g2d.setColor(Color.LIGHT_GRAY);
                         g2d.setFont(new Font("SansSerif", Font.ITALIC, 16));
-                        String msgErro = "Arte do ambiente '" + nomeAmbiente + "' não carregada.";
+                        String msgErroLoad = "Arte do ambiente '" + nomeAmbienteAtualStr + "' não carregada.";
                         FontMetrics fm = g2d.getFontMetrics();
-                        int msgWidth = fm.stringWidth(msgErro);
-                        g2d.drawString(msgErro, (getWidth() - msgWidth) / 2, getHeight() / 2);
+                        int msgWidth = fm.stringWidth(msgErroLoad);
+                        g2d.drawString(msgErroLoad, (getWidth() - msgWidth) / 2, getHeight() / 2);
                     }
-                } else { // Se meuJogo ou jogador ou ambienteAtual for null
+                } else {
                     g2d.setColor(new Color(25, 25, 25));
                     g2d.fillRect(0, 0, getWidth(), getHeight());
                     g2d.setColor(Color.DARK_GRAY);
                     g2d.setFont(new Font("SansSerif", Font.BOLD, 18));
-                    String msg = "Jogo não iniciado ou ambiente não definido.";
+                    String msgJogoNaoIniciado = "Jogo não iniciado ou ambiente não definido.";
                     FontMetrics fm = g2d.getFontMetrics();
-                    int msgWidth = fm.stringWidth(msg);
-                    g2d.drawString(msg, (getWidth() - msgWidth) / 2, getHeight() / 2);
+                    int msgWidth = fm.stringWidth(msgJogoNaoIniciado);
+                    g2d.drawString(msgJogoNaoIniciado, (getWidth() - msgWidth) / 2, getHeight() / 2);
                 }
                 g2d.dispose();
             }
         };
-        painelVisaoAmbiente.setBackground(Color.BLACK); // Cor de fundo caso a imagem não preencha tudo
+        painelVisaoAmbiente.setBackground(Color.BLACK);
 
-        // imagemAmbiente JLabel não é mais usado para desenhar diretamente a imagem de fundo,
-        // pois o paintComponent do painelVisaoAmbiente cuida disso.
-        // Pode ser removido ou usado para outros propósitos se necessário.
-        // Se for removido, ajuste o add(painelVisaoAmbiente, BorderLayout.CENTER);
-        // e a remoção da sua instanciação. Por ora, vou mantê-lo mas não adicioná-lo diretamente.
-        // O código original da branch 'main' adicionava um JLabel ao BorderLayout.CENTER.
-        // A lógica de desenho customizado em paintComponent é mais flexível para scaling.
-        // Para manter a estrutura da 'main' que usa um JLabel para a imagem:
-        imagemAmbiente = new JLabel(); // Instanciado, mas a imagem será setada em atualizarTela
+        imagemAmbiente = new JLabel();
         imagemAmbiente.setHorizontalAlignment(SwingConstants.CENTER);
         imagemAmbiente.setVerticalAlignment(SwingConstants.CENTER);
-        // painelVisaoAmbiente.add(imagemAmbiente, BorderLayout.CENTER); // Removido para usar paintComponent
 
         add(painelVisaoAmbiente, BorderLayout.CENTER);
-
 
         JPanel painelInferior = new JPanel(new BorderLayout(0, 5));
         painelInferior.setOpaque(false);
@@ -219,7 +202,6 @@ public class PainelJogo extends JPanel {
 
                 adicionarLog("Você explora " + ambienteAtual.getNome() + "...");
 
-                // Lógica da branch eventos_interface para explorar
                 GerenciadorDeEventos gerenciadorEventos = null;
                 if (meuJogo.getGerenciadorDeEventos() != null) {
                     gerenciadorEventos = meuJogo.getGerenciadorDeEventos();
@@ -232,10 +214,6 @@ public class PainelJogo extends JPanel {
                 } else {
                     areaLog.append("Sistema de eventos (UI) não pôde ser acionado (gerenciador não encontrado).\n");
                 }
-                // Consumir recursos básicos e atualizar tela é feito pelo GerenciadorDeTurnos chamado dentro de dispararEventoExploracaoInterface
-                // Se não for, descomentar as linhas abaixo e ajustar GerenciadorDeEventos
-                // jogador.consumirRecursosBasicos(); 
-                // areaLog.append("Recursos básicos consumidos.\n");
 
                 atualizarTela();
             } else {
@@ -246,30 +224,30 @@ public class PainelJogo extends JPanel {
         });
 
         botaoMudarAmbiente.addActionListener(e -> {
-            // Lógica da branch main para mudar ambiente
-            adicionarLog("Abrindo mapa de ambientes...");
-            if (meuJogo == null) {
-                adicionarLog("Instância do jogo não disponível para mover ambientes.");
-                JOptionPane.showMessageDialog(this, "Erro: Jogo não inicializado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            adicionarLog("Abrindo opções de ambientes...");
+            if (meuJogo == null || meuJogo.getGerenciadorDeAmbientes() == null) {
+                adicionarLog("Instância do jogo ou gerenciador de ambientes não disponível.");
+                JOptionPane.showMessageDialog(this, "Erro: Jogo não inicializado corretamente.", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // Assegure que TelaMoverAmbientes está acessível e correta
-            new TelaMoverAmbientes(meuJogo.getGerenciadorDeAmbientes().getAmbientes(), nomeAmbienteEscolhido -> {
+            // AJUSTE: A chamada ao construtor de TelaMoverAmbientes agora passa apenas UM argumento (o callback).
+            // A lista de ambientes não é mais passada aqui, pois o construtor de TelaMoverAmbientes não a espera.
+            // TelaMoverAmbientes internamente não usava essa lista de qualquer forma (os botões eram fixos).
+            new TelaMoverAmbientes((String nomeAmbienteEscolhido) -> {
                 try {
+                    // 'nomeAmbienteEscolhido' já é uma String aqui, devido ao Consumer<String> em TelaMoverAmbientes
                     meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente);
-                    // A mensagem "Você se moveu para..." já é adicionada por mudarAmbienteViaInterface
-                    atualizarTela(); 
+                    atualizarTela();
                 } catch (Exception ex) {
-                    adicionarLog("Erro ao mudar de ambiente: " + ex.getMessage());
+                    adicionarLog("Erro ao mudar de ambiente: " + ex.getMessage() + "\n");
                     JOptionPane.showMessageDialog(this,
                             "Erro ao mudar de ambiente:\n" + ex.getMessage(),
-                            "Erro", JOptionPane.ERROR_MESSAGE);
+                            "Erro de Movimentação", JOptionPane.ERROR_MESSAGE);
                 }
             });
         });
 
         botaoRealizarAcao.addActionListener(e -> {
-            // Lógica da branch main para realizar ação
             if (meuJogo != null && meuJogo.getJogador() != null) {
                 String[] tipoDeAcao = {"Ação Comum", "Ação Especial"};
                 String tipoEscolhido = (String) JOptionPane.showInputDialog(
@@ -282,7 +260,7 @@ public class PainelJogo extends JPanel {
                         tipoDeAcao[0]
                 );
 
-                if (tipoEscolhido == null) return; // Usuário cancelou
+                if (tipoEscolhido == null) return;
 
                 java.util.List<String> acoesDisponiveis;
                 String tituloDialogo;
@@ -290,7 +268,7 @@ public class PainelJogo extends JPanel {
                 if (tipoEscolhido.equals("Ação Comum")) {
                     acoesDisponiveis = meuJogo.getAcoesComunsDisponiveis(meuJogo.getJogador());
                     tituloDialogo = "Ação Comum";
-                } else { // Ação Especial
+                } else {
                     acoesDisponiveis = meuJogo.getAcoesEspeciaisDisponiveis(meuJogo.getJogador());
                     tituloDialogo = "Ação Especial";
                 }
@@ -313,35 +291,34 @@ public class PainelJogo extends JPanel {
                 if (acaoEscolhida != null) {
                     if (tipoEscolhido.equals("Ação Comum")) {
                         meuJogo.executarAcaoComumInterface(acaoEscolhida, areaLog);
-                    } else { // Ação Especial
+                    } else {
                         meuJogo.executarAcaoEspecialInterface(acaoEscolhida, areaLog);
                     }
                     atualizarTela();
                 }
             } else {
-                 if (areaLog != null) areaLog.append("Jogador ou Jogo não definido para realizar ação.\n");
+                if (areaLog != null) areaLog.append("Jogador ou Jogo não definido para realizar ação.\n");
             }
         });
 
         botaoVerInventario.addActionListener(e -> {
             if (meuJogo != null && meuJogo.getJogador() != null) {
                 Inventario inv = meuJogo.getJogador().getInventario();
-                // Lógica da branch main (passa jogador)
                 Personagem jogador = meuJogo.getJogador();
                 if (inv != null) {
-                    PainelInventario painel = new PainelInventario(inv, jogador, areaLog); // Passa areaLog
+                    PainelInventario painel = new PainelInventario(inv, jogador);
                     JDialog janela = new JDialog(SwingUtilities.getWindowAncestor(this), "Inventário", Dialog.ModalityType.APPLICATION_MODAL);
                     janela.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                     janela.setContentPane(painel);
                     janela.pack();
                     janela.setLocationRelativeTo(this);
                     janela.setVisible(true);
-                    atualizarTela(); // Atualiza caso um item seja usado/removido no inventário
+                    atualizarTela();
                 } else {
-                     adicionarLog("Inventário não disponível.");
+                    adicionarLog("Inventário não disponível.");
                 }
             } else {
-                 if (areaLog != null) areaLog.append("Jogador ou Jogo não definido para ver inventário.\n");
+                if (areaLog != null) areaLog.append("Jogador ou Jogo não definido para ver inventário.\n");
             }
         });
 
@@ -350,7 +327,6 @@ public class PainelJogo extends JPanel {
                     "Tem certeza que deseja sair do jogo?", "Sair do Jogo",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (confirm == JOptionPane.YES_OPTION) {
-                // Adicionar qualquer lógica de salvamento aqui antes de sair, se necessário
                 System.exit(0);
             }
         });
@@ -372,24 +348,18 @@ public class PainelJogo extends JPanel {
 
     public void atualizarTela() {
         if (meuJogo == null || meuJogo.getJogador() == null) {
-            // Lógica combinada: define N/A para todos os status
             labelStatusNivel.setText("Nível: N/A");
             labelStatusVida.setText("Vida: N/A");
             labelStatusFome.setText("Fome: N/A");
             labelStatusSede.setText("Sede: N/A");
             labelStatusEnergia.setText("Energia: N/A");
             labelStatusSanidade.setText("Sanidade: N/A");
-            
-            // Limpa a imagem do ambiente se estiver usando o JLabel para isso
-            // if (imagemAmbiente != null) imagemAmbiente.setIcon(null); 
-            
-            // Repinta o painel de visão do ambiente (que pode ter sua própria lógica de "estado nulo")
+
             if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
             return;
         }
 
         Personagem jogador = meuJogo.getJogador();
-        // Lógica combinada: atualiza todos os status, incluindo nível
         labelStatusNivel.setText("Nível: " + jogador.getNivel());
         labelStatusVida.setText("Vida: " + jogador.getVida() + "/" + jogador.getVidaMaxima());
         labelStatusFome.setText("Fome: " + jogador.getFome() + "/" + jogador.getFomeMaxima());
@@ -397,37 +367,15 @@ public class PainelJogo extends JPanel {
         labelStatusEnergia.setText("Energia: " + jogador.getEnergia() + "/" + jogador.getEnergiaMaxima());
         labelStatusSanidade.setText("Sanidade: " + jogador.getSanidade() + "/" + jogador.getSanidadeMaxima());
 
-        // Atualiza a imagem do ambiente diretamente no painelVisaoAmbiente
-        // Se você estiver usando um JLabel 'imagemAmbiente' dentro de 'painelVisaoAmbiente'
-        // e quiser continuar com essa abordagem, a lógica seria:
-        /*
-        if (imagemAmbiente != null && jogador.getAmbienteAtual() != null) {
-            Image img = jogador.getAmbienteAtual().getImagemAmbiente(); // Supondo que retorna Image
-            if (img != null) {
-                // Redimensionar a imagem para caber no JLabel/Painel sem distorcer
-                int panelWidth = painelVisaoAmbiente.getWidth();
-                int panelHeight = painelVisaoAmbiente.getHeight();
-                if (panelWidth > 0 && panelHeight > 0) {
-                    Image scaledImg = img.getScaledInstance(panelWidth, panelHeight, Image.SCALE_SMOOTH); // Ou SCALE_DEFAULT
-                    imagemAmbiente.setIcon(new ImageIcon(scaledImg));
-                } else {
-                     imagemAmbiente.setIcon(new ImageIcon(img)); // Sem redimensionamento se o painel não tem tamanho
-                }
-            } else {
-                imagemAmbiente.setIcon(null); // Limpa se não houver imagem
-            }
-        }
-        */
-        // Como estamos usando paintComponent para desenhar a imagem, apenas repintar é suficiente.
         if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
-        
-        this.requestFocusInWindow(); // Lógica combinada
+
+        this.requestFocusInWindow();
     }
 
     public void aoEntrarNaTela() {
         if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
             Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
-            if (areaLog != null) { // Checagem adicional para areaLog
+            if (areaLog != null) {
                 areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
                 areaLog.append("------------------------------------------------------\n");
                 areaLog.append(ambienteAtual.getDescricao() + "\n");
@@ -435,10 +383,9 @@ public class PainelJogo extends JPanel {
             }
             atualizarTela();
         } else {
-            if (areaLog != null) { // Checagem adicional para areaLog
+            if (areaLog != null) {
                 areaLog.setText("ERRO CRÍTICO AO CARREGAR O JOGO! PERSONAGEM OU AMBIENTE NULO.");
             }
-            // Lógica combinada: atualiza todos os status para ERRO
             labelStatusNivel.setText("Nível: ERRO");
             labelStatusVida.setText("Vida: ERRO");
             labelStatusFome.setText("Fome: ERRO");
@@ -451,7 +398,7 @@ public class PainelJogo extends JPanel {
     private void mostrarMapa() {
         JDialog dialogoMapa = new JDialog(SwingUtilities.getWindowAncestor(this), "Mapa de Velkaria", Dialog.ModalityType.APPLICATION_MODAL);
         dialogoMapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialogoMapa.setSize(1000, 700); // Tamanho padrão do mapa
+        dialogoMapa.setSize(1000, 700);
         dialogoMapa.setLocationRelativeTo(this);
 
         try {
@@ -460,14 +407,12 @@ public class PainelJogo extends JPanel {
                 throw new IOException("Arquivo de mapa 'Resources/mapa2.png' não encontrado no classpath.");
             }
             BufferedImage imagemOriginal = ImageIO.read(imgUrl);
-            
-            // Painel para desenhar a imagem, permitindo redimensionamento dinâmico se a janela for redimensionável
+
             JPanel painelMapa = new JPanel() {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     if (imagemOriginal != null) {
-                        // Desenha a imagem escalada para preencher o painel mantendo a proporção
                         int painelW = getWidth();
                         int painelH = getHeight();
                         int imgW = imagemOriginal.getWidth();
@@ -479,9 +424,9 @@ public class PainelJogo extends JPanel {
                         int drawW = painelW;
                         int drawH = painelH;
 
-                        if (imgRatio > painelRatio) { // Imagem mais larga
+                        if (imgRatio > painelRatio) {
                             drawH = (int) (painelW / imgRatio);
-                        } else { // Imagem mais alta
+                        } else {
                             drawW = (int) (painelH * imgRatio);
                         }
                         int x = (painelW - drawW) / 2;
@@ -490,14 +435,18 @@ public class PainelJogo extends JPanel {
                     }
                 }
             };
-            painelMapa.setPreferredSize(new Dimension(imagemOriginal.getWidth(), imagemOriginal.getHeight())); // Define o tamanho preferido inicial
-
-            dialogoMapa.setContentPane(new JScrollPane(painelMapa)); // Adiciona scroll se a imagem for maior que a janela
-            dialogoMapa.pack(); // Ajusta o tamanho da janela ao conteúdo (se JScrollPane permitir)
-            if (dialogoMapa.getWidth() > 1000 || dialogoMapa.getHeight() > 700) { // Limita ao tamanho máximo se pack() exceder
-                 dialogoMapa.setSize(Math.min(dialogoMapa.getWidth(), 1000), Math.min(dialogoMapa.getHeight(), 700));
+            if (imagemOriginal != null) {
+                painelMapa.setPreferredSize(new Dimension(imagemOriginal.getWidth(), imagemOriginal.getHeight()));
+            } else {
+                painelMapa.setPreferredSize(new Dimension(800, 600));
             }
-             dialogoMapa.setLocationRelativeTo(this); // Centraliza novamente após pack/setSize
+
+            dialogoMapa.setContentPane(new JScrollPane(painelMapa));
+            dialogoMapa.pack();
+            if (dialogoMapa.getWidth() > 1000 || dialogoMapa.getHeight() > 700) {
+                dialogoMapa.setSize(Math.min(dialogoMapa.getWidth(), 1000), Math.min(dialogoMapa.getHeight(), 700));
+            }
+            dialogoMapa.setLocationRelativeTo(this);
             dialogoMapa.setVisible(true);
 
         } catch (IOException | NullPointerException ex) {
@@ -505,7 +454,4 @@ public class PainelJogo extends JPanel {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa: " + ex.getMessage(), "Erro de Mapa", JOptionPane.ERROR_MESSAGE);
         }
     }
-    // Os métodos realizarAcaoComumUI() e realizarAcaoEspecialUI() da branch main
-    // foram integrados na lógica do ActionListener de botaoRealizarAcao,
-    // portanto, não são adicionados aqui como métodos separados para evitar redundância.
 }
