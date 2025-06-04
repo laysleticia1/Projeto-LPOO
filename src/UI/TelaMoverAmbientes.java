@@ -5,9 +5,10 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.InputStream; // Para getResourceAsStream
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
+import java.io.IOException;
 
 public class TelaMoverAmbientes extends JFrame {
 
@@ -26,17 +27,24 @@ public class TelaMoverAmbientes extends JFrame {
         setLayout(null);
 
         try {
-            imagemOriginal = ImageIO.read(new File("src/Resources/mapa3.png"));
+            InputStream imgStream = getClass().getResourceAsStream("/Resources/mapa3.png");
+            if (imgStream == null) {
+                throw new IOException("Arquivo de mapa '/Resources/mapa3.png' não encontrado no classpath.");
+            }
+            imagemOriginal = ImageIO.read(imgStream);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao carregar imagem: " + e.getMessage());
+            e.printStackTrace(); // Para depuração no console
+            JOptionPane.showMessageDialog(null, "Erro ao carregar imagem do mapa: " + e.getMessage(), "Erro de Imagem", JOptionPane.ERROR_MESSAGE);
+            dispose(); // Fecha a janela se o mapa não puder ser carregado
             return;
         }
 
         imagemEscalada = new JLabel();
-        imagemEscalada.setBounds(0, 0, 1, 1);
+        // As dimensões iniciais podem ser pequenas, serão ajustadas pelo componentResized
+        imagemEscalada.setBounds(0, 0, getWidth(), getHeight());
         layeredPane.add(imagemEscalada, Integer.valueOf(0));
 
-        // Botões invisíveis
+        // Coordenadas e tamanhos dos botões precisam ser ajustados para sua imagem de mapa específica
         layeredPane.add(criarBotao("Montanhas de Vhaldrak", 85, 65, 300, 300, callback), Integer.valueOf(1));
         layeredPane.add(criarBotao("Floresta de Elvarron", 520, 65, 300, 300, callback), Integer.valueOf(1));
         layeredPane.add(criarBotao("Planícies de Myndros", 950, 65, 300, 300, callback), Integer.valueOf(1));
@@ -44,32 +52,48 @@ public class TelaMoverAmbientes extends JFrame {
         layeredPane.add(criarBotao("Ruínas de Thargor", 770, 450, 500, 200, callback), Integer.valueOf(1));
 
         addComponentListener(new ComponentAdapter() {
+            @Override
             public void componentResized(ComponentEvent e) {
                 int largura = getContentPane().getWidth();
                 int altura = getContentPane().getHeight();
-                imagemEscalada.setBounds(0, 0, largura, altura);
-                atualizarImagemFundo(largura, altura);
+                if (largura > 0 && altura > 0) { // Evita divisão por zero ou dimensões inválidas
+                    imagemEscalada.setBounds(0, 0, largura, altura);
+                    atualizarImagemFundo(largura, altura);
+                    // Reajustar botões se o layout depender do tamanho da janela/imagem
+                }
             }
         });
+
+        // Chamar o redimensionamento inicial explicitamente após o frame estar visível
+        // ou ter um tamanho definido pode ser mais robusto em alguns casos.
+        // Por ora, o componentResized deve cuidar disso quando o frame se torna visível e tem tamanho.
+        // Se a imagem não aparecer inicialmente, tente chamar atualizarImagemFundo aqui com getWidth/getHeight.
+        if (getWidth() > 0 && getHeight() > 0) {
+            atualizarImagemFundo(getWidth(), getHeight());
+        }
+
 
         setVisible(true);
     }
 
     private void atualizarImagemFundo(int largura, int altura) {
-        Image img = imagemOriginal.getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
-        imagemEscalada.setIcon(new ImageIcon(img));
+        if (imagemOriginal != null && largura > 0 && altura > 0) {
+            Image img = imagemOriginal.getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
+            imagemEscalada.setIcon(new ImageIcon(img));
+        }
     }
 
-    private JButton criarBotao(String nome, int x, int y, int largura, int altura, Consumer<String> callback) {
-        JButton botao = new JButton(); // sem nome visível
+    private JButton criarBotao(String nomeAmbiente, int x, int y, int largura, int altura, Consumer<String> callback) {
+        JButton botao = new JButton();
+        botao.setActionCommand(nomeAmbiente); // Útil para identificar o botão se necessário
         botao.setBounds(x, y, largura, altura);
         botao.setOpaque(false);
         botao.setContentAreaFilled(false);
-        botao.setBorder(null); // sem borda
-        botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // 👈 mostra o dedo ao passar
+        botao.setBorderPainted(false); // Garante que nenhuma borda padrão seja pintada
+        botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         botao.addActionListener(e -> {
-            callback.accept(nome);
-            dispose();
+            callback.accept(nomeAmbiente); // Passa o NOME (String) do ambiente
+            dispose(); // Fecha a janela TelaMoverAmbientes
         });
         return botao;
     }
