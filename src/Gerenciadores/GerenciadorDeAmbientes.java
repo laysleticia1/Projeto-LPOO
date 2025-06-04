@@ -16,13 +16,10 @@ public class GerenciadorDeAmbientes {
     }
 
     public void mudarAmbiente(Personagem jogador, Ambiente novoAmbiente) throws AmbienteInacessivelException {
-
-        //Caso o jogador escolha o mesmo ambiente vai avisar, evitando movimentação inútil
         if (jogador.getAmbienteAtual() != null && jogador.getAmbienteAtual().getNome().equals(novoAmbiente.getNome())) {
             System.out.println("Você já está nesse ambiente!");
             return;
         }
-        //Lançamento da Exceção se não for acessível
         if (!novoAmbiente.estaAcessivel()){
             throw new AmbienteInacessivelException("O ambiente " + novoAmbiente.getNome() + " está inacessível no momento");
         }
@@ -39,8 +36,6 @@ public class GerenciadorDeAmbientes {
             System.out.println("- " + nome);
         }
     }
-
-    //Interface
 
     public void mudarAmbienteInterface(Personagem jogador, Ambiente novoAmbiente, JTextArea areaLog) throws AmbienteInacessivelException {
         if (jogador.getAmbienteAtual() != null && jogador.getAmbienteAtual().getNome().equals(novoAmbiente.getNome())) {
@@ -69,8 +64,31 @@ public class GerenciadorDeAmbientes {
     public ArrayList<Ambiente> getAmbientes() {
         return ambientesDisponiveis;
     }
+
     public void registrarAmbienteInicial(Ambiente ambiente){
-        historicoDeMovimentacao.add(ambiente.getNome());
+        if (ambiente != null) {
+            historicoDeMovimentacao.add(ambiente.getNome());
+        }
+    }
+
+    public void listarAmbientesNumerados() {
+        if (this.ambientesDisponiveis == null || this.ambientesDisponiveis.isEmpty()) {
+            System.out.println("Nenhum ambiente disponível para listar.");
+            return;
+        }
+        System.out.println("Ambientes disponíveis:");
+        for (int i = 0; i < this.ambientesDisponiveis.size(); i++) {
+            Ambiente ambiente = this.ambientesDisponiveis.get(i);
+            if (ambiente != null) {
+                System.out.println((i + 1) + " - " + ambiente.getNome());
+            }
+        }
+    }
+
+    public Ambiente getAmbientePorIndice(int indice) {
+        if (this.ambientesDisponiveis == null || indice < 0 || indice >= this.ambientesDisponiveis.size()) {
+            return null;
+        }
+        return this.ambientesDisponiveis.get(indice);
     }
 }
-
