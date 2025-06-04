@@ -8,6 +8,8 @@ import Evento.Subclasses.EventoClimatico;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.*;
+
 public class GerenciadorDeTurnos {
     private int turnoAtual;
     private final GerenciadorDeEventos gerenciadorDeEventos;
@@ -43,9 +45,9 @@ public class GerenciadorDeTurnos {
                 subirNivel(personagem);
             }
 
-            // ✅ Verifica vitória
+            // Verifica vitória
             if (verificarVitoria(personagem)) {
-                System.out.println("✨ Fim do jogo.");
+                System.out.println("Fim do jogo.");
                 return false;
             }
 
@@ -53,7 +55,7 @@ public class GerenciadorDeTurnos {
 
         } catch (FomeSedeSanidadeException e) {
             System.out.println(e.getMessage());
-            System.out.println("☠️ Fim de jogo.");
+            System.out.println("Fim de jogo.");
             return false;
         }
     }
@@ -87,18 +89,65 @@ public class GerenciadorDeTurnos {
             System.out.println("\n🎉 Parabéns! Você sobreviveu até o turno " + turnoMaximo + "!");
             return true;
         } else if (nivelAtual >= nivelMaximo) {
-            System.out.println("\n🏆 Vitória! Você alcançou o nível máximo de sobrevivência: " + nivelMaximo);
+            System.out.println("\nVitória! Você alcançou o nível máximo de sobrevivência: " + nivelMaximo);
             return true;
         }
         return false;
     }
 
-    // Getters
+    // Getters and Setters
     public int getTurnoAtual() {
         return turnoAtual;
     }
-
     public int getNivelAtual() {
         return nivelAtual;
     }
+
+    //Interface
+    public boolean executarTurnoInterface(Personagem personagem, boolean avancarTurno, JTextArea areaLog) {
+        if (!avancarTurno) return true;
+
+        try {
+            personagem.verificarFomeSedeSanidade();
+
+            atualizarEventosAtivos();
+
+            turnoAtual++;
+
+            if (turnoAtual > turnosParaProximoNivel) {
+                subirNivelInterface(personagem, areaLog);
+            }
+
+            if (verificarVitoriaInterface(personagem, areaLog)) {
+                areaLog.append("✨ Fim do jogo.\n");
+                return false;
+            }
+
+            return true;
+
+        } catch (FomeSedeSanidadeException e) {
+            areaLog.append("☠️ " + e.getMessage() + "\n");
+            areaLog.append("☠️ Fim de jogo.\n");
+            return false;
+        }
+    }
+    private void subirNivelInterface(Personagem personagem, JTextArea areaLog) {
+        nivelAtual++;
+        turnosParaProximoNivel += nivelAtual * 5;
+        areaLog.append("\n🎉 PARABÉNS! Você subiu para o nível " + nivelAtual + "!\n");
+        personagem.setNivel(nivelAtual);
+    }
+
+    private boolean verificarVitoriaInterface(Personagem jogador, JTextArea areaLog) {
+        if (turnoAtual >= turnoMaximo) {
+            areaLog.append("\n🎉 Parabéns! Você sobreviveu até o turno " + turnoMaximo + "!\n");
+            return true;
+        } else if (nivelAtual >= nivelMaximo) {
+            areaLog.append("\n🏆 Vitória! Você alcançou o nível máximo de sobrevivência: " + nivelMaximo + "\n");
+            return true;
+        }
+        return false;
+    }
+
+
 }

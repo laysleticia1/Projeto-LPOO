@@ -4,6 +4,8 @@ import Evento.Superclasse.Evento;
 import Personagem.Superclasse.Personagem;
 import Ambiente.Superclasse.Ambiente;
 
+import javax.swing.*;
+
 public class EventoClimatico extends Evento {
     private String tipo;
     private int duracao;
@@ -61,4 +63,26 @@ public class EventoClimatico extends Evento {
         return tipo;
     }
 
+    //Interface
+    public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
+        areaLog.append("Evento Climático: " + getNomeEvento() + "\n");
+        areaLog.append(getDescricao() + "\n");
+        areaLog.append("Efeito no ambiente: " + efeitoNoAmbiente + "\n");
+        areaLog.append("Duração: " + duracao + " turno/s.\n");
+
+        switch (getImpacto().toLowerCase()) {
+            case "vida":
+                jogador.diminuirVida(15);
+                areaLog.append("Você perdeu 15 de vida!\n");
+                break;
+            case "sanidade":
+                jogador.diminuirSanidade(15);
+                areaLog.append("Você perdeu 15 de sanidade!\n");
+                break;
+            case "energia":
+                jogador.diminuirEnergia(15);
+                areaLog.append("Você perdeu 15 de energia!\n");
+                break;
+        }
+    }
 }

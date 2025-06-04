@@ -34,7 +34,6 @@ public class Alimentos extends Item {
         }
     }
 
-
     //Gettes and Setters
     public String getTipo() {
         return tipo;
@@ -42,21 +41,28 @@ public class Alimentos extends Item {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-
     public int getValidade() {
         return validade;
     }
-
     public void setValidade(int validade) {
         this.validade = validade;
     }
-
     public int getValorNutricional() {
         return valorNutricional;
     }
-
     public void setValorNutricional(int valorNutricional) {
         this.valorNutricional = valorNutricional;
+    }
+
+    //Interface
+    @Override
+    public String exibirDetalhesInterface() {
+        return "Alimento: " + getNome() +
+                "\nTipo: " + tipo +
+                "\nPeso: " + getPeso() +
+                "\nDurabilidade: " + getDurabilidade() +
+                "\nValor Nutricional: " + valorNutricional +
+                "\nValidade (dias): " + validade;
     }
 
 }
