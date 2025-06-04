@@ -21,15 +21,12 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     private ArrayList<String> recursosDisponiveis;
     private double probabilidadeDeEventos;
     private String condicaoClimatica;
-
-
     protected String caminhoImagemAmbiente;
     protected transient Image imagemAmbienteCarregada;
+    private String caminhoImagem;
 
 
-    public Ambiente(String nome, String descricao, int dificuldadeExploracao,
-                    ArrayList<String> recursosDisponiveis, double probabilidadeEventos,
-                    String condicaoClimatica, String caminhoImagem) { // Novo parâmetro
+    public Ambiente(String nome, String descricao, int dificuldadeExploracao, ArrayList<String> recursosDisponiveis, double probabilidadeEventos, String condicaoClimatica, String caminhoImagem) { // Novo parâmetro
         this.nome = nome;
         this.descricao = descricao;
         this.dificuldadeExploracao = dificuldadeExploracao;
@@ -130,5 +127,8 @@ public abstract class Ambiente implements Exploravel, Coletavel {
             }
         }
         return imagemAmbienteCarregada;
+    }
+    public String getCaminhoImagem() {
+        return caminhoImagem;
     }
 }

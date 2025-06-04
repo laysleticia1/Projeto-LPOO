@@ -17,6 +17,9 @@ import Item.Superclasse.*;
 import Item.Subclasses.*;
 import Personagem.Subclasses.*;
 import Gerenciadores.*;
+import java.util.List;
+
+import javax.swing.*;
 
 public class Jogo {
     private Scanner scanner = new Scanner(System.in);
@@ -506,6 +509,8 @@ public class Jogo {
             if (!resposta.equalsIgnoreCase("Sim")) break;
         }
     }
+
+    //Interface
     public boolean iniciarNovaPartida(String nome, String classe) {
         try {
             // Criação do personagem com base na classe
@@ -544,9 +549,212 @@ public class Jogo {
     public Personagem getJogador() {
         return jogador;
     }
-
-    // Dentro da classe Jogo.java
     public GerenciadorDeAmbientes getGerenciadorDeAmbientes() {
         return this.gerenciador;
     }
+    public Ambiente getAmbientePorNome(String nome) {
+        for (Ambiente ambiente : getGerenciadorDeAmbientes().getAmbientes()) {
+            if (ambiente.getNome().equalsIgnoreCase(nome)) {
+                return ambiente;
+            }
+        }
+        return null;
+    }
+    public void mudarAmbiente(String nomeAmbiente) throws AmbienteInacessivelException {
+        Ambiente novoAmbiente = getAmbientePorNome(nomeAmbiente);
+        if (novoAmbiente == null) {
+            throw new AmbienteInacessivelException("Ambiente '" + nomeAmbiente + "' não encontrado.");
+        }
+        gerenciador.mudarAmbiente(jogador, novoAmbiente);
+    }
+
+    public void mudarAmbienteViaInterface(String nome, JTextArea areaLog, JLabel imagemAmbiente) throws AmbienteInacessivelException {
+        mudarAmbiente(nome);
+
+        getJogador().diminuirFome(8);
+        getJogador().diminuirSede(10);
+
+        Ambiente atual = getAmbienteAtual();
+
+        areaLog.append("\nVocê se moveu para: " + atual.getNome() + ".\n");
+        areaLog.append("------------------------------------------------------\n");
+        areaLog.append(atual.getDescricao() + "\n");
+        areaLog.append("Clima: " + atual.getCondicaoClimatica() + "\n\n");
+
+        imagemAmbiente.setIcon(new ImageIcon(atual.getCaminhoImagem()));
+    }
+
+
+
+    public Personagem getPersonagem() {
+        return jogador;
+    }
+
+    public Ambiente getAmbienteAtual() {
+        return jogador != null ? jogador.getAmbienteAtual() : null;
+    }
+    public void executarAcaoInterface(int escolha, JTextArea areaLog) {
+        Ambiente ambiente = jogador.getAmbienteAtual();
+
+        switch (escolha) {
+            case 1 -> areaLog.append("Você realizou a ação comum do ambiente.\n");
+            case 2 -> areaLog.append("Você realizou a ação especial do ambiente.\n");
+            case 3 -> areaLog.append("Você optou por usar um item.\n");
+            default -> areaLog.append("Ação inválida.\n");
+        }
+    }
+
+    public List<String> getAcoesComunsDisponiveis(Personagem jogador) {
+        List<String> acoes = new ArrayList<>();
+        Ambiente ambiente = jogador.getAmbienteAtual();
+
+        if (ambiente instanceof Floresta) {
+            acoes.add("Coletar frutas");
+            acoes.add("Coletar madeira e cipós");
+        } else if (ambiente instanceof Montanha) {
+            acoes.add("Escalar abrigo");
+            acoes.add("Procurar itens congelados");
+        } else if (ambiente instanceof LagoRio) {
+            acoes.add("Beber água");
+            acoes.add("Pescar");
+        } else if (ambiente instanceof Caverna) {
+            acoes.add("Acender tochas");
+            acoes.add("Buscar minérios");
+        } else if (ambiente instanceof Ruinas) {
+            acoes.add("Vasculhar suprimentos");
+            acoes.add("Analisar símbolos");
+        } else {
+            acoes.add("Explorar o local");
+        }
+
+        return acoes;
+    }
+
+    public void executarAcaoComumInterface(String acao, JTextArea areaLog) {
+        Ambiente ambiente = jogador.getAmbienteAtual();
+
+        try {
+            if (acao.equals("Coletar frutas") && ambiente instanceof Floresta) {
+                areaLog.append("Você encontra frutas frescas da floresta.\n");
+                Alimentos frutas = new Alimentos("Frutas", 0.5, 3, 15, "Fruta", 3);
+                jogador.getInventario().adicionarItem(frutas);
+
+            } else if (acao.equals("Coletar madeira e cipós") && ambiente instanceof Floresta) {
+                Material madeira = new Material("Madeira Bruta", "Madeira", 2.0, 1, 30);
+                Material cipo = new Material("Cipó", "Fibra", 0.8, 1, 15);
+                jogador.getInventario().adicionarItem(madeira);
+                jogador.getInventario().adicionarItem(cipo);
+                areaLog.append("Você coletou madeira e cipós.\n");
+
+            } else if (acao.equals("Escalar abrigo") && ambiente instanceof Montanha) {
+                Material pedra = new Material("Pedra Afiada", "Pedra", 1.0, 1, 30);
+                jogador.getInventario().adicionarItem(pedra);
+                areaLog.append("Você escalou e encontrou uma pedra afiada.\n");
+
+            } else if (acao.equals("Procurar itens congelados") && ambiente instanceof Montanha) {
+                Material gelo = new Material("Fragmento de Gelo", "Gelo", 1.2, 1, 20);
+                jogador.getInventario().adicionarItem(gelo);
+                areaLog.append("Você encontrou fragmentos de gelo congelado.\n");
+
+            } else if (acao.equals("Beber água") && ambiente instanceof LagoRio) {
+                jogador.restaurarEnergia(10);
+                jogador.restaurarSede(20);
+                areaLog.append("Você bebeu água fresca e recuperou energia e sede.\n");
+
+            } else if (acao.equals("Pescar") && ambiente instanceof LagoRio) {
+                Alimentos peixe = new Alimentos("Peixe Fresco", 1.0, 4, 25, "Peixe", 2);
+                jogador.getInventario().adicionarItem(peixe);
+                areaLog.append("Você pescou um peixe.\n");
+
+            } else if (acao.equals("Acender tochas") && ambiente instanceof Caverna) {
+                Material tocha = new Material("Tocha Improvisada", "Luz", 0.5, 1, 10);
+                jogador.getInventario().adicionarItem(tocha);
+                areaLog.append("Você acendeu tochas e iluminou o caminho.\n");
+
+            } else if (acao.equals("Buscar minérios") && ambiente instanceof Caverna) {
+                Material minerio = new Material("Minério Brilhante", "Cristal", 2.0, 1, 50);
+                jogador.getInventario().adicionarItem(minerio);
+                areaLog.append("Você encontrou um minério brilhante.\n");
+
+            } else if (acao.equals("Vasculhar suprimentos") && ambiente instanceof Ruinas) {
+                Alimentos bolacha = new Alimentos("Bolacha Rachada", 0.3, 1, -5, "Industrial", 1);
+                jogador.getInventario().adicionarItem(bolacha);
+                areaLog.append("Você encontrou uma bolacha rachada entre os escombros.\n");
+
+            } else if (acao.equals("Analisar símbolos") && ambiente instanceof Ruinas) {
+                Material simbolo = new Material("Símbolo Rúnico", "Artefato", 0.2, 1, 40);
+                jogador.getInventario().adicionarItem(simbolo);
+                areaLog.append("Você analisou um símbolo rúnico misterioso.\n");
+
+            } else if (acao.equals("Explorar o local")) {
+                ambiente.explorar(jogador);
+                areaLog.append("Você observou atentamente o ambiente.\n");
+
+            } else {
+                areaLog.append("❌ Ação inválida ou fora de contexto.\n");
+                return;
+            }
+
+            jogador.diminuirFome(5);
+            jogador.diminuirSede(7);
+            jogador.verificarFomeSedeSanidade();
+
+        } catch (InventarioCheioException | FomeSedeSanidadeException e) {
+            areaLog.append("⚠️ " + e.getMessage() + "\n");
+        }
+    }
+
+
+    public List<String> getAcoesEspeciaisDisponiveis(Personagem jogador) {
+        List<String> acoes = new ArrayList<>();
+
+        if (jogador instanceof Rastreador) {
+            acoes.add("Identificar pegadas");
+            acoes.add("Farejar trilha");
+            acoes.add("Procurar recursos");
+        } else if (jogador instanceof Mecanico) {
+            acoes.add("Consertar equipamento");
+            acoes.add("Melhorar arma");
+        } else if (jogador instanceof Medico) {
+            acoes.add("Auto-curar");
+            acoes.add("Preparar remédio");
+        } else if (jogador instanceof SobreviventeNato) {
+            acoes.add("Fabricar lança");
+            acoes.add("Caçar animais");
+        }
+
+        return acoes;
+    }
+
+    public void executarAcaoEspecialInterface(String acao, JTextArea areaLog) {
+        if (jogador instanceof Rastreador rastreador) {
+            switch (acao) {
+                case "Identificar pegadas" -> rastreador.identificarPegadasInterface(jogador.getAmbienteAtual(), areaLog);
+                case "Farejar trilha" -> rastreador.farejarTrilhaInterface(jogador.getAmbienteAtual(), areaLog);
+                case "Procurar recursos" -> rastreador.procurarRecursosInterface(jogador.getAmbienteAtual(), jogador, areaLog);
+            }
+        } else if (jogador instanceof Mecanico mecanico) {
+            switch (acao) {
+                case "Consertar equipamento" -> mecanico.consertarEquipamentoInterface(areaLog);
+                case "Melhorar arma" -> mecanico.melhorarArmaInterface(areaLog);
+            }
+        } else if (jogador instanceof Medico medico) {
+            switch (acao) {
+                case "Curar a si mesmo" -> medico.autoCurarFerimentosLevesInterface(areaLog);
+                case "Curar outro personagem" -> areaLog.append("🩺 Ainda não há outro personagem para curar.\n");
+                case "Preparar remédio natural" -> medico.prepararRemedioNaturalInterface(areaLog);
+            }
+        } else if (jogador instanceof SobreviventeNato sobrevivente) {
+            switch (acao) {
+                case "Fabricar lança" -> sobrevivente.fabricarLancaInterface(areaLog);
+                case "Caçar animais" -> sobrevivente.cacarAnimaisInterface(areaLog);
+            }
+        }
+
+        jogador.diminuirFome(2);
+        jogador.diminuirSede(3);
+    }
+
+
+
 }

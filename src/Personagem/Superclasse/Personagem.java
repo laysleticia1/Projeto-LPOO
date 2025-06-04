@@ -8,6 +8,8 @@ import Item.Superclasse.Item;
 import Interface.Movivel;
 import Excecoes.FomeSedeSanidadeException;
 
+import javax.swing.*;
+
 public class Personagem implements Movivel {
     private String nome;
     private String classe;
@@ -226,7 +228,6 @@ public class Personagem implements Movivel {
         }
     }
 
-
     public void getStatus () {
         System.out.println ("Nome: " + getNome());
         System.out.println ("Nível: " + getNivel());
@@ -373,6 +374,35 @@ public class Personagem implements Movivel {
     }
     public Ambiente getAmbienteAtual() {
         return ambienteAtual;
+    }
+
+    //Interface
+    public void verificarFomeSedeSanidadeInterface(JTextArea areaLog) throws FomeSedeSanidadeException {
+        boolean perdeuVida = false;
+
+        if (fome <= 0) {
+            vida -= 10;
+            areaLog.append("⚠️ Sua fome chegou a zero! Você perdeu 10 de vida.\n");
+            perdeuVida = true;
+        }
+        if (sede <= 0) {
+            vida -= 10;
+            areaLog.append("⚠️ Sua sede chegou a zero! Você perdeu 10 de vida.\n");
+            perdeuVida = true;
+        }
+        if (sanidade <= 0) {
+            vida -= 10;
+            areaLog.append("⚠️ Sua sanidade chegou a zero! Você perdeu 10 de vida.\n");
+            perdeuVida = true;
+        }
+
+        if (perdeuVida) {
+            areaLog.append("❤️ Vida atual: " + vida + "\n");
+        }
+
+        if (vida <= 0) {
+            throw new FomeSedeSanidadeException("☠️ Você morreu por falta de recursos básicos.");
+        }
     }
 
 }

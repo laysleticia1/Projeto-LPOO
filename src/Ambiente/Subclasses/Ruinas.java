@@ -16,13 +16,7 @@ public class Ruinas extends Ambiente {
     private String misteriosPresentes;
 
     public Ruinas() {
-        super("Ruínas Ancestrais",
-                "Local marcado por vestígios de uma civilização antiga. Estruturas em ruínas, inscrições enigmáticas e artefatos esquecidos compõem o cenário. Um ambiente misterioso e potencialmente perigoso.",
-                6,
-                new ArrayList<>(Arrays.asList("Artefatos Antigos", "Fragmentos de Escrita", "Poeira Mágica")),
-                0.55, // Probabilidade de evento ligeiramente menor
-                "Seco, com ventos uivantes entre as estruturas",
-                "/Resources/Ambientes/ruina.png"); // Caminho da imagem
+        super("Ruínas de Thargor", "Local marcado por vestígios de uma civilização antiga, envoltos em ecos e enigmas. Há estruturas em ruínas, artefatos valiosos e registros esquecidos por toda parte, mas portas surgem e somem, e visões distorcem a realidade.", 6, new ArrayList<>(Arrays.asList("Artefatos Antigos", "Fragmentos de Escrita", "Poeira Mágica")), 0.55, "Seco, com ventos uivantes entre as estruturas", "/Resources/Ambientes/ruina.png");
         this.tipoDeEstrutura = "Templos desmoronados, torres quebradas e passagens subterrâneas.";
         this.misteriosPresentes = "Inscrições em uma língua esquecida, armadilhas antigas e ecos do passado.";
     }

@@ -16,7 +16,7 @@ public class Floresta extends Ambiente {
     private String faunaEspecifica;
 
     public Floresta() {
-        super("Floresta de Elvaron", "Local coberto por uma vegetação densa e viva, onde trilhas somem e sombras observam. Rica em frutas, ervas e madeira, mas lar de criaturas furtivas e segredos que afetam até a mente dos viajantes.", 2, new ArrayList<>(Arrays.asList("Frutas Silvestres", "Madeira de Lei", "Ervas Medicinais")), 0.4, "Chuvoso e Úmido", "/Resources/ambientes/floresta.png"); // Caminho da imagem
+        super("Floresta de Elvarron", "Local coberto por uma vegetação densa e viva, onde trilhas somem e sombras observam. Rica em frutas, ervas e madeira, mas lar de criaturas furtivas e segredos que afetam até a mente dos viajantes.", 2, new ArrayList<>(Arrays.asList("Frutas Silvestres", "Madeira de Lei", "Ervas Medicinais")), 0.4, "Chuvoso e Úmido", "/Resources/ambientes/floresta.png"); // Caminho da imagem
         this.vegetacaoEspecifica = "Árvores altas, cipós e arbustos densos.";
         this.faunaEspecifica = "Pássaros exóticos, pequenos mamíferos e insetos variados.";
     }
