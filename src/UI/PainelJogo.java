@@ -224,20 +224,27 @@ public class PainelJogo extends JPanel {
         });
 
         botaoMudarAmbiente.addActionListener(e -> {
-            adicionarLog("Abrindo opções de ambientes...");
-            if (meuJogo == null || meuJogo.getGerenciadorDeAmbientes() == null) {
-                adicionarLog("Instância do jogo ou gerenciador de ambientes não disponível.");
-                JOptionPane.showMessageDialog(this, "Erro: Jogo não inicializado corretamente.", "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            // AJUSTE: A chamada ao construtor de TelaMoverAmbientes agora passa apenas UM argumento (o callback).
-            // A lista de ambientes não é mais passada aqui, pois o construtor de TelaMoverAmbientes não a espera.
-            // TelaMoverAmbientes internamente não usava essa lista de qualquer forma (os botões eram fixos).
             new TelaMoverAmbientes((String nomeAmbienteEscolhido) -> {
                 try {
-                    // 'nomeAmbienteEscolhido' já é uma String aqui, devido ao Consumer<String> em TelaMoverAmbientes
                     meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente);
+
+                    meuJogo.getJogador().diminuirEnergia(10);
+                    meuJogo.getJogador().diminuirFome(5);
+                    meuJogo.getJogador().diminuirSede(5);
+
                     atualizarTela();
+
+                    // Mensagem completa do novo ambiente
+                    Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
+                    if (ambienteAtual != null) {
+                        areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
+                        areaLog.append("------------------------------------------------------\n");
+                        areaLog.append("Descrição: " + ambienteAtual.getDescricao() + "\n");
+                        areaLog.append("Clima: " + ambienteAtual.getCondicaoClimatica() + "\n\n");
+                    }
+
+                    areaLog.append("Você se moveu e perdeu energia, fome e sede.\n");
+
                 } catch (Exception ex) {
                     adicionarLog("Erro ao mudar de ambiente: " + ex.getMessage() + "\n");
                     JOptionPane.showMessageDialog(this,

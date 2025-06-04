@@ -127,7 +127,7 @@ public class PainelInventario extends JPanel {
                         "Deseja remover " + itemSelecionado.getNome() + " do inventário?",
                         "Remover Item", JOptionPane.YES_NO_OPTION);
                 if (resposta == JOptionPane.YES_OPTION) {
-                    inventario.removerItem(itemSelecionado.getNome());
+                    inventario.removerItem(itemSelecionado); // CORREÇÃO
                     JOptionPane.showMessageDialog(this, itemSelecionado.getNome() + " foi removido.");
                     atualizarPainel();
                 }
@@ -179,6 +179,11 @@ public class PainelInventario extends JPanel {
             int y = coordenadas[i][1];
 
             JButton slotBtn = new JButton();
+            ImageIcon icone = item.getImagem();
+            if (icone != null && icone.getIconWidth() > 0) {
+                Image img = icone.getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+                slotBtn.setIcon(new ImageIcon(img));
+            }
             slotBtn.setBounds(x, y, largura, altura);
             slotBtn.setOpaque(false);
             slotBtn.setContentAreaFilled(false);

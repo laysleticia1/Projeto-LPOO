@@ -59,7 +59,6 @@ public class GerenciadorDeEventos {
         }
     }
 
-    // Método para CONSOLE (como você forneceu)
     public void aplicarEventoAleatorioPorAmbiente(Personagem jogador) {
         Ambiente ambienteAtual = jogador.getAmbienteAtual();
         if (ambienteAtual == null) {
@@ -148,7 +147,6 @@ public class GerenciadorDeEventos {
         )));
     }
 
-    // Método para CONSOLE (como você forneceu)
     public void aplicarEventoCriaturaDuranteDescanso(Personagem jogador) {
         Ambiente ambienteAtual = jogador.getAmbienteAtual();
         if (ambienteAtual == null) return;
@@ -173,7 +171,6 @@ public class GerenciadorDeEventos {
         }
     }
 
-    // Método para CONSOLE (como você forneceu)
     public void aplicarEventoClimaticoDuranteDescanso(Personagem jogador) {
         Ambiente ambienteAtual = jogador.getAmbienteAtual();
         if (ambienteAtual == null) return;
@@ -199,9 +196,7 @@ public class GerenciadorDeEventos {
         }
     }
 
-    // ---- MÉTODOS PARA INTERFACE GRÁFICA ----
-
-    // Mantido como você forneceu (eventos adversos genéricos)
+    //Interface
     public void aplicarEventoAdversoInterface(Personagem jogador, JTextArea areaLog) {
         int chance = sorteador.nextInt(100);
 
@@ -219,7 +214,6 @@ public class GerenciadorDeEventos {
         }
     }
 
-    // MÉTODO "ACRESCENTADO" para disparar eventos de EXPLORAÇÃO na interface
     public void dispararEventoExploracaoInterface(Personagem jogador, JTextArea areaLog) {
         Ambiente ambienteAtual = jogador.getAmbienteAtual();
         if (ambienteAtual == null) {
@@ -272,8 +266,6 @@ public class GerenciadorDeEventos {
         }
     }
 
-    // Método para INTERFACE (como você forneceu, usa eventosDisponiveis, mas agora modificado para usar eventosPorAmbiente)
-    // Este método agora seleciona eventos de criatura e climáticos do ambiente atual para o descanso.
     public void aplicarEventoDuranteDescansoInterface(Personagem jogador, Ambiente ambienteAtual, JTextArea areaLog) {
         if (ambienteAtual == null) {
             areaLog.append("Erro: Ambiente atual do jogador não definido para evento de descanso.\n");

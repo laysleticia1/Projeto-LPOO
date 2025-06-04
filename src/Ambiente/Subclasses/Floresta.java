@@ -96,7 +96,7 @@ public class Floresta extends Ambiente {
     public void explorarInterface(Personagem jogador) {
         StringBuilder mensagem = new StringBuilder();
 
-        mensagem.append("🌲 Você começa a explorar a floresta...\n");
+        mensagem.append("Você começa a explorar a floresta...\n");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();

@@ -59,6 +59,42 @@ public class Item {
         sb.append("• Durabilidade: ").append(durabilidade).append("\n");
         return sb.toString();
     }
+
+    //Interface
+    public ImageIcon getImagem() {
+        try {
+            String nomeBase = nome.toLowerCase();
+
+            String nomeArquivo;
+
+            // 💡 Exceção específica para carne de cobra
+            if (nomeBase.equals("carne de cobra")) {
+                nomeArquivo = "carnecobra";
+            }
+            // 🥩 Todas as outras carnes genéricas
+            else if (nomeBase.startsWith("carne de")) {
+                nomeArquivo = "carne";
+            }
+            // 🌐 Regra geral: remove espaços, acentos e pontuação
+            else {
+                nomeArquivo = nome.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            }
+
+            String caminho = "Resources/Item/" + nomeArquivo + ".png";
+
+            java.net.URL imagemURL = getClass().getClassLoader().getResource(caminho);
+            if (imagemURL != null) {
+                return new ImageIcon(imagemURL);
+            } else {
+                System.err.println("Imagem não encontrada: " + caminho);
+                return new ImageIcon(); // ou imagem fallback
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ImageIcon(); // fallback
+        }
+    }
+
 }
 
 
