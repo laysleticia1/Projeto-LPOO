@@ -45,6 +45,10 @@ public class Personagem implements Movivel {
         this.velocidade = 10;
     }
 
+    public boolean estaVivo() {
+        return this.vida > 0;
+    }
+
     public void diminuirFome(int quantidade) {
         this.fome -= quantidade;
         if (this.fome < 0) {
@@ -79,17 +83,20 @@ public class Personagem implements Movivel {
     }
 
     public void restaurarVida(int quantidade) {
+        if (!estaVivo()) return;
         this.vida += quantidade;
         if (this.vida > VIDA_MAXIMA) {
             this.vida = VIDA_MAXIMA;
         }
     }
     public void restaurarEnergia(double quantidade) {
-        this.energia += quantidade;
+        if (!estaVivo()) return;
+        this.energia += (int)quantidade;
         if (this.energia > ENERGIA_MAXIMA) this.energia = ENERGIA_MAXIMA;
         System.out.println("Energia recuperada em " + (int)quantidade + ". Energia atual: " + this.energia);
     }
     public void restaurarFome(int quantidade) {
+        if (!estaVivo()) return;
         this.fome += quantidade;
         if (this.fome > FOME_MAXIMA) {
             this.fome = FOME_MAXIMA;
@@ -97,17 +104,20 @@ public class Personagem implements Movivel {
         System.out.println("Fome recuperada em " + quantidade + ". Fome atual: " + this.fome);
     }
     public void restaurarSede(int quantidade) {
+        if (!estaVivo()) return;
         this.sede += quantidade;
         if (this.sede > SEDE_MAXIMA) this.sede = SEDE_MAXIMA;
         System.out.println("Sede recuperada em " + quantidade + ". Sede atual: " + this.sede);
     }
     public void restaurarSanidade(int quantidade) {
+        if (!estaVivo()) return;
         this.sanidade += quantidade;
         if (this.sanidade > SANIDADE_MAXIMA) this.sanidade = SANIDADE_MAXIMA;
         System.out.println("Sanidade recuperada em " + quantidade + ". Sanidade atual: " + this.sanidade);
     }
 
     public void atacar() {
+        if (!estaVivo()) return;
         if (energia >= 4) {
             energia -= 4;
             System.out.println("Jogador está atacando (-4 energia)");
@@ -116,6 +126,7 @@ public class Personagem implements Movivel {
         }
     }
     public void defender() {
+        if (!estaVivo()) return;
         if (energia >= 5) {
             energia -= 5;
         } else {
@@ -123,6 +134,7 @@ public class Personagem implements Movivel {
         }
     }
     public void fugir() {
+        if (!estaVivo()) return;
         int custoFuga = 15;
         energia -= custoFuga;
 
@@ -136,6 +148,7 @@ public class Personagem implements Movivel {
     }
 
     public void correr() {
+        if (!estaVivo()) return;
         if (getEnergia () > 0) {
             System.out.println ("Jogador está correndo");
         }
@@ -144,6 +157,7 @@ public class Personagem implements Movivel {
         }
     }
     public void agachar() {
+        if (!estaVivo()) return;
         if (getEnergia () > 0) {
             System.out.println ("Jogador está agachado");
         }
@@ -152,6 +166,7 @@ public class Personagem implements Movivel {
         }
     }
     public void moverDireita() {
+        if (!estaVivo()) return;
         if (getEnergia () > 0) {
             x++;
             System.out.println ("Jogador se moveu para a direita");
@@ -161,6 +176,7 @@ public class Personagem implements Movivel {
         }
     }
     public void moverEsquerda() {
+        if (!estaVivo()) return;
         if (getEnergia () > 0) {
             x--;
             System.out.println ("Jogador se moveu para a esquerda");
@@ -170,6 +186,7 @@ public class Personagem implements Movivel {
         }
     }
     public void moverCima() {
+        if (!estaVivo()) return;
         if (getEnergia () > 0) {
             y++;
             System.out.println ("Jogador se moveu para cima");
@@ -179,6 +196,7 @@ public class Personagem implements Movivel {
         }
     }
     public void moverBaixo() {
+        if (!estaVivo()) return;
         if (getEnergia () > 0) {
             y--;
             System.out.println ("Jogador se moveu para baixo");
@@ -187,13 +205,19 @@ public class Personagem implements Movivel {
             System.out.println ("Jogador não poderá se mover");
         }
     }
+
     @Override
     public void moverParaAmbiente(Ambiente novoAmbiente) {
+        if (!estaVivo()) return;
         int custoMovimento = 7;
 
         if (this.energia < custoMovimento) {
             System.out.println("\nVocê está exausto demais para se mover.");
             System.out.println("Energia atual: " + energia + " | Necessário: " + custoMovimento);
+            return;
+        }
+        if (novoAmbiente == null) {
+            System.out.println("\nDestino inválido.");
             return;
         }
 
@@ -204,6 +228,7 @@ public class Personagem implements Movivel {
     }
 
     public void usarItem(String nomeItem) {
+        if (!estaVivo()) return;
         if (getEnergia() > 0) {
             if (this.inventario != null) {
                 inventario.usarItem(nomeItem, this);
@@ -216,11 +241,13 @@ public class Personagem implements Movivel {
     }
 
     public void curar () {
+        if (!estaVivo()) return;
         if (getEnergia() >= 0) {
             System.out.println("Jogador está se curando");
         }
     }
     public void descansar() {
+        if (!estaVivo()) return;
         this.energia += 20;
         if (this.energia > ENERGIA_MAXIMA) {
             this.energia = ENERGIA_MAXIMA;
@@ -239,6 +266,9 @@ public class Personagem implements Movivel {
         System.out.println ("Sede: " + getSede() + "/" + getSedeMaxima());
         System.out.println ("Energia: " + getEnergia() + "/" + getEnergiaMaxima());
         System.out.println ("Sanidade: " + getSanidade() + "/" + getSanidadeMaxima());
+        if (!estaVivo()) {
+            System.out.println ("Status: MORTO");
+        }
     }
 
     public void visualizarInventario() {
@@ -262,6 +292,7 @@ public class Personagem implements Movivel {
     }
 
     public void consumirRecursosBasicos() {
+        if (!estaVivo()) return;
         diminuirFome(3);
         diminuirSede(4);
 
@@ -273,6 +304,9 @@ public class Personagem implements Movivel {
     }
 
     public void verificarFomeSedeSanidade() throws FomeSedeSanidadeException {
+        if (!estaVivo()) { // Se já entrou morto, lança exceção direto
+            throw new FomeSedeSanidadeException("☠️ Sua jornada já havia chegado ao fim.");
+        }
         boolean perdeuVidaGeral = false;
 
         if (fome <= 0) {
@@ -291,12 +325,12 @@ public class Personagem implements Movivel {
             perdeuVidaGeral = true;
         }
 
-        if (perdeuVidaGeral) {
+        if (perdeuVidaGeral && estaVivo()) { // Só mostra se ainda estiver vivo após as perdas
             System.out.println("❤️ Vida atual: " + vida);
         }
 
-        if (vida <= 0) {
-            throw new FomeSedeSanidadeException("Você morreu por falta de recursos básicos.");
+        if (!estaVivo()) { // Checa se as perdas acima resultaram em morte
+            throw new FomeSedeSanidadeException("☠️ Sua jornada chegou ao fim devido à falta de recursos ou ferimentos graves.");
         }
     }
 
@@ -364,10 +398,10 @@ public class Personagem implements Movivel {
     public void setInventario (Inventario inventarioUsuario) {
         this.inventario = inventarioUsuario;
     }
-    public String [] getLocalizacao () {
+    public String[] getLocalizacao () {
         return localizacao;
     }
-    public void setLocalizacao (String [] localizacaoUsuario) {
+    public void setLocalizacao (String[] localizacaoUsuario) {
         this.localizacao = localizacaoUsuario;
     }
     public int getVelocidade() {
@@ -416,33 +450,35 @@ public class Personagem implements Movivel {
     }
 
     public void verificarFomeSedeSanidadeInterface(JTextArea areaLog) throws FomeSedeSanidadeException {
+        if (!estaVivo()) {
+            areaLog.append("☠️ Sua jornada já havia chegado ao fim.\n");
+            throw new FomeSedeSanidadeException("☠️ Sua jornada já havia chegado ao fim.");
+        }
         boolean perdeuVida = false;
 
         if (fome <= 0) {
-            vida -= 10;
-            if (vida < 0) vida = 0;
+            diminuirVida(10);
             areaLog.append("⚠️ Sua fome chegou a zero! Você perdeu 10 de vida.\n");
             perdeuVida = true;
         }
         if (sede <= 0) {
-            vida -= 10;
-            if (vida < 0) vida = 0;
+            diminuirVida(10);
             areaLog.append("⚠️ Sua sede chegou a zero! Você perdeu 10 de vida.\n");
             perdeuVida = true;
         }
         if (sanidade <= 0) {
-            vida -= 10;
-            if (vida < 0) vida = 0;
+            diminuirVida(10);
             areaLog.append("⚠️ Sua sanidade chegou a zero! Você perdeu 10 de vida.\n");
             perdeuVida = true;
         }
 
-        if (perdeuVida) {
-            areaLog.append("❤️ Vida atual: " + vida + "\n");
+        if (perdeuVida && estaVivo()) {
+            areaLog.append("❤️ Vida atual: " + this.vida + "\n");
         }
 
-        if (vida <= 0) {
-            throw new FomeSedeSanidadeException("☠️ Você morreu por falta de recursos básicos.");
+        if (!estaVivo()) {
+            areaLog.append("❤️ Vida atual: 0\n"); // Garante que o log mostre 0
+            throw new FomeSedeSanidadeException("☠️ Sua jornada chegou ao fim devido à falta de recursos ou ferimentos graves.");
         }
     }
 }

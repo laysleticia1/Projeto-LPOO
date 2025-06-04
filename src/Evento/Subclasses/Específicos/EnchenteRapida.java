@@ -27,8 +27,6 @@ public class EnchenteRapida extends EventoClimatico {
     }
     @Override
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
-        // Supondo que o nome do ambiente é "Lago/Rio" ou similar.
-        // Se sua classe Ambiente se chama LagoRio, seria: ambiente instanceof LagoRio
         return ambiente.getNome().equalsIgnoreCase("LagoRio") || ambiente.getNome().equalsIgnoreCase("Lago/Rio");
     }
 
