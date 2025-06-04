@@ -56,29 +56,12 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     }
 
     public abstract Item coletarItemAleatorio();
-
-    // --- NOVO MÉTODO PARA OBTER A IMAGEM DO AMBIENTE ---
-    public Image getImagemAmbiente() {
-        if (imagemAmbienteCarregada == null && caminhoImagemAmbiente != null && !caminhoImagemAmbiente.isEmpty()) {
-            try {
-                URL imgUrl = getClass().getResource(caminhoImagemAmbiente);
-
-                if (imgUrl != null) {
-                    imagemAmbienteCarregada = new ImageIcon(imgUrl).getImage();
-                    System.out.println("Imagem do ambiente '" + nome + "' carregada de: " + imgUrl.getPath());
-                } else {
-                    System.err.println("ERRO ao carregar imagem do ambiente '" + nome + "': Arquivo não encontrado em " + caminhoImagemAmbiente);
-
-                }
-            } catch (Exception e) {
-                System.err.println("Exceção ao carregar imagem do ambiente '" + nome + "' de " + caminhoImagemAmbiente);
-                e.printStackTrace();
-                imagemAmbienteCarregada = null;
-            }
-        }
-        return imagemAmbienteCarregada;
+    public boolean estaAcessivel(){
+        return this.dificuldadeExploracao <= 70; // Exemplo, pode ser mais complexo
     }
 
+
+    //Getters and Setters
     public String getNome() {
         return nome;
     }
@@ -127,7 +110,25 @@ public abstract class Ambiente implements Exploravel, Coletavel {
         this.condicaoClimatica = condicao;
     }
 
-    public boolean estaAcessivel(){
-        return this.dificuldadeExploracao <= 70; // Exemplo, pode ser mais complexo
+    // Interface
+    public Image getImagemAmbiente() {
+        if (imagemAmbienteCarregada == null && caminhoImagemAmbiente != null && !caminhoImagemAmbiente.isEmpty()) {
+            try {
+                URL imgUrl = getClass().getResource(caminhoImagemAmbiente);
+
+                if (imgUrl != null) {
+                    imagemAmbienteCarregada = new ImageIcon(imgUrl).getImage();
+                    System.out.println("Imagem do ambiente '" + nome + "' carregada de: " + imgUrl.getPath());
+                } else {
+                    System.err.println("ERRO ao carregar imagem do ambiente '" + nome + "': Arquivo não encontrado em " + caminhoImagemAmbiente);
+
+                }
+            } catch (Exception e) {
+                System.err.println("Exceção ao carregar imagem do ambiente '" + nome + "' de " + caminhoImagemAmbiente);
+                e.printStackTrace();
+                imagemAmbienteCarregada = null;
+            }
+        }
+        return imagemAmbienteCarregada;
     }
 }

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.*;
+
 public class SobreviventeNato extends Personagem {
 
     public SobreviventeNato(String nomeUsuario) {
@@ -110,6 +112,30 @@ public class SobreviventeNato extends Personagem {
         } else {
             System.out.println("Você optou por deixar a carne para trás.");
         }
-
     }
+
+    //Interface
+    public void montarAbrigoInterface(Ambiente ambiente, JTextArea areaLog) {
+        if (ambiente instanceof Caverna) {
+            areaLog.append(getNome() + " usa pedras e sombras da caverna para se esconder e descansar.\n");
+        } else if (ambiente instanceof Floresta) {
+            areaLog.append(getNome() + " reúne galhos e folhas da floresta para construir um abrigo camuflado.\n");
+        } else if (ambiente instanceof LagoRio) {
+            areaLog.append(getNome() + " monta um abrigo simples próximo ao rio, usando juncos e lama.\n");
+        } else if (ambiente instanceof Montanha) {
+            areaLog.append(getNome() + " se protege com rochas e fendas na encosta da montanha.\n");
+        } else if (ambiente instanceof Ruinas) {
+            areaLog.append(getNome() + " usa os escombros das ruínas para montar um abrigo temporário.\n");
+        } else {
+            areaLog.append("Ambiente desconhecido. Não foi possível montar abrigo.\n");
+            return;
+        }
+
+        restaurarSanidade(15);
+        restaurarEnergia(25);
+        areaLog.append("Você se sente um pouco mais seguro. (+15 de sanidade e +25 de energia)\n");
+    }
+
+
+
 }

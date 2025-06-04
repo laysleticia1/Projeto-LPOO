@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 public class Floresta extends Ambiente {
     private String vegetacaoEspecifica;
     private String faunaEspecifica;
@@ -82,20 +84,88 @@ public class Floresta extends Ambiente {
         }
     }
 
+    //Getters and Setters
     public String getVegetacaoEspecifica() {
         return vegetacaoEspecifica;
     }
-
     public void setVegetacaoEspecifica(String vegetacaoEspecifica) {
         this.vegetacaoEspecifica = vegetacaoEspecifica;
     }
-
     public String getFaunaEspecifica() {
         return faunaEspecifica;
     }
-
     public void setFaunaEspecifica(String faunaEspecifica) {
         this.faunaEspecifica = faunaEspecifica;
     }
+
+    //Interface
+    public void explorarInterface(Personagem jogador) {
+        StringBuilder mensagem = new StringBuilder();
+
+        mensagem.append("🌲 Você começa a explorar a floresta...\n");
+        jogador.diminuirEnergia(this.getDificuldadeExploracao());
+
+        Item recurso = coletarItemAleatorio();
+        if (recurso != null) {
+            mensagem.append("\nVocê encontrou: ").append(recurso.getNome()).append("\n");
+
+            if (recurso instanceof Material m) {
+                mensagem.append("- Tipo: ").append(m.getTipo()).append("\n")
+                        .append("- Peso: ").append(m.getPeso()).append(" kg\n")
+                        .append("- Durabilidade: ").append(m.getDurabilidade()).append("\n")
+                        .append("- Resistência: ").append(m.getResistencia()).append("\n");
+            } else if (recurso instanceof Agua a) {
+                mensagem.append("- Tipo: Água\n")
+                        .append("- Pureza: ").append(a.getPureza()).append("\n")
+                        .append("- Volume: ").append(a.getPeso()).append(" L\n")
+                        .append("- Risco de contaminação: ").append(a.getChanceContaminacao() * 100).append("%\n");
+            } else if (recurso instanceof Ferramentas f) {
+                mensagem.append("- Tipo: ").append(f.getTipo()).append("\n")
+                        .append("- Durabilidade: ").append(f.getDurabilidade()).append("\n")
+                        .append("- Eficácia: ").append(f.getEficiencia()).append("\n")
+                        .append("- Peso: ").append(f.getPeso()).append(" kg\n");
+            } else if (recurso instanceof Armas arma) {
+                mensagem.append("- Tipo: ").append(arma.getTipo()).append("\n")
+                        .append("- Dano: ").append(arma.getDano()).append("\n")
+                        .append("- Durabilidade: ").append(arma.getDurabilidade()).append("\n")
+                        .append("- Alcance: ").append(arma.getAlcance()).append("\n");
+            } else if (recurso instanceof Alimentos alimento) {
+                mensagem.append("- Tipo: ").append(alimento.getTipo()).append("\n")
+                        .append("- Peso: ").append(alimento.getPeso()).append(" kg\n")
+                        .append("- Valor Nutricional: ").append(alimento.getValorNutricional()).append("\n")
+                        .append("- Validade: ").append(alimento.getValidade()).append(" dia/s\n")
+                        .append("- Durabilidade: ").append(alimento.getDurabilidade()).append("\n");
+            } else if (recurso instanceof Remedios r) {
+                mensagem.append("- Nome: ").append(r.getNome()).append("\n")
+                        .append("- Tipo: ").append(r.getTipo()).append("\n")
+                        .append("- Efeito: ").append(r.getEfeito()).append("\n");
+            } else {
+                mensagem.append("- Peso: ").append(recurso.getPeso()).append("\n")
+                        .append("- Durabilidade: ").append(recurso.getDurabilidade()).append("\n");
+            }
+
+            int opcao = JOptionPane.showConfirmDialog(null,
+                    mensagem + "\nDeseja adicionar este item ao seu inventário?",
+                    "Item Encontrado", JOptionPane.YES_NO_OPTION);
+
+            if (opcao == JOptionPane.YES_OPTION) {
+                try {
+                    jogador.adicionarAoInventario(recurso);
+                    JOptionPane.showMessageDialog(null, "✅ Item adicionado com sucesso!");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "❌ Não foi possível adicionar o item: " + e.getMessage());
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Você deixou o item para trás.");
+            }
+
+        } else {
+            mensagem.append("\nA floresta não revelou nada útil desta vez...");
+            JOptionPane.showMessageDialog(null, mensagem.toString());
+        }
+
+        new Gerenciadores.GerenciadorDeEventos().aplicarEventoAleatorioPorAmbiente(jogador);
+    }
+
 }
 

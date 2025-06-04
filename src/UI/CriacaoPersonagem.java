@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 import Jogo.Jogo;
 
@@ -18,7 +21,7 @@ public class CriacaoPersonagem extends JPanel {
 
     private JLabel labelClasse;
     private JComboBox<String> comboBoxClasse;
-    private JTextArea areaDescricaoClasse;
+    private JTextPane areaDescricaoClasse;
     private JScrollPane scrollDescricao;
 
     private JButton botaoCriarPersonagem;
@@ -92,14 +95,19 @@ public class CriacaoPersonagem extends JPanel {
         gbc.gridy = 3;
         add(comboBoxClasse, gbc);
 
-        areaDescricaoClasse = new JTextArea(5, 30);
-        areaDescricaoClasse.setFont(new Font("SansSerif", Font.ITALIC, 14));
-        areaDescricaoClasse.setWrapStyleWord(true);
-        areaDescricaoClasse.setLineWrap(true);
+        areaDescricaoClasse = new JTextPane();
+        areaDescricaoClasse.setFont(new Font("SansSerif", Font.ITALIC, 19));
         areaDescricaoClasse.setEditable(false);
         areaDescricaoClasse.setOpaque(false);
+        areaDescricaoClasse.setForeground(new Color(182, 167, 47));
         areaDescricaoClasse.setText(descricoesClasses.get(""));
         scrollDescricao = new JScrollPane(areaDescricaoClasse);
+        scrollDescricao.setOpaque(false);
+        scrollDescricao.getViewport().setOpaque(false);
+
+        areaDescricaoClasse.revalidate();
+        areaDescricaoClasse.repaint();
+
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
@@ -136,73 +144,66 @@ public class CriacaoPersonagem extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
         add(painelBotoesFinais, gbc);
 
-        botaoConfirmarNome.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nomeConfirmado = campoNome.getText().trim();
-                if (nomeConfirmado.isEmpty()) {
-                    JOptionPane.showMessageDialog(CriacaoPersonagem.this,
-                            "Por favor, digite um nome para o personagem.",
-                            "Nome Inválido", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                campoNome.setEnabled(false);
-                botaoConfirmarNome.setEnabled(false);
-
-                labelClasse.setEnabled(true);
-                comboBoxClasse.setEnabled(true);
-                areaDescricaoClasse.setEnabled(true);
-
-                botaoCriarPersonagem.setEnabled(true);
-                comboBoxClasse.requestFocusInWindow();
+        botaoConfirmarNome.addActionListener(e -> {
+            nomeConfirmado = campoNome.getText().trim();
+            if (nomeConfirmado.isEmpty()) {
+                JOptionPane.showMessageDialog(CriacaoPersonagem.this,
+                        "Por favor, digite um nome para o personagem.",
+                        "Nome Inválido", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            campoNome.setEnabled(false);
+            botaoConfirmarNome.setEnabled(false);
+
+            labelClasse.setEnabled(true);
+            comboBoxClasse.setEnabled(true);
+            areaDescricaoClasse.setEnabled(true);
+
+            botaoCriarPersonagem.setEnabled(true);
+            comboBoxClasse.requestFocusInWindow();
         });
 
-        comboBoxClasse.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (comboBoxClasse.isEnabled()) {
-                    String classeSelecionada = (String) comboBoxClasse.getSelectedItem();
-                    areaDescricaoClasse.setText(descricoesClasses.getOrDefault(classeSelecionada, "Descrição não disponível."));
-                }
-            }
-        });
-
-        botaoCriarPersonagem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        comboBoxClasse.addActionListener(e -> {
+            if (comboBoxClasse.isEnabled()) {
                 String classeSelecionada = (String) comboBoxClasse.getSelectedItem();
+                String texto = descricoesClasses.getOrDefault(classeSelecionada, "Descrição não disponível.");
+                areaDescricaoClasse.setText(texto);
 
-                if (classeSelecionada == null || classeSelecionada.isEmpty()) {
-                    JOptionPane.showMessageDialog(CriacaoPersonagem.this,
-                            "Por favor, selecione uma classe para o personagem.",
-                            "Classe Inválida", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                boolean sucesso = meuJogo.iniciarNovaPartida(nomeConfirmado, classeSelecionada);
-
-                if (sucesso) {
-                    System.out.println("Personagem criado com sucesso! Nome: " + meuJogo.getJogador().getNome() + ", Classe: " + meuJogo.getJogador().getClasse());
-
-                    CardLayout cl = (CardLayout) painelPrincipalCardLayout.getLayout();
-                    cl.show(painelPrincipalCardLayout, "TELA_NARRATIVA");
-                } else {
-                    JOptionPane.showMessageDialog(CriacaoPersonagem.this,
-                            "Ocorreu um erro ao criar o personagem. Verifique o console para mais detalhes.",
-                            "Erro na Criação", JOptionPane.ERROR_MESSAGE);
-                }
+                StyledDocument doc = areaDescricaoClasse.getStyledDocument();
+                SimpleAttributeSet center = new SimpleAttributeSet();
+                StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+                doc.setParagraphAttributes(0, doc.getLength(), center, false);
             }
         });
 
-        botaoVoltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resetarPainel();
-                CardLayout cl = (CardLayout) (painelPrincipalCardLayout.getLayout());
-                cl.show(painelPrincipalCardLayout, "MENU_INICIAL");
+        botaoCriarPersonagem.addActionListener(e -> {
+            String classeSelecionada = (String) comboBoxClasse.getSelectedItem();
+
+            if (classeSelecionada == null || classeSelecionada.isEmpty()) {
+                JOptionPane.showMessageDialog(CriacaoPersonagem.this,
+                        "Por favor, selecione uma classe para o personagem.",
+                        "Classe Inválida", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            boolean sucesso = meuJogo.iniciarNovaPartida(nomeConfirmado, classeSelecionada);
+
+            if (sucesso) {
+                System.out.println("Personagem criado com sucesso! Nome: " + meuJogo.getJogador().getNome() + ", Classe: " + meuJogo.getJogador().getClasse());
+                CardLayout cl = (CardLayout) painelPrincipalCardLayout.getLayout();
+                cl.show(painelPrincipalCardLayout, "TELA_NARRATIVA");
+            } else {
+                JOptionPane.showMessageDialog(CriacaoPersonagem.this,
+                        "Ocorreu um erro ao criar o personagem. Verifique o console para mais detalhes.",
+                        "Erro na Criação", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        botaoVoltar.addActionListener(e -> {
+            resetarPainel();
+            CardLayout cl = (CardLayout) painelPrincipalCardLayout.getLayout();
+            cl.show(painelPrincipalCardLayout, "MENU_INICIAL");
         });
     }
 

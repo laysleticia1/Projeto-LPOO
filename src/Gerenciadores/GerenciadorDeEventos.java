@@ -15,7 +15,8 @@ import java.util.Random;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Arrays;
+
+import javax.swing.*;
 
 public class GerenciadorDeEventos {
     private ArrayList<Evento> eventosDisponiveis = new ArrayList<>();
@@ -169,4 +170,35 @@ public class GerenciadorDeEventos {
         }
     }
 
+    //Interface
+    public void aplicarEventoInterface(Personagem jogador, JTextArea areaLog) {
+        Random random = new Random();
+        int chance = random.nextInt(100);
+
+        if (chance < 15) {
+            jogador.diminuirVida(10);
+            areaLog.append("Você pisou em uma armadilha escondida! (-10 de vida)\n");
+        } else if (chance < 30) {
+            jogador.diminuirSanidade(15);
+            areaLog.append("O ambiente te deixou perturbado... (-15 de sanidade)\n");
+        } else if (chance < 40) {
+            jogador.diminuirEnergia(20);
+            areaLog.append("Você se esforçou demais e está exausto. (-20 de energia)\n");
+        } else {
+            areaLog.append("Nenhum evento adverso ocorreu desta vez.\n");
+        }
+    }
+
+    public void aplicarEventoDuranteDescansoInterface(Personagem jogador, Ambiente ambienteAtual, JTextArea areaLog) {
+        for (Evento evento : eventosDisponiveis) {
+            if (evento instanceof Evento.Subclasses.EventoCriatura criatura) {
+                if (criatura.podeOcorrerNoAmbiente(ambienteAtual)) {
+                    if (new Random().nextDouble() < evento.getProbabilidadeDeOcorrencia()) {
+                        criatura.executarDuranteDescansoInterface(jogador, ambienteAtual, areaLog);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

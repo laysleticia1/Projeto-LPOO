@@ -36,6 +36,17 @@ public class Armas extends Item {
         System.out.println("• Alcance: " + alcance);
     }
 
+    @Override
+    public String exibirDetalhesInterface() {
+        return "Arma: " + getNome() +
+                "\nTipo: " + tipo +
+                "\nPeso: " + getPeso() +
+                "\nDurabilidade: " + getDurabilidade() +
+                "\nDano: " + dano +
+                "\nAlcance: " + alcance;
+    }
+
+
     //Getters and Setters
     public void setTipo(String tipo) {
         this.tipo = tipo;

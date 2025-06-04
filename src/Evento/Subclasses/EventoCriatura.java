@@ -9,6 +9,8 @@ import Criatura.Superclasse.*;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.*;
+
 public class EventoCriatura extends Evento {
     private String tipo;
     private int nivelPerigo;
@@ -57,7 +59,7 @@ public class EventoCriatura extends Evento {
                 break;
 
             case 3:
-                System.out.println("\n🏃 Um impulso de puro instinto de sobrevivência toma conta de você... e seus pés disparam como relâmpagos!");
+                System.out.println("\nUm impulso de puro instinto de sobrevivência toma conta de você... e seus pés disparam como relâmpagos!");
                 if (new Random().nextDouble() < 0.7) {
                     System.out.println("Seus passos são rápidos o bastante. A criatura hesita por um instante, e você consegue escapar ileso... por enquanto.\n");
                     jogador.fugir();
@@ -89,4 +91,70 @@ public class EventoCriatura extends Evento {
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
         return ambiente instanceof Floresta;
     }
+
+    //Interface
+    public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
+        areaLog.append("Um som estranho interrompe sua exploração...\n");
+        areaLog.append("Você está cara a cara com um(a) " + criatura.getTipoDeCriatura() + "!\n\n");
+        areaLog.append("Antes que você possa reagir...\n");
+        criatura.atacar(jogador);
+
+        areaLog.append("\nCom o coração acelerado e o corpo ferido, você precisa decidir seu próximo movimento:\n");
+        String[] opcoes = {
+                "1 - Revidar com toda sua força",
+                "2 - Assumir postura defensiva",
+                "3 - Correr desesperadamente",
+                "4 - Observar a criatura"
+        };
+
+        int escolha = JOptionPane.showOptionDialog(
+                null,
+                "O que você vai fazer?",
+                "Ação contra a Criatura",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0]
+        );
+
+        switch (escolha) {
+            case 0:
+                areaLog.append("\n🗡Com sangue nos olhos, você revida com um golpe instintivo!\n");
+                criatura.fugir();
+                break;
+            case 1:
+                areaLog.append("\n🛡Você se encolhe, protegendo o rosto e o peito com os braços.\n");
+                areaLog.append("O impacto é menor, mas doloroso. Você aproveita a brecha para escapar da criatura.\n");
+                jogador.restaurarVida(4);
+                jogador.fugir();
+                break;
+            case 2:
+                areaLog.append("\nUm impulso de puro instinto de sobrevivência toma conta de você...\n");
+                if (new Random().nextDouble() < 0.7) {
+                    areaLog.append("Você consegue escapar ileso... por enquanto.\n");
+                    jogador.fugir();
+                } else {
+                    areaLog.append("Você tropeça por um momento... a criatura te alcança!\n");
+                    criatura.atacar(jogador);
+                }
+                break;
+            case 3:
+                areaLog.append("\n👁Você permanece imóvel, encarando a criatura com coragem...\n");
+                areaLog.append("Por um instante, ela hesita... mas então desencadeia uma ação misteriosa!\n");
+                criatura.acaoEspecial(jogador);
+                jogador.fugir();
+                break;
+            default:
+                areaLog.append("\nA indecisão te domina... e a criatura não desperdiça a chance.\n");
+                criatura.atacar(jogador);
+                break;
+        }
+    }
+
+    public void executarDuranteDescansoInterface(Personagem jogador, Ambiente ambiente, JTextArea areaLog) {
+        areaLog.append("\n🔸 Um ataque inesperado durante o descanso!\n");
+        criatura.ataqueDuranteDescanso(jogador);
+    }
+
 }

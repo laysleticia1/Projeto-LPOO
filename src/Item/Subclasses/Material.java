@@ -39,6 +39,15 @@ public class Material extends Item {
         System.out.println("• Resistência: " + resistencia);
     }
 
+    @Override
+    public String exibirDetalhesInterface() {
+        return "Material: " + getNome() +
+                "\nTipo: " + tipo +
+                "\nPeso: " + getPeso() +
+                "\nDurabilidade: " + getDurabilidade() +
+                "\nResistência: " + resistencia;
+    }
+
 
     //Getters and Setters
     public String getTipo() {

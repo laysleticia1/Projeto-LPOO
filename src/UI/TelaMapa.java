@@ -14,7 +14,7 @@ public class TelaMapa extends JPanel {
     private Image imagemMapa;
     private JButton botaoContinuarParaJogo;
 
-    private final String NOME_ARQUIVO_MAPA = "mapa1.png"; // << COLOQUE O NOME DO SEU ARQUIVO DE MAPA
+    private final String NOME_ARQUIVO_MAPA = "mapa1.png"; // Nome do arquivo do mapa
 
     public TelaMapa(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
         this.controlador = ctrl;
@@ -36,27 +36,21 @@ public class TelaMapa extends JPanel {
         }
 
         setLayout(null);
-        setPreferredSize(new Dimension(800, 600));
 
-        // Painel Central (vazio e transparente) para ocupar a região CENTER
-        JPanel painelCentralPlaceholder = new JPanel();
-        painelCentralPlaceholder.setOpaque(false);
-        add(painelCentralPlaceholder, BorderLayout.CENTER);
+        Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
+        setPreferredSize(tela);
+        setSize(tela);
+        setBounds(0, 0, tela.width, tela.height);
 
-        // --- Botão para continuar para o jogo ---
         botaoContinuarParaJogo = new JButton("Iniciar Exploração em Velkaria");
-        botaoContinuarParaJogo.setFont(new Font("Serif", Font.BOLD, 18)); // Fonte
-
-        // Estilo: Apenas texto, sem fundo ou borda pintada
-        botaoContinuarParaJogo.setForeground(new Color(230, 220, 190)); // Cor do texto (bege claro)
+        botaoContinuarParaJogo.setFont(new Font("Serif", Font.BOLD, 24));
+        botaoContinuarParaJogo.setForeground(new Color(230, 220, 190));
         botaoContinuarParaJogo.setOpaque(false);
         botaoContinuarParaJogo.setContentAreaFilled(false);
         botaoContinuarParaJogo.setBorderPainted(false);
         botaoContinuarParaJogo.setFocusPainted(false);
         botaoContinuarParaJogo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // Adiciona um padding em volta do texto para aumentar a área de clique sutilmente
         botaoContinuarParaJogo.setBorder(new EmptyBorder(10, 15, 10, 15));
-
 
         botaoContinuarParaJogo.addActionListener(new ActionListener() {
             @Override
@@ -67,7 +61,6 @@ public class TelaMapa extends JPanel {
             }
         });
 
-        botaoContinuarParaJogo.setBounds(510, 55, 300, 50); // <<🔺 Aqui você modifica X, Y, largura, altura
         add(botaoContinuarParaJogo);
     }
 
@@ -79,19 +72,25 @@ public class TelaMapa extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        int largura = getWidth();
+        int altura = getHeight();
+
         if (imagemMapa != null) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2d.drawImage(imagemMapa, 0, 0, getWidth(), getHeight(), this);
+            g2d.drawImage(imagemMapa, 0, 0, largura, altura, this);
             g2d.dispose();
         } else {
             g.setColor(new Color(100, 120, 80));
-            g.fillRect(0, 0, getWidth(), getHeight());
+            g.fillRect(0, 0, largura, altura);
             g.setColor(Color.WHITE);
             g.setFont(new Font("SansSerif", Font.BOLD, 24));
             String msg = "Imagem do mapa (" + NOME_ARQUIVO_MAPA + ") não carregada.";
             FontMetrics fm = g.getFontMetrics();
-            g.drawString(msg, (getWidth() - fm.stringWidth(msg)) / 2, getHeight() / 2);
+            g.drawString(msg, (largura - fm.stringWidth(msg)) / 2, altura / 2);
         }
+
+        // Centralizar botão dinamicamente
+        botaoContinuarParaJogo.setBounds((largura - 360) / 2, 70, 360, 50);
     }
 }

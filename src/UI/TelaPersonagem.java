@@ -20,6 +20,19 @@ public class TelaPersonagem extends JPanel {
         }
 
         criarBotoesPersonagem();
+
+        // Botão "Voltar" com texto visível, fundo e borda invisíveis
+        JButton botaoVoltar = new JButton("Voltar");
+        botaoVoltar.setBounds(30, 33, 100, 40);
+        botaoVoltar.setContentAreaFilled(false);
+        botaoVoltar.setBorderPainted(false);
+        botaoVoltar.setFocusPainted(false);
+        botaoVoltar.setOpaque(false);
+        botaoVoltar.setForeground(Color.WHITE);
+        botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 18));
+        botaoVoltar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        botaoVoltar.addActionListener(e -> controlador.irParaTelaNome());
+        add(botaoVoltar);
     }
 
     private void criarBotoesPersonagem() {
@@ -67,4 +80,3 @@ public class TelaPersonagem extends JPanel {
         }
     }
 }
-
