@@ -17,7 +17,7 @@ public class LagoRio extends Ambiente {
     private String caracteristicaTerrenoMargem;
 
     public LagoRio() {
-        super("Lago Sereno",
+        super("Planícies de Myndros",
                 "Local de águas calmas e cristalinas. Um lago ou rio que oferece oportunidades de hidratação, pesca e travessia. A presença de peixes e algas torna o ambiente fértil e estratégico.",
                 2, // Dificuldade baixa
                 new ArrayList<>(Arrays.asList("Água Fresca", "Peixes Comestíveis", "Algas Nutritivas", "Pedras Lisas")),

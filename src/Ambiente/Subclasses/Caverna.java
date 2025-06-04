@@ -17,7 +17,7 @@ public class Caverna extends Ambiente {
     private String fonteDeHidratacao;
 
     public Caverna() {
-        super("Caverna Escura", "Local subterrâneo, escuro e silencioso. Túneis estreitos e paredes úmidas escondem rochas valiosas, minérios raros, mas também perigos ocultos.", 7, new ArrayList<>(Arrays.asList("Minério de Ferro", "Cristais", "Fungos Luminosos")), 0.65, "Úmido, Frio e Escuro", "/Resources/Ambientes/caverna.png");
+        super("Fissura de Narzug", "Um abismo venenoso, profundo e sussurrante. O ar é pesado e irrespirável, e as rochas parecem vigiar. Sons ecoam do fundo, chamando... ou alertando.", 7, new ArrayList<>(Arrays.asList("Minério de Ferro", "Cristais", "Fungos Luminosos")), 0.65, "Úmido, Frio e Escuro", "/Resources/Ambientes/caverna.png");
         this.luminosidadeAmbiente = "Penumbra, requer fonte de luz para exploração profunda.";
         this.tipoDeCriaturas = "Morcegos, aranhas gigantes e criaturas adaptadas à escuridão.";
         this.fonteDeHidratacao = "Gotejamento de água das estalactites, pureza duvidosa.";
