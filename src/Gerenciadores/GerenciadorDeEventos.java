@@ -197,6 +197,47 @@ public class GerenciadorDeEventos {
     }
 
     //Interface
+    public void aplicarEventoAleatorioPorAmbienteInterface(Personagem jogador, JTextArea areaLog) {
+        Ambiente ambienteAtual = jogador.getAmbienteAtual();
+        if (ambienteAtual == null) {
+            areaLog.append("Erro: Ambiente atual do jogador não definido para evento aleatório.\n");
+            return;
+        }
+
+        String nomeClasseAmbiente = ambienteAtual.getClass().getSimpleName();
+        List<Evento> eventos = eventosPorAmbiente.get(nomeClasseAmbiente);
+
+        if (eventos == null || eventos.isEmpty()) {
+            areaLog.append("Você explora " + ambienteAtual.getNome() + ", mas nada acontece por aqui...\n\n");
+            return;
+        }
+
+        if (sorteador.nextDouble() < 0.2) {
+            areaLog.append("Você explora com cautela... mas tudo está calmo em " + ambienteAtual.getNome() + ".\n\n");
+            return;
+        }
+
+        Evento eventoEscolhido = eventos.get(sorteador.nextInt(eventos.size()));
+        areaLog.append("\n🔸 Um evento inesperado acontece em " + ambienteAtual.getNome() + "...\n\n");
+
+        // Chamada do método de execução da interface, se existir
+        if (eventoEscolhido instanceof EventoClimatico) {
+            ((EventoClimatico) eventoEscolhido).executarInterface(jogador, ambienteAtual, areaLog);
+        } else if (eventoEscolhido instanceof EventoCriatura) {
+            ((EventoCriatura) eventoEscolhido).executarInterface(jogador, ambienteAtual, areaLog);
+        } else if (eventoEscolhido instanceof EventoDescoberta) {
+            ((EventoDescoberta) eventoEscolhido).executarInterface(jogador, ambienteAtual, areaLog);
+        } else if (eventoEscolhido instanceof EventoDoencaFerimento) {
+            ((EventoDoencaFerimento) eventoEscolhido).executarInterface(jogador, ambienteAtual, areaLog);
+        } else {
+            // Fallback genérico
+            areaLog.append(eventoEscolhido.getDescricao() + "\n\n");
+        }
+
+        historicoDeEventos.add(eventoEscolhido.getNomeEvento());
+    }
+
+
     public void aplicarEventoAdversoInterface(Personagem jogador, JTextArea areaLog) {
         int chance = sorteador.nextInt(100);
 

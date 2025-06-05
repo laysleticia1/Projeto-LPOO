@@ -26,6 +26,7 @@ public class Item {
         System.out.println("Item genérico: " + nome);
     }
 
+    //Getters and Setters
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;
     }
@@ -44,7 +45,6 @@ public class Item {
     public double getPeso() {
         return peso;
     }
-
     public String getDescricaoItem() {
         if (this.nome != null && !this.nome.trim().isEmpty()) {
             return "Um item do tipo: " + this.nome + ".";
@@ -52,6 +52,7 @@ public class Item {
         return "Um item misterioso.";
     }
 
+    //Interface
     public String exibirDetalhesInterface() {
         StringBuilder sb = new StringBuilder();
         sb.append("- ").append(nome).append("\n");
@@ -60,7 +61,6 @@ public class Item {
         return sb.toString();
     }
 
-    //Interface
     public ImageIcon getImagem() {
         try {
             String nomeBase = nome.toLowerCase();
@@ -94,6 +94,27 @@ public class Item {
             return new ImageIcon(); // fallback
         }
     }
+
+    public ImageIcon getImagemIcone() {
+        if (nome == null) return null;
+
+        String nomeArquivo = nome.replaceAll("\\s+", "").toLowerCase() + ".png";
+        String caminho = "/Resources/Item/" + nomeArquivo;
+
+        java.net.URL imgURL = getClass().getResource(caminho);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("⚠️ Imagem não encontrada para: " + nome + " (" + caminho + ")");
+            return null;
+        }
+    }
+
+
+    public String gerarDescricaoDetalhada() {
+        return "- Nome: " + nome + "\n- Peso: " + peso + " kg";
+    }
+
 
 }
 

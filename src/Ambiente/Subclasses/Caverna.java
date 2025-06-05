@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Caverna extends Ambiente {
     private String luminosidadeAmbiente;
@@ -126,8 +126,10 @@ public class Caverna extends Ambiente {
     public void setFonteDeHidratacao(String fonteDeHidratacao) { this.fonteDeHidratacao = fonteDeHidratacao; }
 
     //Interface
-    public void explorarInterface(Personagem jogador) {
-        JOptionPane.showMessageDialog(null, "Você adentra a escuridão úmida da caverna...");
+    public void explorarInterface(Personagem jogador, JTextArea areaLog) {
+        areaLog.append("Você adentra as profundezas da caverna...\n");
+        areaLog.append("O ambiente é sombrio, úmido, e ecos misteriosos preenchem o espaço.\n");
+
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -186,6 +188,6 @@ public class Caverna extends Ambiente {
         }
 
         GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
-        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
 }

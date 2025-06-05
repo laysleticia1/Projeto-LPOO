@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class LagoRio extends Ambiente {
     private String qualidadeAgua;
@@ -38,8 +38,11 @@ public class LagoRio extends Ambiente {
         gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
     }
 
-    public void explorarInterface(Personagem jogador) {
-        JOptionPane.showMessageDialog(null, "Você se aproxima das margens silenciosas do lago, onde a névoa cobre a água e sons distantes ecoam ao redor...");
+    @Override
+    public void explorarInterface(Personagem jogador, JTextArea areaLog) {
+        areaLog.append("Você se aproxima das margens do lago e observa o brilho da água em movimento...\n");
+        areaLog.append("Pequenos redemoinhos se formam entre as pedras, enquanto pássaros pescam ao longe.\n");
+
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -98,7 +101,7 @@ public class LagoRio extends Ambiente {
         }
 
         GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
-        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
 
     @Override

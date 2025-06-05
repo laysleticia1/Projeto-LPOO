@@ -3,6 +3,8 @@ package Criatura.Subclasses;
 import Criatura.Superclasse.Criatura;
 import Personagem.Superclasse.Personagem;
 
+import javax.swing.*;
+
 public class Jacare extends Criatura {
 
     public Jacare() {
@@ -17,24 +19,6 @@ public class Jacare extends Criatura {
     }
 
     @Override
-    public String atacarParaUI(Personagem alvo) {
-        atacar(alvo);
-        return "Das águas escuras, um jacaré salta e crava os dentes em sua perna!\nVocê perdeu 20 de vida.";
-    }
-
-    @Override
-    public void ataqueReduzido(Personagem jogador) {
-        jogador.diminuirVida(10);
-        System.out.println("Das águas escuras, um jacaré salta e crava os dentes em sua perna!");
-    }
-
-    @Override
-    public String ataqueReduzidoParaUI(Personagem jogador) {
-        ataqueReduzido(jogador);
-        return "O jacaré tenta uma mordida rápida, mas ainda perigosa!\nVocê perdeu 10 de vida."; // Ajuste
-    }
-
-    @Override
     public void acaoEspecial(Personagem jogador) {
         System.out.println("O Jacaré girou com sua cauda poderosa, lançando água e desorientando você.");
         jogador.diminuirEnergia(10);
@@ -43,20 +27,8 @@ public class Jacare extends Criatura {
     }
 
     @Override
-    public String acaoEspecialParaUI(Personagem jogador) {
-        acaoEspecial(jogador);
-        return "O Jacaré girou com sua cauda poderosa, lançando água e desorientando você.\nVocê perdeu 10 de energia e 10 de sanidade.";
-    }
-
-    @Override
     public void fugir() {
         System.out.println("O jacaré mergulha silenciosamente, desaparecendo nas águas turvas.");
-    }
-
-    @Override
-    public String fugirParaUI() {
-        fugir();
-        return "O jacaré mergulha silenciosamente, desaparecendo nas águas turvas.";
     }
 
     @Override
@@ -67,9 +39,35 @@ public class Jacare extends Criatura {
         System.out.println("Você perdeu 20 de vida");
     }
 
+    //Interface
     @Override
-    public String ataqueDuranteDescansoParaUI(Personagem jogador) {
-        ataqueDuranteDescanso(jogador);
-        return "Você acorda com o estalo de mandíbulas perto demais...\nUm Jacaré tenta arrastá-lo durante o descanso!\nVocê perdeu 20 de vida.";
+    public void atacarInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(16);
+        areaLog.append("O Jacaré surge da água e crava os dentes na sua perna!\n");
+        areaLog.append("Você grita de dor ao ser arrastado por alguns segundos.\n");
+        areaLog.append("Você perdeu 16 de vida.\n");
     }
+
+    @Override
+    public void acaoEspecialInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(10);
+        jogador.diminuirEnergia(8);
+        areaLog.append("O Jacaré desfere um ataque giratório violento, o famoso ‘Death Roll’!\n");
+        areaLog.append("Você sente os ossos chacoalharem. Perdeu vida e energia.\n");
+        areaLog.append("Você perdeu 10 de vida e 8 de energia.\n");
+    }
+
+    @Override
+    public void fugirInterface(JTextArea areaLog) {
+        areaLog.append("O Jacaré se arrasta de volta para as águas lamacentas, desaparecendo silenciosamente...\n");
+    }
+
+    @Override
+    public void ataqueDuranteDescansoInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(18);
+        areaLog.append("Enquanto você dormia perto da margem, um Jacaré realiza um ataque surpresa.\n");
+        areaLog.append("Você acorda com uma mordida dolorosa na perna!\n");
+        areaLog.append("Você perdeu 18 de vida.\n");
+    }
+
 }

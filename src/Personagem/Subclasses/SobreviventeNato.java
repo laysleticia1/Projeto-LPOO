@@ -198,7 +198,7 @@ public class SobreviventeNato extends Personagem {
 
             try {
                 inventario.adicionarItem(lancaImprovisada);
-                areaLog.append("🛠️ Você improvisou uma lança com a sucata!\n");
+                areaLog.append("Você improvisou uma lança com a sucata!\n");
             } catch (InventarioCheioException e) {
                 areaLog.append("❌ Inventário cheio! Não foi possível adicionar a lança: " + e.getMessage() + "\n");
             }

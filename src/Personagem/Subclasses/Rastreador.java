@@ -81,7 +81,6 @@ public class Rastreador extends Personagem{
         }
     }
 
-
     public void procurarRecursos(Ambiente ambiente, Personagem jogador) {
         Random random = new Random();
         Item encontrado = null;
@@ -305,7 +304,61 @@ public class Rastreador extends Personagem{
         } else {
             areaLog.append("Você procurou, mas não encontrou nenhum recurso útil.\n");
         }
+
     }
+
+    public Item procurarRecursosRetornandoItem(Ambiente ambiente, Personagem jogador) {
+        Random random = new Random();
+        int chance = random.nextInt(100);
+
+        if (ambiente instanceof Floresta) {
+            if (chance < 40)
+                return new Alimentos("Frutas Silvestres", 0.3, 3, 10, "Fruta", 2);
+            else if (chance < 70)
+                return new Ferramentas("Galho Afiado", 0.7, 2, 1);
+            else if (chance < 90)
+                return new Remedios("Erva Medicinal", "Planta", "Cura leve");
+            else
+                return new Agua("Orvalho Fresco", 0.5, 1, "Pura", 0.3, 0.1);
+
+        } else if (ambiente instanceof Montanha) {
+            if (chance < 45)
+                return new Material("Minério Bruto", "Metal", 2.5, 4, 6);
+            else if (chance < 75)
+                return new Alimentos("Raízes Comestíveis", 0.6, 5, 8, "Raiz", 3);
+            else if (chance < 95)
+                return new Agua("Gotas de Neve", 1.0, 1, "Pura", 0.5, 0.1);
+            else
+                return new Armas("Lança Improvisada", 2.0, 3, "Lança", 8, 2);
+
+        } else if (ambiente instanceof LagoRio) {
+            if (chance < 50)
+                return new Agua("Água de Rio", 1.2, 2, "Filtrada", 1.0, 0.05);
+            else if (chance < 80)
+                return new Alimentos("Peixe Pequeno", 0.9, 3, 12, "Proteína", 1);
+            else
+                return new Material("Pedras Lisas", "Pedra", 1.5, 6, 4);
+
+        } else if (ambiente instanceof Caverna) {
+            if (chance < 40)
+                return new Material("Cristal Brilhante", "Cristal", 1.3, 5, 8);
+            else if (chance < 75)
+                return new Alimentos("Fungo Luminescente", 0.4, 2, 7, "Cogumelo", 1);
+            else
+                return new Ferramentas("Rocha Afiada", 1.0, 3, 2);
+
+        } else if (ambiente instanceof Ruinas) {
+            if (chance < 50)
+                return new Ferramentas("Ferramenta Enferrujada", 1.5, 2, 1);
+            else if (chance < 80)
+                return new Alimentos("Enlatado Velho", 0.8, 10, 15, "Conserva", 5);
+            else
+                return new Armas("Canivete Antigo", 1.0, 4, "Faca", 6, 1);
+        }
+
+        return null;
+    }
+
 
 
 }

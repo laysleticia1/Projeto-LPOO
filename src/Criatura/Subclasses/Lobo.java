@@ -3,6 +3,8 @@ package Criatura.Subclasses;
 import Criatura.Superclasse.Criatura;
 import Personagem.Superclasse.Personagem;
 
+import javax.swing.*;
+
 public class Lobo extends Criatura {
 
     public Lobo() {
@@ -16,23 +18,6 @@ public class Lobo extends Criatura {
         System.out.println("Você perdeu 15 de vida.");
     }
 
-    @Override
-    public String atacarParaUI(Personagem alvo) {
-        atacar(alvo);
-        return "O lobo avança rapidamente e desfere um golpe, cravando os dentes com fúria!\nVocê perdeu 15 de vida.";
-    }
-
-    @Override
-    public void ataqueReduzido(Personagem jogador) {
-        jogador.diminuirVida(8);
-        System.out.println("O lobo avança rapidamente e desfere um golpe, cravando os dentes com fúria!");
-    }
-
-    @Override
-    public String ataqueReduzidoParaUI(Personagem jogador) {
-        ataqueReduzido(jogador);
-        return "O lobo tenta um ataque mais contido!\nVocê perdeu 8 de vida."; // Ajuste
-    }
 
     @Override
     public void acaoEspecial(Personagem jogador) {
@@ -42,20 +27,8 @@ public class Lobo extends Criatura {
     }
 
     @Override
-    public String acaoEspecialParaUI(Personagem jogador) {
-        acaoEspecial(jogador);
-        return "O Lobo uivou alto, desestabilizando sua sanidade.\nVocê perdeu 8 de sanidade.";
-    }
-
-    @Override
     public void fugir() {
         System.out.println("O lobo rosna em retirada e some entre as sombras densas da floresta.");
-    }
-
-    @Override
-    public String fugirParaUI() {
-        fugir();
-        return "O lobo rosna em retirada e some entre as sombras densas da floresta.";
     }
 
     @Override
@@ -66,9 +39,33 @@ public class Lobo extends Criatura {
         System.out.println("Você perdeu 15 de vida");
     }
 
+    //Interface
     @Override
-    public String ataqueDuranteDescansoParaUI(Personagem jogador) {
-        ataqueDuranteDescanso(jogador);
-        return "Durante seu descanso, um Lobo se aproxima silenciosamente...\nAntes que você possa reagir, ele crava os dentes com ferocidade!\nVocê perdeu 15 de vida.";
+    public void atacarInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(14);
+        areaLog.append("O Lobo rosna e avança em sua direção, cravando os dentes em sua perna!\n");
+        areaLog.append("Você perdeu 14 de vida.\n");
     }
+
+    @Override
+    public void acaoEspecialInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirSanidade(10);
+        areaLog.append("O Lobo começa a uivar para a lua...\n");
+        areaLog.append("Um som que ecoa por toda a floresta, deixando você paralisado de medo.\n");
+        areaLog.append("Você perdeu 10 de sanidade.\n");
+    }
+
+    @Override
+    public void fugirInterface(JTextArea areaLog) {
+        areaLog.append("O lobo rosna em retirada e some entre as sombras densas da floresta.\n");
+    }
+
+    @Override
+    public void ataqueDuranteDescansoInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(12);
+        areaLog.append("Durante seu descanso, você é surpreendido por um Lobo faminto!\n");
+        areaLog.append("Ele morde seu braço e foge correndo.\n");
+        areaLog.append("Você perdeu 12 de vida.\n");
+    }
+
 }

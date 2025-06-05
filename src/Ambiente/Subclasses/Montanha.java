@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Montanha extends Ambiente {
     private String terrenoEspecifico;
@@ -109,8 +109,10 @@ public class Montanha extends Ambiente {
     public void setVegetacaoTipica(String vegetacaoTipica) { this.vegetacaoTipica = vegetacaoTipica; }
 
     //Interface
-    public void explorarInterface(Personagem jogador) {
-        JOptionPane.showMessageDialog(null, "Você começa a escalar os terrenos íngremes e gélidos das Montanhas de Vhaldrak...");
+    @Override
+    public void explorarInterface(Personagem jogador, JTextArea areaLog) {
+        areaLog.append("Você começa a escalar os terrenos íngremes e gélidos das Montanhas de Vhaldrak...\n");
+        areaLog.append("O ar é rarefeito, e o vento frio corta o rosto como lâminas de gelo.\n");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -169,6 +171,6 @@ public class Montanha extends Ambiente {
         }
 
         GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
-        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
 }

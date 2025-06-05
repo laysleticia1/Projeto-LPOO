@@ -13,6 +13,8 @@ import Item.Subclasses.*;
 import Evento.Superclasse.*;
 import Evento.Subclasses.*;
 
+import javax.swing.*;
+
 
 public abstract class Ambiente implements Exploravel, Coletavel {
     private String nome;
@@ -56,7 +58,7 @@ public abstract class Ambiente implements Exploravel, Coletavel {
     public boolean estaAcessivel(){
         return this.dificuldadeExploracao <= 70; // Exemplo, pode ser mais complexo
     }
-
+    public abstract void explorarInterface(Personagem jogador, JTextArea areaLog);
 
     //Getters and Setters
     public String getNome() {

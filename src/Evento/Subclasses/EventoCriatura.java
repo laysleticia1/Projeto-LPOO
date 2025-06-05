@@ -51,37 +51,33 @@ public class EventoCriatura extends Evento {
         switch (escolha) {
             case 1:
                 System.out.println("\nCom sangue nos olhos, você revida com um golpe instintivo!");
-                // Ação do jogador aqui. A criatura pode reagir ou fugir.
-                // Ex: jogador.atacar(criatura); (se existir tal método)
-                // Ex: criatura.reagirAoAtaque(jogador);
-                // A lógica de `criatura.fugir()` aqui parece que a criatura foge se o jogador revida.
                 criatura.fugir();
                 break;
             case 2:
                 System.out.println("\nVocê se encolhe, protegendo o rosto e o peito com os braços.");
                 System.out.println("O impacto é menor, mas doloroso. Você aproveita a brecha para escapar da criatura.\n");
-                jogador.restaurarVida(4); // Efeito da defesa
-                jogador.fugir(); // Jogador tenta fugir
+                jogador.restaurarVida(4);
+                jogador.fugir();
                 break;
             case 3:
                 System.out.println("\nUm impulso de puro instinto de sobrevivência toma conta de você... e seus pés disparam como relâmpagos!");
-                if (new Random().nextDouble() < 0.7) { // Chance de sucesso na fuga
+                if (new Random().nextDouble() < 0.7) {
                     System.out.println("Seus passos são rápidos o bastante. A criatura hesita por um instante, e você consegue escapar ileso... por enquanto.\n");
-                    jogador.fugir(); // Confirma a fuga
+                    jogador.fugir();
                 } else {
                     System.out.println("Você tropeça por um momento... e a criatura aproveita e te alcança!");
-                    criatura.atacar(jogador); // Criatura ataca novamente
+                    criatura.atacar(jogador);
                 }
                 break;
             case 4:
                 System.out.println("\nVocê permanece imóvel, encarando a criatura com curiosidade e coragem...");
                 System.out.println("Por um instante, ela parece hesitar... mas então desencadeia uma ação misteriosa!");
-                criatura.acaoEspecial(jogador); // Ação especial da criatura
-                jogador.fugir(); // Jogador tenta fugir depois
+                criatura.acaoEspecial(jogador);
+                jogador.fugir();
                 break;
             default:
                 System.out.println("\nA indecisão te domina... e a criatura não desperdiça a chance.");
-                criatura.atacar(jogador); // Criatura ataca
+                criatura.atacar(jogador);
                 break;
         }
     }
@@ -93,11 +89,6 @@ public class EventoCriatura extends Evento {
 
     @Override
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
-        // Exemplo: Este evento genérico de criatura pode ocorrer em Florestas.
-        // As subclasses específicas (como EmboscadaLobos) podem ter suas próprias lógicas.
-        // Para 'ambiente instanceof Floresta' funcionar, a classe Floresta deve existir
-        // e ser importada ou estar no mesmo pacote (o que não é o caso aqui).
-        // Assumindo que Floresta está em Ambiente.Subclasses e é importada.
         return ambiente instanceof Floresta;
     }
 
@@ -105,10 +96,10 @@ public class EventoCriatura extends Evento {
     public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
         areaLog.append("Um som estranho interrompe sua exploração...\n");
         areaLog.append("Você está cara a cara com um(a) " + criatura.getTipoDeCriatura() + "!\n\n");
-        areaLog.append("Antes que você possa reagir...\n");
-        areaLog.append(criatura.atacarParaUI(jogador) + "\n"); // Usa método da criatura para UI
 
-        areaLog.append("\nCom o coração acelerado e o corpo ferido, você precisa decidir seu próximo movimento:\n");
+        areaLog.append("Antes que você possa reagir...\n");
+        criatura.atacarInterface(jogador, areaLog); // Novo método Interface
+
         String[] opcoes = {
                 "Revidar com toda sua força",
                 "Assumir postura defensiva",
@@ -117,57 +108,65 @@ public class EventoCriatura extends Evento {
         };
 
         int escolha = JOptionPane.showOptionDialog(
-                null, // parentComponent
-                "O que você vai fazer contra " + criatura.getTipoDeCriatura() + "?", // message
-                "Encontro com Criatura!", // title
-                JOptionPane.DEFAULT_OPTION, // optionType
-                JOptionPane.WARNING_MESSAGE, // messageType
-                null, // icon
-                opcoes, // options
-                opcoes[0] // initialValue
+                null,
+                "O que você vai fazer contra " + criatura.getTipoDeCriatura() + "?",
+                "Encontro com Criatura!",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0]
         );
 
         switch (escolha) {
             case 0: // Revidar
-                areaLog.append("\n🗡️Com sangue nos olhos, você revida com um golpe instintivo!\n");
-                // Ação do jogador (ex: jogador.atacar(criatura) teria que ter um ...ParaUI)
-                // Se a criatura foge como resultado:
-                areaLog.append(criatura.fugirParaUI() + "\n");
+                areaLog.append("\nCom sangue nos olhos, você revida com um golpe instintivo!\n");
+                criatura.fugirInterface(areaLog);
+                jogador.fugir();
+                areaLog.append("Você aproveita a chance e se afasta da criatura!\n");
                 break;
+
             case 1: // Defender
-                areaLog.append("\n🛡️Você se encolhe, protegendo o rosto e o peito com os braços.\n");
-                areaLog.append("O impacto é menor, mas doloroso. Você aproveita a brecha para escapar da criatura.\n");
+                areaLog.append("\nVocê se encolhe, protegendo o rosto e o peito com os braços.\n");
+                areaLog.append("O impacto é menor, mas doloroso. Você aproveita a brecha para escapar.\n");
                 jogador.restaurarVida(4);
                 areaLog.append("Você restaurou 4 de vida.\n");
-                // jogador.fugir(); // Se o jogador foge, precisa de uma representação para UI
+                jogador.fugir();
                 areaLog.append("Você tenta se afastar da criatura...\n");
                 break;
+
             case 2: // Correr
-                areaLog.append("\n🏃Um impulso de puro instinto de sobrevivência toma conta de você...\n");
+                areaLog.append("\nUm impulso de puro instinto de sobrevivência toma conta de você...\n");
                 if (new Random().nextDouble() < 0.7) {
                     areaLog.append("Seus passos são rápidos o bastante. Você consegue escapar ileso... por enquanto.\n");
-                    // jogador.fugir();
+                    jogador.fugir();
                 } else {
                     areaLog.append("Você tropeça por um momento... a criatura te alcança!\n");
-                    areaLog.append(criatura.atacarParaUI(jogador) + "\n");
+                    criatura.atacarInterface(jogador, areaLog);
                 }
                 break;
+
             case 3: // Observar
-                areaLog.append("\n👁️Você permanece imóvel, encarando a criatura com coragem...\n");
+                areaLog.append("\nVocê permanece imóvel, encarando a criatura com coragem...\n");
                 areaLog.append("Por um instante, ela hesita... mas então desencadeia uma ação misteriosa!\n");
-                areaLog.append(criatura.acaoEspecialParaUI(jogador) + "\n");
-                // jogador.fugir();
+                criatura.acaoEspecialInterface(jogador, areaLog);
+                jogador.fugir();
                 areaLog.append("Após a ação da criatura, você recua...\n");
                 break;
-            default: // Nenhuma escolha ou fechou o diálogo
+
+            default:
                 areaLog.append("\nA indecisão te domina... e a criatura não desperdiça a chance.\n");
-                areaLog.append(criatura.atacarParaUI(jogador) + "\n");
+                criatura.atacarInterface(jogador, areaLog);
                 break;
         }
     }
 
     public void executarDuranteDescansoInterface(Personagem jogador, Ambiente ambiente, JTextArea areaLog) {
-        areaLog.append("\n🔸 Um ataque inesperado durante o descanso!\n");
-        areaLog.append(criatura.ataqueDuranteDescansoParaUI(jogador) + "\n"); // Usa método da criatura para UI
+        areaLog.append("\n🔸 Enquanto você descansa em silêncio...\n");
+        areaLog.append("Um som sutil — um movimento, uma presença — rompe a calmaria.\n");
+        areaLog.append("Algo se aproxima sorrateiramente!\n\n");
+
+        criatura.ataqueDuranteDescansoInterface(jogador, areaLog);
     }
+
 }

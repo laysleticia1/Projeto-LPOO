@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Ruinas extends Ambiente {
     private String tipoDeEstrutura;
@@ -57,8 +57,11 @@ public class Ruinas extends Ambiente {
     public String getMisteriosPresentes() { return misteriosPresentes; }
 
     //Interface
-    public void explorarInterface(Personagem jogador) {
-        JOptionPane.showMessageDialog(null, "Você entra nas ruínas silenciosas, onde o vento sussurra entre paredes quebradas e colunas caídas...");
+    @Override
+    public void explorarInterface(Personagem jogador, JTextArea areaLog) {
+        areaLog.append("Você caminha entre os escombros antigos das ruínas...\n");
+        areaLog.append("As pedras estão cobertas de musgo e inscrições antigas brilham levemente sob a luz.\n");
+        areaLog.append("O silêncio é quebrado por corvos distantes, e o ar é carregado de memórias esquecidas.\n");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -117,6 +120,6 @@ public class Ruinas extends Ambiente {
         }
 
         GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
-        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
 }
