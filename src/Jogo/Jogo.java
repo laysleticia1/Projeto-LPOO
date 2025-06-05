@@ -650,7 +650,6 @@ public class Jogo {
         return acoes;
     }
 
-
     public void executarAcaoComumInterface(String nomeAcao, JTextArea areaLog) {
         if (jogador == null || jogador.getAmbienteAtual() == null || areaLog == null) {
             if (areaLog != null) areaLog.append("Erro: Jogador ou ambiente não definido, ou área de log nula.\n");
@@ -662,23 +661,30 @@ public class Jogo {
         try {
             if (ambiente instanceof Floresta) {
                 if (nomeAcao.equals("Coletar frutas")) {
+                    areaLog.append("Você encontra frutas frescas da floresta.\n");
                     Alimentos frutas = new Alimentos("Frutas Silvestres", 0.5, 20, 10, "Fruta", 3);
+                    jogador.getInventario().adicionarItem(frutas);
                     acaoRealizada = true;
                 } else if (nomeAcao.equals("Coletar madeira e cipós")) {
+                    areaLog.append("Você encontra madeira resistente e cipós entre as árvores.\n");
                     Material madeira = new Material("Madeira Resistente", "Recurso de construção", 2.0, 1, 30);
                     Material cipo = new Material("Cipó Resistente", "Material para amarras", 0.8, 1, 15);
+                    jogador.getInventario().adicionarItem(madeira);
+                    jogador.getInventario().adicionarItem(cipo);
                     acaoRealizada = true;
                 }
-
             } else if (ambiente instanceof Montanha) {
                 if (nomeAcao.equals("Escalar para encontrar abrigo natural")) {
+                    areaLog.append("Você escala a montanha e encontra um abrigo natural entre as rochas.\n");
                     Material pedra = new Material("Pedra Afiada", "Ferramenta básica", 1.0, 1, 30);
+                    jogador.getInventario().adicionarItem(pedra);
                     acaoRealizada = true;
                 } else if (nomeAcao.equals("Procurar itens congelados no alto")) {
+                    areaLog.append("Você encontra um pedaço de couro antigo preservado no gelo.\n");
                     Material couro = new Material("Couro Antigo Congelado", "Material para vestimentas", 1.2, 1, 45);
+                    jogador.getInventario().adicionarItem(couro);
                     acaoRealizada = true;
                 }
-
             } else if (ambiente instanceof LagoRio) {
                 if (nomeAcao.equals("Beber água diretamente")) {
                     areaLog.append("Você bebe água fresca do lago/rio, se hidratando.\n");
@@ -686,6 +692,7 @@ public class Jogo {
                     jogador.restaurarEnergia(5);
                     acaoRealizada = true;
                 } else if (nomeAcao.equals("Pescar")) {
+                    areaLog.append("Você tenta pescar com as mãos... e com sorte consegue um pequeno peixe!\n");
                     Alimentos peixe = new Alimentos("Peixe Pequeno Cru", 0.4, 15, 5, "Carne de Peixe", 1);
 
                     String mensagem = "🔍 Você encontrou: " + peixe.getNome() + "\n\n" +
@@ -709,23 +716,25 @@ public class Jogo {
                     } else {
                         areaLog.append("Você decidiu não pegar o item.\n");
                     }
-
                     acaoRealizada = true;
                 }
-
-
             } else if (ambiente instanceof Caverna) {
                 if (nomeAcao.equals("Acender tochas e explorar")) {
+                    areaLog.append("Você acende uma tocha e encontra um veio de minério brilhante.\n");
                     Material minerio = new Material("Minério Brilhante", "Recurso valioso", 2.0, 1, 50);
+                    jogador.getInventario().adicionarItem(minerio);
                     acaoRealizada = true;
                 } else if (nomeAcao.equals("Buscar minerais úteis")) {
+                    areaLog.append("Você busca por minerais e encontra alguns fragmentos de carvão.\n");
                     Material carvao = new Material("Carvão", "Combustível", 0.5, 5, 20);
+                    jogador.getInventario().adicionarItem(carvao);
                     acaoRealizada = true;
                 }
-
             } else if (ambiente instanceof Ruinas) {
                 if (nomeAcao.equals("Vasculhar ruínas por suprimentos antigos")) {
+                    areaLog.append("Você vasculha os escombros e encontra uma antiga ração de emergência, ainda selada.\n");
                     Alimentos racao = new Alimentos("Ração de Emergência Antiga", 0.3, 30, 5, "Industrializado", 100);
+                    jogador.getInventario().adicionarItem(racao);
                     acaoRealizada = true;
                 } else if (nomeAcao.equals("Analisar símbolos misteriosos")) {
                     areaLog.append("Você analisa símbolos misteriosos e sente sua mente se expandir, mas também um arrepio...\n");
@@ -733,8 +742,9 @@ public class Jogo {
                     jogador.diminuirEnergia(5);
                     acaoRealizada = true;
                 }
+            }
 
-            } else if (nomeAcao.equals("Descansar")) {
+            if (nomeAcao.equals("Descansar")) {
                 if (jogador instanceof SobreviventeNato sobrevivente) {
                     areaLog.append("Você monta um abrigo improvisado e descansa com segurança.\n");
                     sobrevivente.montarAbrigoImprovisado(jogador.getAmbienteAtual());
@@ -749,15 +759,14 @@ public class Jogo {
                 jogador.descansar();
                 jogador.consumirRecursosBasicos();
                 acaoRealizada = true;
+            }
 
-            } else {
-                if (nomeAcao.equals("Explorar o local")) {
-                    areaLog.append("Você observa atentamente o ambiente.\n");
-                    if (gerenciadorEventos != null) {
-                        gerenciadorEventos.dispararEventoExploracaoInterface(jogador, areaLog);
-                    }
-                    acaoRealizada = true;
+            if (nomeAcao.equals("Explorar o local")) {
+                areaLog.append("Você observa atentamente o ambiente.\n");
+                if (gerenciadorEventos != null) {
+                    gerenciadorEventos.dispararEventoExploracaoInterface(jogador, areaLog);
                 }
+                acaoRealizada = true;
             }
 
             if (acaoRealizada) {
@@ -781,34 +790,6 @@ public class Jogo {
         } catch (Exception e) {
             areaLog.append("🚫 Erro inesperado ao executar ação: " + e.getMessage() + "\n");
             e.printStackTrace();
-        }
-    }
-
-    private void apresentarItemEAdicionar(Item item, JTextArea areaLog) {
-        areaLog.append("🔸 Item encontrado: " + item.getNome() + "\n");
-        item.exibirDetalhesInterface();
-        int resposta = JOptionPane.showConfirmDialog(null, "Deseja adicionar o item ao inventário?", "Item Encontrado", JOptionPane.YES_NO_OPTION);
-        if (resposta == JOptionPane.YES_OPTION) {
-            try {
-                jogador.getInventario().adicionarItem(item);
-                areaLog.append("Item '" + item.getNome() + "' adicionado ao inventário.\n");
-            } catch (InventarioCheioException e) {
-                areaLog.append("⚠️ Inventário cheio! Não foi possível adicionar o item.\n");
-            }
-        } else {
-            areaLog.append("Você decidiu não pegar o item.\n");
-        }
-    }
-
-
-    private void adicionarItemColetadoInterface(Item item, JTextArea areaLog) throws InventarioCheioException {
-        if (jogador == null || item == null || areaLog == null) return;
-        areaLog.append("🔸 Item encontrado: " + item.getNome() + " (" + item.getDescricaoItem() + ")\n");
-        if (jogador.getInventario() != null) {
-            jogador.getInventario().adicionarItem(item);
-            areaLog.append("Item '" + item.getNome() + "' adicionado ao inventário.\n");
-        } else {
-            areaLog.append("Erro: Inventário do jogador não encontrado.\n");
         }
     }
 
@@ -853,30 +834,7 @@ public class Jogo {
                         break;
 
                     case "Procurar recursos (especial)":
-                        Item itemEncontrado = rastreador.procurarRecursosRetornandoItem(jogador.getAmbienteAtual(), jogador);
-                        if (itemEncontrado != null) {
-                            areaLog.append("\n🔍 Você encontrou um item! Detalhes:\n");
-                            itemEncontrado.exibirDetalhesInterface(); // ✅ usa o método correto
-                            int resposta = JOptionPane.showConfirmDialog(
-                                    null,
-                                    "Deseja adicionar o item ao inventário?",
-                                    "Item Encontrado",
-                                    JOptionPane.YES_NO_OPTION
-                            );
-
-                            if (resposta == JOptionPane.YES_OPTION) {
-                                try {
-                                    jogador.getInventario().adicionarItem(itemEncontrado);
-                                    areaLog.append("Você adicionou " + itemEncontrado.getNome() + " ao inventário.\n");
-                                } catch (InventarioCheioException e) {
-                                    areaLog.append("Inventário cheio! Não foi possível adicionar o item.\n");
-                                }
-                            } else {
-                                areaLog.append("Você decidiu não pegar o item.\n");
-                            }
-                        } else {
-                            areaLog.append("Você procurou, mas não encontrou nenhum recurso útil.\n");
-                        }
+                        rastreador.procurarRecursosInterface(jogador.getAmbienteAtual(), jogador, areaLog);
                         acaoRealizada = true;
                         break;
                 }
