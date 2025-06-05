@@ -28,7 +28,7 @@ Bem-vindo ao **Última Fronteira**, um jogo de sobrevivência baseado em texto e
 
 1. Clone o repositório:
 
-`git clone https://github.com/laysleticia1/Projeto-LPOO
+git clone https://github.com/laysleticia1/Projeto-LPOO
 
 2. Abra o projeto em uma IDE como IntelliJ ou Eclipse
 3. Execute o Main.java
