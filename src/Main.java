@@ -1,9 +1,6 @@
 import Jogo.Jogo;
 import javax.swing.*;
-import UI.GamePanel;
 import UI.GerenciadorUI;
-import UI.MenuInicialPanel;
-import UI.CriacaoPersonagem;
 
 public class Main {
     public static void main(String[] args) {

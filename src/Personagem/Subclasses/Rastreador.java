@@ -286,10 +286,14 @@ public class Rastreador extends Personagem{
 
             areaLog.append(detalhes + "\n");
 
+            String mensagem = "🔍 Você encontrou: " + encontrado.getNome() + "\n\n"
+                    + detalhes + "\n\nDeseja adicionar este item ao seu inventário?";
+
             int escolha = JOptionPane.showConfirmDialog(null,
-                    "Deseja adicionar este item ao seu inventário?",
+                    mensagem,
                     "Item Encontrado",
                     JOptionPane.YES_NO_OPTION);
+
 
             if (escolha == JOptionPane.YES_OPTION) {
                 try {
@@ -304,7 +308,6 @@ public class Rastreador extends Personagem{
         } else {
             areaLog.append("Você procurou, mas não encontrou nenhum recurso útil.\n");
         }
-
     }
 
     public Item procurarRecursosRetornandoItem(Ambiente ambiente, Personagem jogador) {
