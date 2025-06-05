@@ -51,7 +51,7 @@ public class GerenciadorUI {
         telaDetalhePersonagem = new TelaDetalhePersonagem(null, this);
         telaClasse = new TelaClasse(null, this);
         telaNarrativa = new TelaNarrativa(() -> irParaTelaMapa());
-        telaMapa = new TelaMapa(null, this);
+        telaMapa = new TelaMapa(this);
         painelJogo = new PainelJogo(null, this);
 
         painelPrincipalCardLayout.add(menuInicialPanel, "MENU_INICIAL");
@@ -157,5 +157,4 @@ public class GerenciadorUI {
                     "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }

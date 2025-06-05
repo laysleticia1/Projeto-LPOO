@@ -16,7 +16,7 @@ public class TelaMapa extends JPanel {
 
     private final String NOME_ARQUIVO_MAPA = "mapa1.png"; // Nome do arquivo do mapa
 
-    public TelaMapa(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
+    public TelaMapa(GerenciadorUI ctrl) {
         this.controlador = ctrl;
 
         try {
@@ -35,12 +35,7 @@ public class TelaMapa extends JPanel {
             this.imagemMapa = null;
         }
 
-        setLayout(null);
-
-        Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
-        setPreferredSize(tela);
-        setSize(tela);
-        setBounds(0, 0, tela.width, tela.height);
+        setLayout(null); // Usamos layout absoluto para posicionar o botão livremente
 
         botaoContinuarParaJogo = new JButton("Iniciar Exploração em Velkaria");
         botaoContinuarParaJogo.setFont(new Font("Serif", Font.BOLD, 24));
@@ -78,7 +73,7 @@ public class TelaMapa extends JPanel {
         if (imagemMapa != null) {
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2d.drawImage(imagemMapa, 0, 0, largura, altura, this);
+            g2d.drawImage(imagemMapa, 0, 0, largura, altura, this); // Redimensiona a imagem para preencher toda a área
             g2d.dispose();
         } else {
             g.setColor(new Color(100, 120, 80));
@@ -90,7 +85,7 @@ public class TelaMapa extends JPanel {
             g.drawString(msg, (largura - fm.stringWidth(msg)) / 2, altura / 2);
         }
 
-        // Centralizar botão dinamicamente
+        // Posiciona o botão no topo centralizado
         botaoContinuarParaJogo.setBounds((largura - 360) / 2, 70, 360, 50);
     }
 }
