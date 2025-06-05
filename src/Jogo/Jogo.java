@@ -824,16 +824,19 @@ public class Jogo {
             if (jogador instanceof Rastreador rastreador) {
                 switch (nomeAcao) {
                     case "Identificar pegadas":
+                        areaLog.append(jogador.getNome() + " se agacha e observa o solo em busca de rastros...\n");
                         rastreador.identificarPegadasInterface(jogador.getAmbienteAtual(), areaLog);
                         acaoRealizada = true;
                         break;
 
                     case "Farejar trilha":
+                        areaLog.append(jogador.getNome() + " fareja o ar e examina o ambiente em busca de pistas...\n");
                         rastreador.farejarTrilhaInterface(jogador.getAmbienteAtual(), areaLog);
                         acaoRealizada = true;
                         break;
 
                     case "Procurar recursos (especial)":
+                        areaLog.append(jogador.getNome() + " realiza uma busca cuidadosa por recursos escondidos...\n");
                         rastreador.procurarRecursosInterface(jogador.getAmbienteAtual(), jogador, areaLog);
                         acaoRealizada = true;
                         break;
@@ -841,11 +844,13 @@ public class Jogo {
             } else if (jogador instanceof Mecanico mecanico) {
                 switch (nomeAcao) {
                     case "Consertar equipamento":
+                        areaLog.append(jogador.getNome() + " analisa rapidamente o equipamento danificado e inicia o conserto...\n");
                         mecanico.consertarEquipamentoInterface(areaLog);
                         acaoRealizada = true;
                         break;
 
                     case "Melhorar arma":
+                        areaLog.append(jogador.getNome() + " ajusta e reforça sua arma improvisada...\n");
                         mecanico.melhorarArmaInterface(areaLog);
                         acaoRealizada = true;
                         break;
@@ -853,11 +858,13 @@ public class Jogo {
             } else if (jogador instanceof Medico medico) {
                 switch (nomeAcao) {
                     case "Auto-curar ferimentos leves":
+                        areaLog.append(jogador.getNome() + " aplica um curativo rápido em seus próprios ferimentos...\n");
                         medico.autoCurarFerimentosLevesInterface(areaLog);
                         acaoRealizada = true;
                         break;
 
                     case "Preparar remédio natural":
+                        areaLog.append(jogador.getNome() + " mistura ervas encontradas para preparar um remédio natural...\n");
                         medico.prepararRemedioNaturalInterface(areaLog);
                         acaoRealizada = true;
                         break;
@@ -865,11 +872,13 @@ public class Jogo {
             } else if (jogador instanceof SobreviventeNato sobrevivente) {
                 switch (nomeAcao) {
                     case "Fabricar lança":
+                        areaLog.append(jogador.getNome() + " improvisa uma lança utilizando os recursos disponíveis...\n");
                         sobrevivente.fabricarLancaInterface(areaLog);
                         acaoRealizada = true;
                         break;
 
                     case "Caçar animais (especial)":
+                        areaLog.append(jogador.getNome() + " se embrenha na mata em busca de caça...\n");
                         sobrevivente.cacarAnimaisInterface(areaLog);
                         acaoRealizada = true;
                         break;
@@ -898,6 +907,7 @@ public class Jogo {
             e.printStackTrace();
         }
     }
+
 
 }
 
