@@ -48,7 +48,6 @@ public class Material extends Item {
                 "\nResistência: " + resistencia;
     }
 
-
     //Getters and Setters
     public String getTipo() {
         return tipo;

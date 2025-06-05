@@ -26,6 +26,7 @@ public class Item {
         System.out.println("Item genérico: " + nome);
     }
 
+    //Getters and Setters
     public void setDurabilidade(int durabilidade) {
         this.durabilidade = durabilidade;
     }
@@ -44,7 +45,6 @@ public class Item {
     public double getPeso() {
         return peso;
     }
-
     public String getDescricaoItem() {
         if (this.nome != null && !this.nome.trim().isEmpty()) {
             return "Um item do tipo: " + this.nome + ".";
@@ -52,6 +52,7 @@ public class Item {
         return "Um item misterioso.";
     }
 
+    //Interface
     public String exibirDetalhesInterface() {
         StringBuilder sb = new StringBuilder();
         sb.append("- ").append(nome).append("\n");
@@ -59,6 +60,62 @@ public class Item {
         sb.append("• Durabilidade: ").append(durabilidade).append("\n");
         return sb.toString();
     }
+
+    public ImageIcon getImagem() {
+        try {
+            String nomeBase = nome.toLowerCase();
+
+            String nomeArquivo;
+
+            // 💡 Exceção específica para carne de cobra
+            if (nomeBase.equals("carne de cobra")) {
+                nomeArquivo = "carnecobra";
+            }
+            // 🥩 Todas as outras carnes genéricas
+            else if (nomeBase.startsWith("carne de")) {
+                nomeArquivo = "carne";
+            }
+            // 🌐 Regra geral: remove espaços, acentos e pontuação
+            else {
+                nomeArquivo = nome.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+            }
+
+            String caminho = "Resources/Item/" + nomeArquivo + ".png";
+
+            java.net.URL imagemURL = getClass().getClassLoader().getResource(caminho);
+            if (imagemURL != null) {
+                return new ImageIcon(imagemURL);
+            } else {
+                System.err.println("Imagem não encontrada: " + caminho);
+                return new ImageIcon(); // ou imagem fallback
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ImageIcon(); // fallback
+        }
+    }
+
+    public ImageIcon getImagemIcone() {
+        if (nome == null) return null;
+
+        String nomeArquivo = nome.replaceAll("\\s+", "").toLowerCase() + ".png";
+        String caminho = "/Resources/Item/" + nomeArquivo;
+
+        java.net.URL imgURL = getClass().getResource(caminho);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL);
+        } else {
+            System.err.println("⚠️ Imagem não encontrada para: " + nome + " (" + caminho + ")");
+            return null;
+        }
+    }
+
+
+    public String gerarDescricaoDetalhada() {
+        return "- Nome: " + nome + "\n- Peso: " + peso + " kg";
+    }
+
+
 }
 
 

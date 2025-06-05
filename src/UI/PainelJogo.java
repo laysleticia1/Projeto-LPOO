@@ -14,6 +14,9 @@ import Personagem.Superclasse.Personagem;
 import Personagem.Inventario.Inventario;
 import Ambiente.Superclasse.Ambiente;
 import Gerenciadores.GerenciadorDeEventos;
+import Item.Superclasse.Item;
+import Excecoes.InventarioCheioException;
+
 
 public class PainelJogo extends JPanel {
     private GerenciadorUI controlador;
@@ -153,7 +156,7 @@ public class PainelJogo extends JPanel {
         JPanel painelInferior = new JPanel(new BorderLayout(0, 5));
         painelInferior.setOpaque(false);
 
-        areaLog = new JTextArea(5, 0);
+        areaLog = new JTextArea(7, 0);
         areaLog.setEditable(false);
         areaLog.setLineWrap(true);
         areaLog.setWrapStyleWord(true);
@@ -196,48 +199,54 @@ public class PainelJogo extends JPanel {
 
     private void configurarAcoes() {
         botaoExplorar.addActionListener(e -> {
-            if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
+            if (meuJogo != null && meuJogo.getJogador() != null) {
                 Personagem jogador = meuJogo.getJogador();
                 Ambiente ambienteAtual = jogador.getAmbienteAtual();
 
-                adicionarLog("Você explora " + ambienteAtual.getNome() + "...");
+                if (ambienteAtual != null) {
+                    areaLog.append("\nVocê decide explorar " + ambienteAtual.getNome() + "...\n");
 
-                GerenciadorDeEventos gerenciadorEventos = null;
-                if (meuJogo.getGerenciadorDeEventos() != null) {
-                    gerenciadorEventos = meuJogo.getGerenciadorDeEventos();
-                } else if (controlador != null && controlador.getGerenciadorDeEventos() != null) {
-                    gerenciadorEventos = controlador.getGerenciadorDeEventos();
-                }
-
-                if (gerenciadorEventos != null) {
-                    gerenciadorEventos.dispararEventoExploracaoInterface(jogador, areaLog);
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            ambienteAtual.explorarInterface(jogador, areaLog);
+                            atualizarTela();
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(this, "Erro durante a exploração: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                            ex.printStackTrace();
+                        }
+                    });
                 } else {
-                    areaLog.append("Sistema de eventos (UI) não pôde ser acionado (gerenciador não encontrado).\n");
+                    areaLog.append("Ambiente atual não definido para exploração.\n");
                 }
-
-                atualizarTela();
             } else {
-                if (areaLog != null) {
-                    areaLog.append("Não é possível explorar agora (jogador, jogo ou ambiente atual não definido).\n");
-                }
+                areaLog.append("Jogador ou jogo não disponível.\n");
             }
         });
 
+
+
         botaoMudarAmbiente.addActionListener(e -> {
-            adicionarLog("Abrindo opções de ambientes...");
-            if (meuJogo == null || meuJogo.getGerenciadorDeAmbientes() == null) {
-                adicionarLog("Instância do jogo ou gerenciador de ambientes não disponível.");
-                JOptionPane.showMessageDialog(this, "Erro: Jogo não inicializado corretamente.", "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            // AJUSTE: A chamada ao construtor de TelaMoverAmbientes agora passa apenas UM argumento (o callback).
-            // A lista de ambientes não é mais passada aqui, pois o construtor de TelaMoverAmbientes não a espera.
-            // TelaMoverAmbientes internamente não usava essa lista de qualquer forma (os botões eram fixos).
             new TelaMoverAmbientes((String nomeAmbienteEscolhido) -> {
                 try {
-                    // 'nomeAmbienteEscolhido' já é uma String aqui, devido ao Consumer<String> em TelaMoverAmbientes
                     meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente);
+
+                    meuJogo.getJogador().diminuirEnergia(10);
+                    meuJogo.getJogador().diminuirFome(5);
+                    meuJogo.getJogador().diminuirSede(5);
+
                     atualizarTela();
+
+                    // Mensagem completa do novo ambiente
+                    Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
+                    if (ambienteAtual != null) {
+                        areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
+                        areaLog.append("------------------------------------------------------\n");
+                        areaLog.append("Descrição: " + ambienteAtual.getDescricao() + "\n");
+                        areaLog.append("Clima: " + ambienteAtual.getCondicaoClimatica() + "\n\n");
+                    }
+
+                    areaLog.append("Você se moveu e perdeu energia, fome e sede.\n");
+
                 } catch (Exception ex) {
                     adicionarLog("Erro ao mudar de ambiente: " + ex.getMessage() + "\n");
                     JOptionPane.showMessageDialog(this,
@@ -361,11 +370,11 @@ public class PainelJogo extends JPanel {
 
         Personagem jogador = meuJogo.getJogador();
         labelStatusNivel.setText("Nível: " + jogador.getNivel());
-        labelStatusVida.setText("Vida: " + jogador.getVida() + "/" + jogador.getVidaMaxima());
-        labelStatusFome.setText("Fome: " + jogador.getFome() + "/" + jogador.getFomeMaxima());
-        labelStatusSede.setText("Sede: " + jogador.getSede() + "/" + jogador.getSedeMaxima());
-        labelStatusEnergia.setText("Energia: " + jogador.getEnergia() + "/" + jogador.getEnergiaMaxima());
-        labelStatusSanidade.setText("Sanidade: " + jogador.getSanidade() + "/" + jogador.getSanidadeMaxima());
+        labelStatusVida.setText("Vida: " + jogador.getVida());
+        labelStatusFome.setText("Fome: " + jogador.getFome());
+        labelStatusSede.setText("Sede: " + jogador.getSede());
+        labelStatusEnergia.setText("Energia: " + jogador.getEnergia());
+        labelStatusSanidade.setText("Sanidade: " + jogador.getSanidade());
 
         if (painelVisaoAmbiente != null) painelVisaoAmbiente.repaint();
 
@@ -454,4 +463,5 @@ public class PainelJogo extends JPanel {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa: " + ex.getMessage(), "Erro de Mapa", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 }

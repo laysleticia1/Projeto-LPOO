@@ -11,6 +11,7 @@ public class Ferramentas extends Item {
     public Ferramentas(String nome, double peso, int durabilidade, int eficiencia) {
         super(nome, peso, durabilidade);
         this.eficiencia = eficiencia;
+        this.tipo = "Ferramenta";
     }
 
 

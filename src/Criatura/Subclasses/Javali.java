@@ -3,6 +3,8 @@ package Criatura.Subclasses;
 import Criatura.Superclasse.Criatura;
 import Personagem.Superclasse.Personagem;
 
+import javax.swing.*;
+
 public class Javali extends Criatura {
 
     public Javali() {
@@ -17,24 +19,6 @@ public class Javali extends Criatura {
     }
 
     @Override
-    public String atacarParaUI(Personagem jogador) {
-        atacar(jogador);
-        return "O Javali investe com força, atingindo seu tronco com suas presas afiadas!\nVocê perdeu 14 de vida.";
-    }
-
-    @Override
-    public void ataqueReduzido(Personagem jogador) {
-        jogador.diminuirVida(6);
-        System.out.println("O Javali investe com força, atingindo seu tronco com suas presas afiadas!");
-    }
-
-    @Override
-    public String ataqueReduzidoParaUI(Personagem jogador) {
-        ataqueReduzido(jogador);
-        return "O Javali tenta uma investida menos potente!\nVocê perdeu 6 de vida."; // Ajuste
-    }
-
-    @Override
     public void acaoEspecial(Personagem jogador) {
         jogador.diminuirSanidade(6);
         System.out.println("O Javali solta um grunhido feroz, fazendo seu coração acelerar.");
@@ -42,20 +26,8 @@ public class Javali extends Criatura {
     }
 
     @Override
-    public String acaoEspecialParaUI(Personagem jogador) {
-        acaoEspecial(jogador);
-        return "O Javali solta um grunhido feroz, fazendo seu coração acelerar.\nVocê perdeu 6 de sanidade.";
-    }
-
-    @Override
     public void fugir() {
         System.out.println("Ferido, o Javali corre pela mata e desaparece entre os arbustos.");
-    }
-
-    @Override
-    public String fugirParaUI() {
-        fugir();
-        return "Ferido, o Javali corre pela mata e desaparece entre os arbustos.";
     }
 
     @Override
@@ -66,9 +38,35 @@ public class Javali extends Criatura {
         System.out.println("Você perdeu 18 de vida");
     }
 
+    //Interface
     @Override
-    public String ataqueDuranteDescansoParaUI(Personagem jogador) {
-        ataqueDuranteDescanso(jogador);
-        return "Você ouve um barulho surdo durante o sono...\nUm Javali investe com força total contra você enquanto dorme!\nVocê perdeu 18 de vida.";
+    public void atacarInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(11);
+        areaLog.append("Um Javali enfurecido investe contra você e acerta em cheio suas costelas!\n");
+        areaLog.append("Você sente a dor do impacto e tenta se manter em pé.\n");
+        areaLog.append("Você perdeu 11 de vida.\n");
     }
+
+    @Override
+    public void acaoEspecialInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirEnergia(10);
+        areaLog.append("O Javali começa a cavar o chão e resfolega com força...\n");
+        areaLog.append("Subitamente, ele lança barro e folhas para todos os lados, cegando sua visão temporariamente.\n");
+        areaLog.append("Você tenta se defender, mas se cansa com a confusão.\n");
+        areaLog.append("Você perdeu 10 de energia.\n");
+    }
+
+    @Override
+    public void fugirInterface(JTextArea areaLog) {
+        areaLog.append("O Javali bufa alto e sai correndo floresta adentro...\n");
+    }
+
+    @Override
+    public void ataqueDuranteDescansoInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(13);
+        areaLog.append("Durante seu descanso, um Javali selvagem te encontra e te acerta com a cabeça!\n");
+        areaLog.append("Você rola pelo chão atordoado.\n");
+        areaLog.append("Você perdeu 13 de vida.\n");
+    }
+
 }

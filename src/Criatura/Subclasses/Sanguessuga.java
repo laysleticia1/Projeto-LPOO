@@ -3,6 +3,8 @@ package Criatura.Subclasses;
 import Criatura.Superclasse.Criatura;
 import Personagem.Superclasse.Personagem;
 
+import javax.swing.*;
+
 public class Sanguessuga extends Criatura {
 
     public Sanguessuga() {
@@ -17,24 +19,6 @@ public class Sanguessuga extends Criatura {
     }
 
     @Override
-    public String atacarParaUI(Personagem jogador) {
-        atacar(jogador);
-        return "A Sanguessuga se prende à sua pele e começa a sugar seu sangue!\nVocê perdeu 6 de vida.";
-    }
-
-    @Override
-    public void ataqueReduzido(Personagem jogador) {
-        jogador.diminuirVida(3);
-        System.out.println("A Sanguessuga se prende à sua pele e começa a sugar seu sangue!");
-    }
-
-    @Override
-    public String ataqueReduzidoParaUI(Personagem jogador) {
-        ataqueReduzido(jogador);
-        return "A Sanguessuga tenta uma sucção menor!\nVocê perdeu 3 de vida."; // Ajuste
-    }
-
-    @Override
     public void acaoEspecial(Personagem jogador) {
         jogador.diminuirVida(4); // Ação especial causa dano de vida (infecção)
         System.out.println("A ferida causada pela Sanguessuga infecciona, causando dor intensa.");
@@ -42,20 +26,8 @@ public class Sanguessuga extends Criatura {
     }
 
     @Override
-    public String acaoEspecialParaUI(Personagem jogador) {
-        acaoEspecial(jogador);
-        return "A ferida causada pela Sanguessuga infecciona, causando dor intensa.\nVocê perdeu 4 de vida.";
-    }
-
-    @Override
     public void fugir() {
         System.out.println("Satisfeita, a Sanguessuga se solta e desliza para a água escura.\n");
-    }
-
-    @Override
-    public String fugirParaUI() {
-        fugir();
-        return "Satisfeita, a Sanguessuga se solta e desliza para a água escura.";
     }
 
     @Override
@@ -67,9 +39,34 @@ public class Sanguessuga extends Criatura {
         System.out.println("Você perdeu 5 de vida e 10 de energia.");
     }
 
+    //Interface
     @Override
-    public String ataqueDuranteDescansoParaUI(Personagem jogador) {
-        ataqueDuranteDescanso(jogador);
-        return "Você acorda exausto... algo está sugando sua força.\nUma Sanguessuga está presa ao seu corpo!\nVocê perdeu 5 de vida e 10 de energia.";
+    public void atacarInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(6);
+        areaLog.append("A Sanguessuga se prende à sua pele e começa a sugar seu sangue!\n");
+        areaLog.append("Você perdeu 6 de vida.\n");
     }
+
+    @Override
+    public void acaoEspecialInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirVida(10);
+        areaLog.append("A Sanguessuga se contorce violentamente e injeta uma substância viscosa em sua pele!\n");
+        areaLog.append("Uma queimação intensa se espalha, indicando o início de uma infecção.\n");
+        areaLog.append("Você perdeu 10 de vida.\n");
+    }
+
+    @Override
+    public void fugirInterface(JTextArea areaLog) {
+        areaLog.append("A Sanguessuga se desprende com um movimento repentino e desliza para as águas escuras, desaparecendo sem deixar vestígios.\\n\n");
+    }
+
+    @Override
+    public void ataqueDuranteDescansoInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirEnergia(10);
+        jogador.diminuirVida(5);
+        areaLog.append("Você acorda exausto... algo está sugando sua força.\n");
+        areaLog.append("Uma Sanguessuga está presa ao seu corpo!\n");
+        areaLog.append("Você perdeu 5 de vida e 10 de energia.\n");
+    }
+
 }

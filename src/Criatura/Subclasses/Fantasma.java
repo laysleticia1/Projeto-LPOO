@@ -3,6 +3,8 @@ package Criatura.Subclasses;
 import Criatura.Superclasse.Criatura;
 import Personagem.Superclasse.Personagem;
 
+import javax.swing.*;
+
 public class Fantasma extends Criatura {
 
     public Fantasma() {
@@ -17,34 +19,10 @@ public class Fantasma extends Criatura {
     }
 
     @Override
-    public String atacarParaUI(Personagem alvo) {
-        atacar(alvo);
-        return "Um grito fantasmagórico ecoa... uma presença invisível invade sua mente.\nVocê perdeu 12 de sanidade.";
-    }
-
-    @Override
-    public void ataqueReduzido(Personagem jogador) {
-        jogador.diminuirSanidade(5);
-        System.out.println("Um grito fantasmagórico ecoa... uma presença invisível invade sua mente.");
-    }
-
-    @Override
-    public String ataqueReduzidoParaUI(Personagem jogador) {
-        ataqueReduzido(jogador);
-        return "Um sussurro gélido arrepia sua espinha.\nVocê perdeu 5 de sanidade."; // Ajuste
-    }
-
-    @Override
     public void acaoEspecial(Personagem jogador) {
         System.out.println("O Fantasma atravessa seu corpo, drenando sua energia vital.");
         jogador.diminuirVida(10);
         System.out.println("Você perdeu 10 de vida.");
-    }
-
-    @Override
-    public String acaoEspecialParaUI(Personagem jogador) {
-        acaoEspecial(jogador);
-        return "O Fantasma atravessa seu corpo, drenando sua energia vital.\nVocê perdeu 10 de vida.";
     }
 
     @Override
@@ -53,25 +31,43 @@ public class Fantasma extends Criatura {
     }
 
     @Override
-    public String fugirParaUI() {
-        fugir();
-        return "O fantasma desaparece lentamente no ar, deixando um frio no ambiente.";
-    }
-
-    @Override
     public void ataqueDuranteDescanso(Personagem jogador) {
         System.out.println("\nUma presença gélida invade seus sonhos...");
         System.out.println("Um Fantasma sussurra palavras sombrias e consome parte da sua sanidade!");
-        // Originalmente seu System.out dizia "perdeu 12 de vida" mas diminuirSanidade(12) era chamado.
-        // Assumindo que era para diminuir sanidade conforme a mensagem:
         jogador.diminuirSanidade(12);
         System.out.println("Você perdeu 12 de sanidade.");
     }
 
+   //Interface
+   @Override
+   public void atacarInterface(Personagem jogador, JTextArea areaLog) {
+       jogador.diminuirSanidade(15);
+       areaLog.append("O Fantasma atravessa seu corpo com um sussurro gelado!\n");
+       areaLog.append("Você sente sua mente se fragmentar.\n");
+       areaLog.append("Você perdeu 15 de sanidade.\n");
+   }
+
     @Override
-    public String ataqueDuranteDescansoParaUI(Personagem jogador) {
-        ataqueDuranteDescanso(jogador);
-        return "Uma presença gélida invade seus sonhos...\nUm Fantasma sussurra palavras sombrias e consome parte da sua sanidade!\nVocê perdeu 12 de sanidade.";
+    public void acaoEspecialInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirSanidade(12);
+        areaLog.append("O Fantasma sussurra segredos esquecidos direto em sua mente.\n");
+        areaLog.append("Imagens do passado e dor tomam conta da sua visão...\n");
+        areaLog.append("Você perdeu 12 de sanidade.\n");
     }
+
+    @Override
+    public void fugirInterface(JTextArea areaLog) {
+        areaLog.append("O Fantasma flutua para trás e desaparece lentamente na névoa...\n");
+    }
+
+    @Override
+    public void ataqueDuranteDescansoInterface(Personagem jogador, JTextArea areaLog) {
+        jogador.diminuirSanidade(8);
+        jogador.diminuirVida(10);
+        areaLog.append("Durante seu descanso, um arrepio percorre sua espinha...\n");
+        areaLog.append("O Fantasma atravessa seu corpo, drenando sua energia vital.\n");
+        areaLog.append("Você perdeu 8 de sanidade e 10 de vida.\n");
+    }
+
 }
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class Floresta extends Ambiente {
     private String vegetacaoEspecifica;
@@ -93,10 +93,12 @@ public class Floresta extends Ambiente {
     }
 
     //Interface
-    public void explorarInterface(Personagem jogador) {
-        StringBuilder mensagem = new StringBuilder();
+    public void explorarInterface(Personagem jogador, JTextArea areaLog) {
+        areaLog.append("Você adentra na vegetação densa da floresta...\n");
+        areaLog.append("Folhas úmidas tocam sua pele enquanto sons de animais ressoam ao redor.\n");
+        areaLog.append("Cada passo afasta galhos e revela possíveis descobertas entre a vida selvagem.\n");
 
-        mensagem.append("🌲 Você começa a explorar a floresta...\n");
+        StringBuilder mensagem = new StringBuilder();
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -158,7 +160,8 @@ public class Floresta extends Ambiente {
             JOptionPane.showMessageDialog(null, mensagem.toString());
         }
 
-        new Gerenciadores.GerenciadorDeEventos().aplicarEventoAleatorioPorAmbiente(jogador);
+        GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
 
 }
