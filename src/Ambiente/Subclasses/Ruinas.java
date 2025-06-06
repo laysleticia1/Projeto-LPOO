@@ -23,7 +23,7 @@ public class Ruinas extends Ambiente {
 
     @Override
     public void explorar(Personagem jogador) {
-        System.out.println("\nVocê adentra a escuridão úmida de uma caverna profunda...");
+        System.out.println("\nVocê explora as ruínas silenciosas de uma era esquecida...");
         jogador.diminuirEnergia(this.getDificuldadeExploracao());
 
         Item recurso = coletarItemAleatorio();
@@ -79,7 +79,7 @@ public class Ruinas extends Ambiente {
                 System.out.println("Você deixou o item para trás.");
             }
         } else {
-            System.out.println("\nA caverna não revelou nada desta vez.");
+            System.out.println("\nAs ruínas não revelaram nada desta vez.");
         }
 
         GerenciadorDeEventos gerenciador = new GerenciadorDeEventos();
