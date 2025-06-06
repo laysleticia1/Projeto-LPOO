@@ -21,7 +21,7 @@ import Personagem.Superclasse.Personagem;
 import Item.Superclasse.*;
 import Item.Subclasses.*;
 import Personagem.Subclasses.*;
-import UI.PainelJogo;
+import UI.*;
 
 public class Jogo {
     private Scanner scanner = new Scanner(System.in);
@@ -479,32 +479,41 @@ public class Jogo {
         }
     }
 
-    public boolean iniciarNovaPartida(String nome, String classe) {
+    public boolean iniciarNovaPartida(String nome, String classe, int idVisual) {
         try {
             switch (classe) {
-                case "Rastreador": jogador = new Rastreador(nome); break;
-                case "Mecânico": jogador = new Mecanico(nome); break;
-                case "Médico": jogador = new Medico(nome); break;
-                case "Sobrevivente Nato": jogador = new SobreviventeNato(nome); break;
-                default:
+                case "Rastreador" -> jogador = new Rastreador(nome);
+                case "Mecânico", "Mecanico" -> jogador = new Mecanico(nome);
+                case "Médico", "Medico" -> jogador = new Medico(nome);
+                case "Sobrevivente Nato" -> jogador = new SobreviventeNato(nome);
+                default -> {
                     System.err.println("Classe inválida fornecida para iniciarNovaPartida: " + classe);
                     return false;
+                }
             }
+
+            // ✅ Define o idVisual separadamente
+            jogador.setIdVisual(idVisual);
+
             configurarAmbientes();
             configurarEventos();
+
             if (this.gerenciadorEventos != null) {
                 gerenciadorDeTurnos = new GerenciadorDeTurnos(this.gerenciadorEventos);
             } else {
                 System.err.println("ERRO: GerenciadorDeEventos não inicializado ao configurar GerenciadorDeTurnos em nova partida.");
                 return false;
             }
+
             return true;
+
         } catch (Exception e) {
             System.err.println("Erro ao iniciar nova partida: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
+
 
     public String getTextoIntroducao() {
         if (jogador == null || jogador.getAmbienteAtual() == null) {
@@ -551,7 +560,7 @@ public class Jogo {
         gerenciador.mudarAmbiente(jogador, novoAmbiente);
     }
 
-    public void mudarAmbienteViaInterface(String nomeAmbiente, JTextArea areaLog, JLabel imagemAmbienteLabel) {
+    public void mudarAmbienteViaInterface(String nomeAmbiente, JTextArea areaLog, JLabel imagemAmbienteLabel, PainelJogo painelJogo) {
         if (jogador == null) {
             areaLog.append("Erro: Jogador não inicializado.\n");
             return;
@@ -565,7 +574,6 @@ public class Jogo {
             return;
         }
 
-
         Ambiente novoAmbiente = getAmbientePorNome(nomeAmbiente);
         if (novoAmbiente == null) {
             areaLog.append("Ambiente '" + nomeAmbiente + "' não encontrado.\n");
@@ -575,32 +583,16 @@ public class Jogo {
         try {
             gerenciador.mudarAmbienteInterface(jogador, novoAmbiente, areaLog);
 
-            Ambiente ambienteAtualizado = jogador.getAmbienteAtual();
-            if (ambienteAtualizado != null && imagemAmbienteLabel != null && ambienteAtualizado.getCaminhoImagem() != null && !ambienteAtualizado.getCaminhoImagem().isEmpty()) {
-                try {
-                    java.net.URL imgUrl = getClass().getResource(ambienteAtualizado.getCaminhoImagem());
-                    if (imgUrl != null) {
-                        ImageIcon icon = new ImageIcon(imgUrl);
-                        imagemAmbienteLabel.setIcon(icon);
-                        imagemAmbienteLabel.setText(null);
-                    } else {
-                        areaLog.append("Aviso: Imagem para " + ambienteAtualizado.getNome() + " não encontrada em '" + ambienteAtualizado.getCaminhoImagem() + "'.\n");
-                        imagemAmbienteLabel.setIcon(null);
-                        imagemAmbienteLabel.setText("Imagem não encontrada");
-                    }
-                } catch (Exception e) {
-                    areaLog.append("Erro ao carregar imagem para " + ambienteAtualizado.getNome() + ": " + e.getMessage() + "\n");
-                    imagemAmbienteLabel.setIcon(null);
-                    imagemAmbienteLabel.setText("Erro ao carregar imagem");
-                }
-            } else if (imagemAmbienteLabel != null) {
-                imagemAmbienteLabel.setIcon(null);
-                imagemAmbienteLabel.setText("Ambiente sem imagem definida");
+            // ✅ Atualiza imagem do ambiente com base no personagem e ambiente atual
+            if (painelJogo != null) {
+                painelJogo.atualizarImagemAmbiente();
             }
 
+            // Executa turno
             if (!gerenciadorDeTurnos.executarTurnoInterface(jogador, true, areaLog)) {
                 areaLog.append("O jogo terminou devido às condições do jogador.\n");
             }
+
         } catch (AmbienteInacessivelException e) {
             areaLog.append("Não foi possível mover: " + e.getMessage() + "\n");
         } catch (Exception e) {
@@ -608,7 +600,6 @@ public class Jogo {
             e.printStackTrace();
         }
     }
-
 
     public Ambiente getAmbienteAtual() {
         return jogador != null ? jogador.getAmbienteAtual() : null;
@@ -970,7 +961,9 @@ public class Jogo {
             e.printStackTrace();
         }
     }
-
+    public void setJogador(Personagem jogador) {
+        this.jogador = jogador;
+    }
 
 }
 

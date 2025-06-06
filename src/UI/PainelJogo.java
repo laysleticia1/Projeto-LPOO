@@ -30,6 +30,7 @@ public class PainelJogo extends JPanel {
     private JLabel labelStatusSanidade;
 
     private JPanel painelVisaoAmbiente;
+    private Image backgroundImage;
 
     private JButton botaoMapa;
     private JButton botaoExplorar;
@@ -89,7 +90,7 @@ public class PainelJogo extends JPanel {
                 String nomeAmbienteAtualStr = "Desconhecido";
                 if (meuJogo != null && meuJogo.getJogador() != null && meuJogo.getJogador().getAmbienteAtual() != null) {
                     Ambiente ambienteObj = meuJogo.getJogador().getAmbienteAtual();
-                    imgAmbienteAtual = ambienteObj.getImagemAmbiente();
+                    imgAmbienteAtual = ambienteObj.getImagemAmbiente(meuJogo.getJogador());
                     nomeAmbienteAtualStr = ambienteObj.getNome();
 
                     if (imgAmbienteAtual != null) {
@@ -223,21 +224,21 @@ public class PainelJogo extends JPanel {
             }
         });
 
-
-
         botaoMudarAmbiente.addActionListener(e -> {
             new TelaMoverAmbientes((String nomeAmbienteEscolhido) -> {
                 try {
-                    meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente);
+                    meuJogo.mudarAmbienteViaInterface(nomeAmbienteEscolhido, areaLog, imagemAmbiente, this);
 
-                    meuJogo.getJogador().diminuirEnergia(10);
-                    meuJogo.getJogador().diminuirFome(5);
-                    meuJogo.getJogador().diminuirSede(5);
+                    // Atualiza status do jogador
+                    Personagem jogador = meuJogo.getJogador();
+                    jogador.diminuirEnergia(10);
+                    jogador.diminuirFome(5);
+                    jogador.diminuirSede(5);
 
                     atualizarTela();
 
-                    // Mensagem completa do novo ambiente
-                    Ambiente ambienteAtual = meuJogo.getJogador().getAmbienteAtual();
+                    // Mensagem do novo ambiente
+                    Ambiente ambienteAtual = jogador.getAmbienteAtual();
                     if (ambienteAtual != null) {
                         areaLog.setText("Você está em: " + ambienteAtual.getNome() + ".\n");
                         areaLog.append("------------------------------------------------------\n");
@@ -255,6 +256,7 @@ public class PainelJogo extends JPanel {
                 }
             });
         });
+
 
         botaoRealizarAcao.addActionListener(e -> {
             if (meuJogo != null && meuJogo.getJogador() != null) {
@@ -462,6 +464,52 @@ public class PainelJogo extends JPanel {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa: " + ex.getMessage(), "Erro de Mapa", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public void atualizarImagemAmbiente() {
+        if (meuJogo == null || meuJogo.getJogador() == null) {
+            System.err.println("Erro: Jogo ou jogador não inicializado.");
+            return;
+        }
+
+        Ambiente ambiente = meuJogo.getJogador().getAmbienteAtual();
+        if (ambiente == null) {
+            System.err.println("Erro: Ambiente atual não definido.");
+            return;
+        }
+
+        // Usa o método definido em cada ambiente (ex: "floresta", "caverna", etc.)
+        String tipoAmbiente = ambiente.getTipoImagem();
+        int idVisual = meuJogo.getJogador().getIdVisual();
+        if (idVisual < 1 || idVisual > 6) {
+            System.out.println("ID visual inválido: " + idVisual + " — usando 1 como padrão.");
+            idVisual = 1;
+        }
+        // Segurança para evitar id fora do intervalo
+        if (idVisual < 1 || idVisual > 6) {
+            System.out.println("Aviso: ID visual inválido (" + idVisual + "), usando 1.");
+            idVisual = 1;
+        }
+
+        // Caminho da imagem correspondente
+        String caminhoImagem = "/Resources/ambientes/" + tipoAmbiente + idVisual + ".png";
+
+        try {
+            backgroundImage = new ImageIcon(getClass().getResource(caminhoImagem)).getImage();
+            System.out.println("Imagem carregada com sucesso: " + caminhoImagem);
+        } catch (Exception e) {
+            backgroundImage = null;
+            System.err.println("Erro ao carregar imagem: " + caminhoImagem);
+            e.printStackTrace();
+        }
+
+        // Reforça a atualização visual do painel
+        repaint();
+    }
+
+
+    public void setJogador(Personagem jogador) {
+        this.meuJogo.setJogador(jogador); // ou this.jogador = jogador;
     }
 
 }

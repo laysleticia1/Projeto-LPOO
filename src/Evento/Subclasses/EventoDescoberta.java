@@ -100,8 +100,14 @@ public class EventoDescoberta extends Evento {
 
     //Interface
     public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
-        areaLog.append("✨ Durante sua jornada, algo incomum chama sua atenção...\n");
+        areaLog.append("Durante sua jornada, algo incomum chama sua atenção...\n");
+
         Item item = gerarItemDescoberta();
+
+        if (item == null) {
+            areaLog.append("❌ Você encontrou algo, mas não conseguiu identificar o que era.\n");
+            return;
+        }
 
         areaLog.append("Você encontrou: " + item.getNome() + "\n");
 
@@ -121,6 +127,7 @@ public class EventoDescoberta extends Evento {
             areaLog.append("Você deixou o item para trás.\n");
         }
     }
+
 
     public Item gerarItemDescoberta() {
         Item itemDescoberto;

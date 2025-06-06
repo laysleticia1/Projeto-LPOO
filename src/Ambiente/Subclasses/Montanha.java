@@ -173,4 +173,10 @@ public class Montanha extends Ambiente {
         GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
         gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
+
+    @Override
+    public String getTipoImagem() {
+        return "montanha";
+    }
+
 }

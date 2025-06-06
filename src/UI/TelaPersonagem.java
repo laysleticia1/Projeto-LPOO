@@ -2,7 +2,6 @@ package UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class TelaPersonagem extends JPanel {
     private GerenciadorUI controlador;
@@ -21,7 +20,7 @@ public class TelaPersonagem extends JPanel {
 
         criarBotoesPersonagem();
 
-        // Botão "Voltar" com texto visível, fundo e borda invisíveis
+        // Botão "Voltar"
         JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.setBounds(30, 33, 100, 40);
         botaoVoltar.setContentAreaFilled(false);
@@ -42,12 +41,13 @@ public class TelaPersonagem extends JPanel {
             botao.setContentAreaFilled(false);
             botao.setBorderPainted(false);
             botao.setFocusPainted(false);
-            botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            final int id = i;
-            botao.addActionListener(e -> controlador.personagemSelecionadoParaDetalhes(id));
-            add(botao);
+            final int idVisual = i + 1; // ID de 1 a 6 corretamente
+            botao.addActionListener(e -> controlador.personagemSelecionadoParaDetalhes(idVisual));
+
             botoesPersonagem[i] = botao;
+            add(botao);
         }
     }
 
@@ -59,16 +59,18 @@ public class TelaPersonagem extends JPanel {
         double escalaY = getHeight() / 1024.0;
 
         int[][] posicoes = {
-                { 120, 190 }, { 610, 190 }, { 1100, 190 },
-                { 120, 620 }, { 610, 620 }, { 1100, 620 }
+                {120, 190}, {610, 190}, {1100, 190},
+                {120, 620}, {610, 620}, {1100, 620}
         };
 
         for (int i = 0; i < 6; i++) {
-            int x = (int) (posicoes[i][0] * escalaX);
-            int y = (int) (posicoes[i][1] * escalaY);
-            int largura = (int) (290 * escalaX);
-            int altura = (int) (330 * escalaY);
-            botoesPersonagem[i].setBounds(x, y, largura, altura);
+            if (botoesPersonagem[i] != null) {
+                int x = (int) (posicoes[i][0] * escalaX);
+                int y = (int) (posicoes[i][1] * escalaY);
+                int largura = (int) (290 * escalaX);
+                int altura = (int) (330 * escalaY);
+                botoesPersonagem[i].setBounds(x, y, largura, altura);
+            }
         }
     }
 

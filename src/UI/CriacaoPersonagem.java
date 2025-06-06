@@ -3,7 +3,6 @@ package UI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.text.StyledDocument;
@@ -28,6 +27,7 @@ public class CriacaoPersonagem extends JPanel {
     private JButton botaoVoltar;
 
     private String nomeConfirmado;
+    private int idVisualEscolhido;
 
     private final Map<String, String> descricoesClasses = new HashMap<>();
 
@@ -147,7 +147,7 @@ public class CriacaoPersonagem extends JPanel {
         botaoConfirmarNome.addActionListener(e -> {
             nomeConfirmado = campoNome.getText().trim();
             if (nomeConfirmado.isEmpty()) {
-                JOptionPane.showMessageDialog(CriacaoPersonagem.this,
+                JOptionPane.showMessageDialog(this,
                         "Por favor, digite um nome para o personagem.",
                         "Nome Inválido", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -181,20 +181,21 @@ public class CriacaoPersonagem extends JPanel {
             String classeSelecionada = (String) comboBoxClasse.getSelectedItem();
 
             if (classeSelecionada == null || classeSelecionada.isEmpty()) {
-                JOptionPane.showMessageDialog(CriacaoPersonagem.this,
+                JOptionPane.showMessageDialog(this,
                         "Por favor, selecione uma classe para o personagem.",
                         "Classe Inválida", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            boolean sucesso = meuJogo.iniciarNovaPartida(nomeConfirmado, classeSelecionada);
+            boolean sucesso = meuJogo.iniciarNovaPartida(nomeConfirmado, classeSelecionada, idVisualEscolhido);
 
             if (sucesso) {
-                System.out.println("Personagem criado com sucesso! Nome: " + meuJogo.getJogador().getNome() + ", Classe: " + meuJogo.getJogador().getClasse());
+                System.out.println("Personagem criado com sucesso! Nome: " +
+                        meuJogo.getJogador().getNome() + ", Classe: " + meuJogo.getJogador().getClasse());
                 CardLayout cl = (CardLayout) painelPrincipalCardLayout.getLayout();
                 cl.show(painelPrincipalCardLayout, "TELA_NARRATIVA");
             } else {
-                JOptionPane.showMessageDialog(CriacaoPersonagem.this,
+                JOptionPane.showMessageDialog(this,
                         "Ocorreu um erro ao criar o personagem. Verifique o console para mais detalhes.",
                         "Erro na Criação", JOptionPane.ERROR_MESSAGE);
             }
@@ -220,5 +221,10 @@ public class CriacaoPersonagem extends JPanel {
 
         botaoCriarPersonagem.setEnabled(false);
         nomeConfirmado = null;
+    }
+
+    // ✅ Método público para definir idVisual
+    public void setIdVisualEscolhido(int idVisual) {
+        this.idVisualEscolhido = idVisual;
     }
 }
