@@ -10,7 +10,7 @@ import javax.swing.*;
 public class GerenciadorDeAmbientes {
     private ArrayList<Ambiente> ambientesDisponiveis = new ArrayList<>();
     private ArrayList<String> historicoDeMovimentacao = new ArrayList<>();
-    private Ambiente ambienteAtual; // Adicionado pela branch main e mantido
+    private Ambiente ambienteAtual;
 
     public void adicionarAmbiente(Ambiente ambiente) {
         ambientesDisponiveis.add(ambiente);
@@ -75,7 +75,6 @@ public class GerenciadorDeAmbientes {
         }
     }
 
-    // Métodos da branch eventos_interface
     public void listarAmbientesNumerados() {
         if (this.ambientesDisponiveis == null || this.ambientesDisponiveis.isEmpty()) {
             System.out.println("Nenhum ambiente disponível para listar.");
@@ -91,8 +90,7 @@ public class GerenciadorDeAmbientes {
     }
 
     public Ambiente getAmbientePorIndice(int indice) {
-        // Ajuste para retornar null se o índice for inválido, como estava na branch.
-        // O ideal seria lançar uma exceção (IndexOutOfBoundsException) ou tratar de forma mais robusta.
+
         if (this.ambientesDisponiveis == null || indice < 0 || indice >= this.ambientesDisponiveis.size()) {
             System.err.println("Índice de ambiente inválido: " + indice); // Adicionado um log de erro
             return null;
@@ -100,9 +98,8 @@ public class GerenciadorDeAmbientes {
         return this.ambientesDisponiveis.get(indice);
     }
 
-    // Método da branch main
     public Ambiente getAmbienteAtual() {
         return ambienteAtual;
     }
-} // Fechamento correto da classe
+}
 

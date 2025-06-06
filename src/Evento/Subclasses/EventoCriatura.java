@@ -14,7 +14,6 @@ import java.util.Scanner;
 import javax.swing.*;
 
 public class EventoCriatura extends Evento {
-    // private String tipo; // Campo não utilizado, considere remover se não tiver planos para ele.
     private int nivelPerigo;
     private String acoes; // Descrição das possíveis ações, pode ser usado para UI ou flavor text
     private Criatura criatura;

@@ -92,14 +92,14 @@ public class GerenciadorUI {
     public void personagemSelecionadoParaDetalhes(int personagemId) {
         this.idPersonagemSelecionado = personagemId;
         if (telaDetalhePersonagem != null) {
-            telaDetalhePersonagem.mostrarDetalhes(personagemId); // Aqui está certo porque agora `mostrarDetalhes` faz o ajuste internamente.
+            telaDetalhePersonagem.mostrarDetalhes(personagemId);
             mostrarTela("TELA_DETALHE_PERSONAGEM");
         }
     }
 
     public void personagemConfirmado(int personagemId) {
         this.idPersonagemSelecionado = personagemId;
-        this.setIdVisualEscolhido(personagemId); // 👈 ESSENCIAL
+        this.setIdVisualEscolhido(personagemId);
         if (telaClasse != null) {
             telaClasse.prepararTela(idPersonagemSelecionado);
             mostrarTela("TELA_CLASSE");
@@ -139,9 +139,8 @@ public class GerenciadorUI {
     public String getNomePersonagemAtual() { return nomePersonagemAtual; }
     public int getIdPersonagemSelecionado() { return idPersonagemSelecionado; }
     public Jogo getMeuJogo() { return meuJogo; }
-    public PainelJogo getPainelJogo() { return painelJogo; } // Getter para PainelJogo, pode ser útil
+    public PainelJogo getPainelJogo() { return painelJogo; }
 
-    // MÉTODO ADICIONADO
     public GerenciadorDeEventos getGerenciadorDeEventos() {
         if (this.meuJogo != null) {
             return this.meuJogo.getGerenciadorDeEventos();

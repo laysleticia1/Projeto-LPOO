@@ -46,9 +46,6 @@ public class EventoDoencaFerimento extends Evento {
 
     @Override
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
-        // Para 'ambiente instanceof Montanha' etc. funcionar, essas classes devem existir
-        // e ser importadas ou estar no mesmo pacote.
-        // Assumindo que estão em Ambiente.Subclasses e são importadas.
         return ambiente instanceof Montanha || ambiente instanceof Floresta;
     }
 

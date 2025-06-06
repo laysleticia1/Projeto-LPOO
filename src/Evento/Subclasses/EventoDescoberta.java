@@ -94,7 +94,6 @@ public class EventoDescoberta extends Evento {
     }
 
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
-        // Suponha que só ocorre em Ruínas
         return ambiente instanceof Ruinas;
     }
 

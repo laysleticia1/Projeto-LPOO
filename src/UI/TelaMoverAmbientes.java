@@ -33,18 +33,16 @@ public class TelaMoverAmbientes extends JFrame {
             }
             imagemOriginal = ImageIO.read(imgStream);
         } catch (Exception e) {
-            e.printStackTrace(); // Para depuração no console
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro ao carregar imagem do mapa: " + e.getMessage(), "Erro de Imagem", JOptionPane.ERROR_MESSAGE);
-            dispose(); // Fecha a janela se o mapa não puder ser carregado
+            dispose();
             return;
         }
 
         imagemEscalada = new JLabel();
-        // As dimensões iniciais podem ser pequenas, serão ajustadas pelo componentResized
         imagemEscalada.setBounds(0, 0, getWidth(), getHeight());
         layeredPane.add(imagemEscalada, Integer.valueOf(0));
 
-        // Coordenadas e tamanhos dos botões precisam ser ajustados para sua imagem de mapa específica
         layeredPane.add(criarBotao("Montanhas de Vhaldrak", 85, 65, 300, 300, callback), Integer.valueOf(1));
         layeredPane.add(criarBotao("Floresta de Elvarron", 520, 65, 300, 300, callback), Integer.valueOf(1));
         layeredPane.add(criarBotao("Planícies de Myndros", 950, 65, 300, 300, callback), Integer.valueOf(1));
@@ -56,18 +54,13 @@ public class TelaMoverAmbientes extends JFrame {
             public void componentResized(ComponentEvent e) {
                 int largura = getContentPane().getWidth();
                 int altura = getContentPane().getHeight();
-                if (largura > 0 && altura > 0) { // Evita divisão por zero ou dimensões inválidas
+                if (largura > 0 && altura > 0) {
                     imagemEscalada.setBounds(0, 0, largura, altura);
                     atualizarImagemFundo(largura, altura);
-                    // Reajustar botões se o layout depender do tamanho da janela/imagem
                 }
             }
         });
 
-        // Chamar o redimensionamento inicial explicitamente após o frame estar visível
-        // ou ter um tamanho definido pode ser mais robusto em alguns casos.
-        // Por ora, o componentResized deve cuidar disso quando o frame se torna visível e tem tamanho.
-        // Se a imagem não aparecer inicialmente, tente chamar atualizarImagemFundo aqui com getWidth/getHeight.
         if (getWidth() > 0 && getHeight() > 0) {
             atualizarImagemFundo(getWidth(), getHeight());
         }
@@ -85,15 +78,15 @@ public class TelaMoverAmbientes extends JFrame {
 
     private JButton criarBotao(String nomeAmbiente, int x, int y, int largura, int altura, Consumer<String> callback) {
         JButton botao = new JButton();
-        botao.setActionCommand(nomeAmbiente); // Útil para identificar o botão se necessário
+        botao.setActionCommand(nomeAmbiente);
         botao.setBounds(x, y, largura, altura);
         botao.setOpaque(false);
         botao.setContentAreaFilled(false);
-        botao.setBorderPainted(false); // Garante que nenhuma borda padrão seja pintada
+        botao.setBorderPainted(false);
         botao.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         botao.addActionListener(e -> {
-            callback.accept(nomeAmbiente); // Passa o NOME (String) do ambiente
-            dispose(); // Fecha a janela TelaMoverAmbientes
+            callback.accept(nomeAmbiente);
+            dispose();
         });
         return botao;
     }

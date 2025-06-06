@@ -42,12 +42,12 @@ public class Floresta extends Ambiente {
                 System.out.println("- Durabilidade: " + recurso.getDurabilidade());
             }
             System.out.print("Deseja adicionar este item ao seu inventário? (s/n): ");
-            Scanner scanner = new Scanner(System.in); // Cuidado com múltiplos Scanners System.in
+            Scanner scanner = new Scanner(System.in);
             String resposta = scanner.nextLine().trim().toLowerCase();
             if (resposta.equals("s") || resposta.equals("sim")) {
                 try {
                     jogador.adicionarAoInventario(recurso);
-                } catch (Exception e) { // Idealmente uma exceção mais específica
+                } catch (Exception e) {
                     System.out.println("Não foi possível adicionar o item: " + e.getMessage());
                 }
             } else {
@@ -57,8 +57,8 @@ public class Floresta extends Ambiente {
             System.out.println("\nNada útil foi encontrado na floresta desta vez.");
         }
 
-        GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos(); // Supondo a existência
-        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador); // Supondo este método
+        GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
+        gerenciadorEventos.aplicarEventoAleatorioPorAmbiente(jogador);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Floresta extends Ambiente {
         double chanceEncontrar = Math.random();
         if (chanceEncontrar < 0.4) return null;
 
-        int opcao = (int) (Math.random() * 6); // Ajuste o número de opções conforme seus itens
+        int opcao = (int) (Math.random() * 6);
         switch (opcao) {
             case 0: return new Alimentos("Cogumelo Nutritivo", 0.3, 1, 20, "Fungo", 2);
             case 1: return new Alimentos("Nozes Silvestres", 0.4, 3, 12, "Semente", 5);

@@ -104,7 +104,7 @@ public class GerenciadorDeEventos {
 
                 new EventoClimatico("Chuva Torrencial na Floresta", "Gotas pesadas transformam a floresta em um lamaçal.", 0.45, "energia", "Floresta", "Chuva Intensa", 1, "Movimentação reduzida"),
                 new EventoDoencaFerimento("Contato com Erva Tóxica", "Você roça em uma planta pegajosa e sente a pele arder.", 0.45, "vida", "Floresta", "Cutânea", "Lavar com água limpa"),
-                new EventoDescoberta("Frutas Exóticas da Floresta", "Você encontra frutas de coloração vibrante...", 0.7, "inventario", "Floresta", "Alimento", "Carne de Javali", "Verificar frescor") // "Carne de Javali" como recurso parece estranho para Frutas Exóticas, ajuste se necessário.
+                new EventoDescoberta("Frutas Exóticas da Floresta", "Você encontra frutas de coloração vibrante...", 0.7, "inventario", "Floresta", "Alimento", "Carne de Javali", "Verificar frescor")
         )));
 
 
@@ -136,7 +136,7 @@ public class GerenciadorDeEventos {
                 new EventoDoencaFerimento("Corte Infectado nas Ruínas", "Você tropeça e corta o braço em metal enferrujado.", 0.4, "vida", "Ruinas", "Corte", "Antibiótico e bandagens"),
                 new EventoClimatico("Ventos Cortantes das Ruínas", "Ráfagas violentas varrem as ruínas, carregando poeira e estilhaços.", 0.4, "vida", "Ruinas", "Tempestade de Detritos", 1, "Redução de visibilidade e risco de ferimentos"),
                 new PoeiraToxica(), // Evento Específico
-                new EventoDescoberta("Inscrições Antigas Decifradas", "Num pedestal coberto de musgo, inscrições revelam segredos.", 0.4, "inventario", "Ruinas", "Artefato", "Conhecimento perdido", "Somente se sanidade > 60") // "Artefato místico" estava repetido, mudei para "Conhecimento perdido" como exemplo
+                new EventoDescoberta("Inscrições Antigas Decifradas", "Num pedestal coberto de musgo, inscrições revelam segredos.", 0.4, "inventario", "Ruinas", "Artefato", "Conhecimento perdido", "Somente se sanidade > 60")
         )));
     }
 
@@ -213,7 +213,6 @@ public class GerenciadorDeEventos {
         Evento eventoEscolhido = eventos.get(sorteador.nextInt(eventos.size()));
         areaLog.append("\n🔸 Um evento inesperado acontece em " + ambienteAtual.getNome() + "...\n\n");
 
-        // Chamada do método de execução da interface, se existir
         if (eventoEscolhido instanceof EventoClimatico) {
             ((EventoClimatico) eventoEscolhido).executarInterface(jogador, ambienteAtual, areaLog);
         } else if (eventoEscolhido instanceof EventoCriatura) {
@@ -223,7 +222,7 @@ public class GerenciadorDeEventos {
         } else if (eventoEscolhido instanceof EventoDoencaFerimento) {
             ((EventoDoencaFerimento) eventoEscolhido).executarInterface(jogador, ambienteAtual, areaLog);
         } else {
-            // Fallback genérico
+
             areaLog.append(eventoEscolhido.getDescricao() + "\n\n");
         }
 

@@ -30,7 +30,6 @@ public class LagoRio extends Ambiente {
         Item recurso = coletarItemAleatorio();
         if (recurso != null) {
             System.out.println("\nVocê encontrou: " + recurso.getNome());
-            // ... (lógica de detalhes e coleta)
         } else {
             System.out.println("\nNenhum recurso encontrado desta vez próximo à água.");
         }
@@ -107,7 +106,7 @@ public class LagoRio extends Ambiente {
     @Override
     public Item coletarItemAleatorio() {
         double chanceEncontrar = Math.random();
-        if (chanceEncontrar < 0.3) return null; // Chance um pouco maior de encontrar algo
+        if (chanceEncontrar < 0.3) return null;
 
         int opcao = (int) (Math.random() * 5);
         switch (opcao) {

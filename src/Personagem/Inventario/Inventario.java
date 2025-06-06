@@ -32,7 +32,7 @@ public class Inventario {
 
         quantidadeAtual++;
         pesoTotal += item.getPeso();
-        // Mensagem de item adicionado agora é responsabilidade de quem chama este método.
+
         return true;
     }
 
