@@ -30,6 +30,8 @@ public class TelaNome extends JPanel {
         campoNome.setCaretColor(Color.WHITE);
         campoNome.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
 
+        add(campoNome);
+
         botaoConfirmar = new JButton();
         botaoConfirmar.setOpaque(false);
         botaoConfirmar.setContentAreaFilled(false);
