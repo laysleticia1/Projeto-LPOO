@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Última Fronteira">
+    <output-path>$PROJECT_DIR$/out/artifacts/Última_Fronteira</output-path>
+    <root id="archive" name="Projeto.jar">
+      <element id="module-output" name="Projeto" />
+    </root>
+  </artifact>
+</component>
