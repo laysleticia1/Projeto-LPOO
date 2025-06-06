@@ -7,6 +7,8 @@ import java.awt.*;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import Jogo.Jogo;
@@ -407,63 +409,87 @@ public class PainelJogo extends JPanel {
     }
 
     private void mostrarMapa() {
-        JDialog dialogoMapa = new JDialog(SwingUtilities.getWindowAncestor(this), "Mapa de Velkaria", Dialog.ModalityType.APPLICATION_MODAL);
-        dialogoMapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialogoMapa.setSize(1000, 700);
-        dialogoMapa.setLocationRelativeTo(this);
-
+        // 1) Carrega o BufferedImage do mapa (final para uso na classe anônima abaixo)
+        final BufferedImage imagemOriginal;
         try {
             java.net.URL imgUrl = getClass().getClassLoader().getResource("Resources/mapa2.png");
             if (imgUrl == null) {
-                throw new IOException("Arquivo de mapa 'Resources/mapa2.png' não encontrado no classpath.");
+                throw new IOException("Arquivo 'Resources/mapa2.png' não foi encontrado no classpath.");
             }
-            BufferedImage imagemOriginal = ImageIO.read(imgUrl);
-
-            JPanel painelMapa = new JPanel() {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    if (imagemOriginal != null) {
-                        int painelW = getWidth();
-                        int painelH = getHeight();
-                        int imgW = imagemOriginal.getWidth();
-                        int imgH = imagemOriginal.getHeight();
-
-                        double painelRatio = (double) painelW / painelH;
-                        double imgRatio = (double) imgW / imgH;
-
-                        int drawW = painelW;
-                        int drawH = painelH;
-
-                        if (imgRatio > painelRatio) {
-                            drawH = (int) (painelW / imgRatio);
-                        } else {
-                            drawW = (int) (painelH * imgRatio);
-                        }
-                        int x = (painelW - drawW) / 2;
-                        int y = (painelH - drawH) / 2;
-                        g.drawImage(imagemOriginal, x, y, drawW, drawH, this);
-                    }
-                }
-            };
-            if (imagemOriginal != null) {
-                painelMapa.setPreferredSize(new Dimension(imagemOriginal.getWidth(), imagemOriginal.getHeight()));
-            } else {
-                painelMapa.setPreferredSize(new Dimension(800, 600));
-            }
-
-            dialogoMapa.setContentPane(new JScrollPane(painelMapa));
-            dialogoMapa.pack();
-            if (dialogoMapa.getWidth() > 1000 || dialogoMapa.getHeight() > 700) {
-                dialogoMapa.setSize(Math.min(dialogoMapa.getWidth(), 1000), Math.min(dialogoMapa.getHeight(), 700));
-            }
-            dialogoMapa.setLocationRelativeTo(this);
-            dialogoMapa.setVisible(true);
-
-        } catch (IOException | NullPointerException ex) {
+            imagemOriginal = ImageIO.read(imgUrl);
+        } catch (IOException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao carregar o mapa: " + ex.getMessage(), "Erro de Mapa", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Erro ao carregar o mapa:\n" + ex.getMessage(),
+                    "Erro de Mapa",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            // Se houver falha ao ler a imagem, interrompe a execução do método
+            return;
         }
+
+        // 2) Obtém a resolução total do monitor
+        Dimension resolucaoTela = Toolkit.getDefaultToolkit().getScreenSize();
+        int larguraTela = resolucaoTela.width;
+        int alturaTela = resolucaoTela.height;
+
+        // 3) Cria um JDialog sem bordas que ocupará 100% da tela
+        JDialog dialogoMapa = new JDialog(SwingUtilities.getWindowAncestor(this));
+        dialogoMapa.setModal(true);
+        dialogoMapa.setUndecorated(true);
+        dialogoMapa.setBounds(0, 0, larguraTela, alturaTela);
+
+        // 4) Cria um JPanel que desenha o mapa redimensionado e centralizado
+        JPanel painelMapa = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                if (imagemOriginal != null) {
+                    int painelW = getWidth();
+                    int painelH = getHeight();
+                    int imgW = imagemOriginal.getWidth();
+                    int imgH = imagemOriginal.getHeight();
+
+                    double painelRatio = (double) painelW / painelH;
+                    double imgRatio   = (double) imgW / imgH;
+
+                    int drawW = painelW;
+                    int drawH = painelH;
+                    if (imgRatio > painelRatio) {
+                        drawH = (int) (painelW / imgRatio);
+                    } else {
+                        drawW = (int) (painelH * imgRatio);
+                    }
+
+                    int x = (painelW - drawW) / 2;
+                    int y = (painelH - drawH) / 2;
+                    g.drawImage(imagemOriginal, x, y, drawW, drawH, this);
+                }
+            }
+        };
+
+        // 5) Garante que o fundo do painel seja preto (para não aparecer nenhum branco)
+        painelMapa.setBackground(Color.BLACK);
+
+        // 6) Remove totalmente qualquer borda: NÃO há setBorder(…) aqui
+
+        // 7) Fecha o diálogo ao clicar em qualquer ponto da tela
+        painelMapa.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dialogoMapa.dispose();
+            }
+        });
+
+        // 8) Ajusta o painel para ocupar toda a área do diálogo
+        painelMapa.setPreferredSize(new Dimension(larguraTela, alturaTela));
+        dialogoMapa.setContentPane(painelMapa);
+        dialogoMapa.validate();
+
+        // 9) Exibe o diálogo em tela cheia
+        dialogoMapa.setVisible(true);
     }
 
     public void atualizarImagemAmbiente() {
