@@ -21,9 +21,7 @@ public class TempestadeMontanha extends EventoClimatico {
 
     @Override
     public void executar(Personagem jogador, Ambiente local) {
-        // Pode chamar super.executar() se quiser aplicar o impacto definido no construtor via switch da superclasse
-        // super.executar(jogador, local);
-        // Ou ter uma lógica totalmente customizada aqui:
+
         System.out.println("Evento: " + getNomeEvento());
         System.out.println(getDescricao());
         System.out.println("Tipo: " + getTipo());
@@ -31,7 +29,6 @@ public class TempestadeMontanha extends EventoClimatico {
         System.out.println("Efeito: " + getEfeitoNoAmbiente());
 
         jogador.diminuirEnergia(10); // Ajustado
-        // Adicionar outros efeitos, como na visibilidade, se aplicável à mecânica do jogo
         System.out.println("O personagem perdeu 10 de energia devido à tempestade.");
     }
     @Override
@@ -42,9 +39,7 @@ public class TempestadeMontanha extends EventoClimatico {
     //Interface
     @Override
     public void executarInterface(Personagem jogador, Ambiente local, JTextArea areaLog) {
-        // Pode chamar super.executarInterface() se a lógica for similar
-        // super.executarInterface(jogador, local, areaLog);
-        // Ou customizar:
+
         areaLog.append("⛈️ Evento: " + getNomeEvento() + "\n");
         areaLog.append(getDescricao() + "\n");
         areaLog.append("Tipo: " + getTipo() + "\n");
@@ -53,6 +48,5 @@ public class TempestadeMontanha extends EventoClimatico {
 
         jogador.diminuirEnergia(10); // Ajustado
         areaLog.append("Você perdeu 10 de energia devido à tempestade nas montanhas.\n");
-        // Adicionar log sobre redução de visibilidade se relevante para o jogador
     }
 }

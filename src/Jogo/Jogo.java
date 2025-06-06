@@ -583,7 +583,7 @@ public class Jogo {
         try {
             gerenciador.mudarAmbienteInterface(jogador, novoAmbiente, areaLog);
 
-            // ✅ Atualiza imagem do ambiente com base no personagem e ambiente atual
+            // Atualiza imagem do ambiente com base no personagem e ambiente atual
             if (painelJogo != null) {
                 painelJogo.atualizarImagemAmbiente();
             }

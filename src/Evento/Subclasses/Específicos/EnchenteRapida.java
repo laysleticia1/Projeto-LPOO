@@ -20,7 +20,7 @@ public class EnchenteRapida extends EventoClimatico {
         System.out.println("Duração: " + getDuracao() + " turno/s");
         System.out.println("Efeito: " + getEfeitoNoAmbiente());
 
-        jogador.diminuirEnergia(7); // Ajustado
+        jogador.diminuirEnergia(7);
         jogador.setVelocidade(jogador.getVelocidade() - 2); // Mantido, assumindo que não há diminuirVelocidade
 
         System.out.println("Você perdeu 7 de energia e sua velocidade foi reduzida por causa da enchente!");

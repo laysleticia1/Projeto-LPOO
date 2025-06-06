@@ -87,11 +87,11 @@ public class Item {
                 return new ImageIcon(imagemURL);
             } else {
                 System.err.println("Imagem não encontrada: " + caminho);
-                return new ImageIcon(); // ou imagem fallback
+                return new ImageIcon();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new ImageIcon(); // fallback
+            return new ImageIcon();
         }
     }
 

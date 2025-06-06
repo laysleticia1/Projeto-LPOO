@@ -409,7 +409,6 @@ public class PainelJogo extends JPanel {
     }
 
     private void mostrarMapa() {
-        // 1) Carrega o BufferedImage do mapa (final para uso na classe anônima abaixo)
         final BufferedImage imagemOriginal;
         try {
             java.net.URL imgUrl = getClass().getClassLoader().getResource("Resources/mapa2.png");
@@ -425,22 +424,18 @@ public class PainelJogo extends JPanel {
                     "Erro de Mapa",
                     JOptionPane.ERROR_MESSAGE
             );
-            // Se houver falha ao ler a imagem, interrompe a execução do método
             return;
         }
 
-        // 2) Obtém a resolução total do monitor
         Dimension resolucaoTela = Toolkit.getDefaultToolkit().getScreenSize();
         int larguraTela = resolucaoTela.width;
         int alturaTela = resolucaoTela.height;
 
-        // 3) Cria um JDialog sem bordas que ocupará 100% da tela
         JDialog dialogoMapa = new JDialog(SwingUtilities.getWindowAncestor(this));
         dialogoMapa.setModal(true);
         dialogoMapa.setUndecorated(true);
         dialogoMapa.setBounds(0, 0, larguraTela, alturaTela);
 
-        // 4) Cria um JPanel que desenha o mapa redimensionado e centralizado
         JPanel painelMapa = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -470,12 +465,8 @@ public class PainelJogo extends JPanel {
             }
         };
 
-        // 5) Garante que o fundo do painel seja preto (para não aparecer nenhum branco)
         painelMapa.setBackground(Color.BLACK);
 
-        // 6) Remove totalmente qualquer borda: NÃO há setBorder(…) aqui
-
-        // 7) Fecha o diálogo ao clicar em qualquer ponto da tela
         painelMapa.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -483,12 +474,10 @@ public class PainelJogo extends JPanel {
             }
         });
 
-        // 8) Ajusta o painel para ocupar toda a área do diálogo
         painelMapa.setPreferredSize(new Dimension(larguraTela, alturaTela));
         dialogoMapa.setContentPane(painelMapa);
         dialogoMapa.validate();
 
-        // 9) Exibe o diálogo em tela cheia
         dialogoMapa.setVisible(true);
     }
 
@@ -504,20 +493,18 @@ public class PainelJogo extends JPanel {
             return;
         }
 
-        // Usa o método definido em cada ambiente (ex: "floresta", "caverna", etc.)
         String tipoAmbiente = ambiente.getTipoImagem();
         int idVisual = meuJogo.getJogador().getIdVisual();
         if (idVisual < 1 || idVisual > 6) {
             System.out.println("ID visual inválido: " + idVisual + " — usando 1 como padrão.");
             idVisual = 1;
         }
-        // Segurança para evitar id fora do intervalo
+
         if (idVisual < 1 || idVisual > 6) {
             System.out.println("Aviso: ID visual inválido (" + idVisual + "), usando 1.");
             idVisual = 1;
         }
 
-        // Caminho da imagem correspondente
         String caminhoImagem = "/Resources/ambientes/" + tipoAmbiente + idVisual + ".png";
 
         try {
@@ -529,7 +516,6 @@ public class PainelJogo extends JPanel {
             e.printStackTrace();
         }
 
-        // Reforça a atualização visual do painel
         repaint();
     }
 

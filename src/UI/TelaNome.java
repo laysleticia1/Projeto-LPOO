@@ -15,14 +15,12 @@ public class TelaNome extends JPanel {
         this.controlador = controlador;
         setLayout(null);
 
-        // Carrega o fundo
         try {
             backgroundImage = new ImageIcon(getClass().getResource("/Resources/telaDoNome.png")).getImage();
         } catch (Exception e) {
             System.err.println("Erro ao carregar imagem de fundo");
         }
 
-        // Campo de nome
         campoNome = new JTextField();
         campoNome.setFont(new Font("SansSerif", Font.BOLD, 22));
         campoNome.setHorizontalAlignment(JTextField.CENTER);
@@ -30,10 +28,8 @@ public class TelaNome extends JPanel {
         campoNome.setBackground(new Color(0, 0, 0, 0)); // Sem fundo
         campoNome.setForeground(Color.WHITE);
         campoNome.setCaretColor(Color.WHITE);
-        campoNome.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE)); // apenas uma linha branca abaixo
-        add(campoNome);
+        campoNome.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.WHITE));
 
-        // Botão confirmar
         botaoConfirmar = new JButton();
         botaoConfirmar.setOpaque(false);
         botaoConfirmar.setContentAreaFilled(false);
@@ -50,7 +46,6 @@ public class TelaNome extends JPanel {
         });
         add(botaoConfirmar);
 
-        // Botão voltar
         botaoVoltar = new JButton("Voltar");
         botaoVoltar.setFont(new Font("SansSerif", Font.BOLD, 18));
         botaoVoltar.setContentAreaFilled(false);

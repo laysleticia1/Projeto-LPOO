@@ -116,14 +116,14 @@ public class TelaClasse extends JPanel {
                 return;
             }
 
-            // ✅ Garante que o idVisualSelecionado esteja atualizado corretamente
+            // Garante que o idVisualSelecionado esteja atualizado corretamente
             this.idVisualSelecionado = controlador.getIdVisualEscolhido();
             if (idVisualSelecionado < 1 || idVisualSelecionado > 6) {
                 JOptionPane.showMessageDialog(this, "Erro: ID visual inválido.");
                 return;
             }
 
-            // ✅ Inicia o jogo com o valor certo de visual
+            // Inicia o jogo com o valor certo de visual
             if (meuJogo == null || !meuJogo.iniciarNovaPartida(nome, classeSelecionadaAtual, idVisualSelecionado)) {
                 JOptionPane.showMessageDialog(this, "Erro ao iniciar o jogo.");
                 return;

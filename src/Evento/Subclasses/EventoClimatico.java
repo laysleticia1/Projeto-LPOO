@@ -45,8 +45,6 @@ public class EventoClimatico extends Evento {
 
     @Override
     public boolean podeOcorrerNoAmbiente(Ambiente ambiente) {
-        // Geralmente, eventos climáticos podem ocorrer em muitos lugares,
-        // mas subclasses específicas (como TempestadeMontanha) restringem isso.
         return true;
     }
 

@@ -35,7 +35,7 @@ public class TelaMapa extends JPanel {
             this.imagemMapa = null;
         }
 
-        setLayout(null); // Usamos layout absoluto para posicionar o botão livremente
+        setLayout(null);
 
         botaoContinuarParaJogo = new JButton("Iniciar Exploração em Velkaria");
         botaoContinuarParaJogo.setFont(new Font("Serif", Font.BOLD, 24));
@@ -85,7 +85,6 @@ public class TelaMapa extends JPanel {
             g.drawString(msg, (largura - fm.stringWidth(msg)) / 2, altura / 2);
         }
 
-        // Posiciona o botão no topo centralizado
         botaoContinuarParaJogo.setBounds((largura - 360) / 2, 70, 360, 50);
     }
 }

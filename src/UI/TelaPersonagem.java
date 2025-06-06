@@ -20,7 +20,6 @@ public class TelaPersonagem extends JPanel {
 
         criarBotoesPersonagem();
 
-        // Botão "Voltar"
         JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.setBounds(30, 33, 100, 40);
         botaoVoltar.setContentAreaFilled(false);

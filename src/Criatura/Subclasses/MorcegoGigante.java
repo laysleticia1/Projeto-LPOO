@@ -13,7 +13,7 @@ public class MorcegoGigante extends Criatura {
 
     @Override
     public void atacar(Personagem jogador) {
-        // Seu código original tinha diminuirVida(12) mas imprimia 16. Vou usar 12.
+
         jogador.diminuirVida(12);
         System.out.println("O Morcego Gigante mergulha do teto da caverna e arranha com suas garras afiadas!");
         System.out.println("Você perdeu 12 de vida."); // Ajustado para consistência

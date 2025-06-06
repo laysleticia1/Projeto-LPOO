@@ -20,7 +20,6 @@ public class MenuInicialPanel extends JPanel {
 
         setLayout(null);
 
-        // 👇 ADICIONA AQUI O LISTENER DE CLIQUE DIREITO
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -62,7 +61,6 @@ public class MenuInicialPanel extends JPanel {
     @Override
     public void doLayout() {
         super.doLayout();
-        // Chamada direta e simples:
         setBotaoIniciarCoordenadas(600, 540, 340, 78);
     }
 

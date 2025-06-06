@@ -55,7 +55,7 @@ public class Mecanico extends Personagem {
     }
 
     public void melhorarArma() {
-        Inventario inventario = getInventario(); // Agora você acessa corretamente
+        Inventario inventario = getInventario();
 
         Ferramentas ferramenta = null;
         Armas arma = null;

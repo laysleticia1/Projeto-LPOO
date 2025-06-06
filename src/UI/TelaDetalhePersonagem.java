@@ -57,7 +57,6 @@ public class TelaDetalhePersonagem extends JPanel {
     public void mostrarDetalhes(int personagemId) {
         this.personagemIdAtual = personagemId;
 
-        // Corrigido: índice do array vai de 0 a 5 (então subtrai 1)
         if (personagemId >= 1 && personagemId <= arquivosImagens.length) {
             String nomeArquivo = arquivosImagens[personagemId - 1];
             try {

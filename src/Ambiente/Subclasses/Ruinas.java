@@ -28,7 +28,7 @@ public class Ruinas extends Ambiente {
         Item recurso = coletarItemAleatorio();
         if (recurso != null) {
             System.out.println("\nVocê encontrou: " + recurso.getNome());
-            // ... (lógica de detalhes e coleta)
+
         } else {
             System.out.println("\nAs ruínas não revelaram nada de valor desta vez.");
         }
