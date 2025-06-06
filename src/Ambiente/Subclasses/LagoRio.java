@@ -119,8 +119,16 @@ public class LagoRio extends Ambiente {
             default: return null;
         }
     }
-
+    //Getters and Setters
     public String getQualidadeAgua() { return qualidadeAgua; }
     public String getVidaAquatica() { return vidaAquatica; }
     public String getCaracteristicaTerrenoMargem() { return caracteristicaTerrenoMargem; }
+
+    //Interface
+    @Override
+    public String getTipoImagem() {
+        return "lagorio";
+    }
+
+
 }

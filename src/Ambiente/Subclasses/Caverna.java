@@ -190,4 +190,9 @@ public class Caverna extends Ambiente {
         GerenciadorDeEventos gerenciadorEventos = new GerenciadorDeEventos();
         gerenciadorEventos.aplicarEventoAleatorioPorAmbienteInterface(jogador, areaLog);
     }
+
+    public String getTipoImagem() {
+        return "caverna";
+    }
+
 }

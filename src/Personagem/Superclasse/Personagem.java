@@ -23,6 +23,7 @@ public class Personagem implements Movivel {
     private int x, y;
     private int velocidade;
     private Ambiente ambienteAtual;
+    private int idVisual = 1;
 
     private final int VIDA_MAXIMA = 100;
     private final int FOME_MAXIMA = 100;
@@ -358,40 +359,35 @@ public class Personagem implements Movivel {
     public void setVida (int vidaUsuario) {
         this.vida = vidaUsuario;
         if (this.vida < 0) this.vida = 0;
-        if (this.vida > VIDA_MAXIMA) this.vida = VIDA_MAXIMA;
-    }
+        if (this.vida > VIDA_MAXIMA) this.vida = VIDA_MAXIMA;}
     public int getFome () {
         return fome;
     }
     public void setFome (int fomeUsuario) {
         this.fome = fomeUsuario;
         if (this.fome < 0) this.fome = 0;
-        if (this.fome > FOME_MAXIMA) this.fome = FOME_MAXIMA;
-    }
+        if (this.fome > FOME_MAXIMA) this.fome = FOME_MAXIMA;}
     public int getSede () {
         return sede;
     }
     public void setSede (int sedeUsuario) {
         this.sede = sedeUsuario;
         if (this.sede < 0) this.sede = 0;
-        if (this.sede > SEDE_MAXIMA) this.sede = SEDE_MAXIMA;
-    }
+        if (this.sede > SEDE_MAXIMA) this.sede = SEDE_MAXIMA;}
     public int getEnergia () {
         return energia;
     }
     public void setEnergia (int energiaUsuario) {
         this.energia = energiaUsuario;
         if (this.energia < 0) this.energia = 0;
-        if (this.energia > ENERGIA_MAXIMA) this.energia = ENERGIA_MAXIMA;
-    }
+        if (this.energia > ENERGIA_MAXIMA) this.energia = ENERGIA_MAXIMA;}
     public int getSanidade () {
         return sanidade;
     }
     public void setSanidade (int sanidadeUsuario) {
         this.sanidade = sanidadeUsuario;
         if (this.sanidade < 0) this.sanidade = 0;
-        if (this.sanidade > SANIDADE_MAXIMA) this.sanidade = SANIDADE_MAXIMA;
-    }
+        if (this.sanidade > SANIDADE_MAXIMA) this.sanidade = SANIDADE_MAXIMA;}
     public Inventario getInventario () {
         return inventario;
     }
@@ -428,57 +424,44 @@ public class Personagem implements Movivel {
     public Ambiente getAmbienteAtual() {
         return ambienteAtual;
     }
-
     public int getVidaMaxima() {
         return VIDA_MAXIMA;
     }
-
     public int getFomeMaxima() {
         return FOME_MAXIMA;
     }
-
     public int getSedeMaxima() {
         return SEDE_MAXIMA;
     }
-
     public int getEnergiaMaxima() {
         return ENERGIA_MAXIMA;
     }
-
     public int getSanidadeMaxima() {
         return SANIDADE_MAXIMA;
     }
-
     public void verificarFomeSedeSanidadeInterface(JTextArea areaLog) throws FomeSedeSanidadeException {
         if (!estaVivo()) {
             areaLog.append("☠️ Sua jornada já havia chegado ao fim.\n");
-            throw new FomeSedeSanidadeException("☠️ Sua jornada já havia chegado ao fim.");
-        }
+            throw new FomeSedeSanidadeException("☠️ Sua jornada já havia chegado ao fim.");}
         boolean perdeuVida = false;
-
         if (fome <= 0) {
             diminuirVida(10);
             areaLog.append("⚠️ Sua fome chegou a zero! Você perdeu 10 de vida.\n");
-            perdeuVida = true;
-        }
+            perdeuVida = true;}
         if (sede <= 0) {
             diminuirVida(10);
             areaLog.append("⚠️ Sua sede chegou a zero! Você perdeu 10 de vida.\n");
-            perdeuVida = true;
-        }
+            perdeuVida = true;}
         if (sanidade <= 0) {
             diminuirVida(10);
             areaLog.append("⚠️ Sua sanidade chegou a zero! Você perdeu 10 de vida.\n");
-            perdeuVida = true;
-        }
-
+            perdeuVida = true;}
         if (perdeuVida && estaVivo()) {
-            areaLog.append("❤️ Vida atual: " + this.vida + "\n");
-        }
-
+            areaLog.append("❤️ Vida atual: " + this.vida + "\n");}
         if (!estaVivo()) {
             areaLog.append("❤️ Vida atual: 0\n"); // Garante que o log mostre 0
-            throw new FomeSedeSanidadeException("☠️ Sua jornada chegou ao fim devido à falta de recursos ou ferimentos graves.");
-        }
-    }
+            throw new FomeSedeSanidadeException("☠️ Sua jornada chegou ao fim devido à falta de recursos ou ferimentos graves.");}}
+    public void setIdVisual(int idVisual) {this.idVisual = idVisual;}
+    public int getIdVisual() {return idVisual;}
+
 }

@@ -130,7 +130,18 @@ public abstract class Ambiente implements Exploravel, Coletavel {
         }
         return imagemAmbienteCarregada;
     }
-    public String getCaminhoImagem() {
-        return caminhoImagem;
+    public abstract String getTipoImagem();
+
+    public Image getImagemAmbiente(Personagem jogador) {
+        String tipo = getTipoImagem(); // ex: "floresta", "caverna"
+        int id = jogador.getIdVisual(); // de 1 a 6
+        String caminho = "/Resources/ambientes/" + tipo + id + ".png";
+        try {
+            return new ImageIcon(getClass().getResource(caminho)).getImage();
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar imagem: " + caminho);
+            return null;
+        }
     }
+
 }

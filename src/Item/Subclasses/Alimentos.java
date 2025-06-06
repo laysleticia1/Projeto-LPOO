@@ -27,7 +27,8 @@ public class Alimentos extends Item {
     public void usar(Personagem alvo) {
         if (getDurabilidade() > 0) {
             setDurabilidade(getDurabilidade() - 1);
-            alvo.setFome(alvo.getFome() + valorNutricional); // exemplo
+            alvo.setFome(alvo.getFome() + valorNutricional);
+            alvo.setEnergia(alvo.getEnergia() + 10);
             System.out.println("Você consumiu: " + getNome());
         } else {
             System.out.println("Este alimento está estragado.");

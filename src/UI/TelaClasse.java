@@ -13,6 +13,7 @@ public class TelaClasse extends JPanel {
     private GerenciadorUI controlador;
     private Jogo meuJogo;
     private Image backgroundImageTelaClasse;
+    private int idVisualSelecionado;
 
     private JTextArea areaDescricaoClasse;
     private JScrollPane scrollDescricao;
@@ -36,12 +37,16 @@ public class TelaClasse extends JPanel {
 
     public TelaClasse(JPanel painelPrincipalCardLayoutIgnorado, GerenciadorUI ctrl) {
         this.controlador = ctrl;
-        if (controlador != null) this.meuJogo = controlador.getMeuJogo();
+        if (controlador != null) {
+            this.meuJogo = controlador.getMeuJogo();
+        }
 
         try {
             URL imgUrl = getClass().getResource("/Resources/escolhaClasse.png");
             if (imgUrl == null) imgUrl = getClass().getResource("escolhaClasse.png");
-            if (imgUrl != null) backgroundImageTelaClasse = new ImageIcon(imgUrl).getImage();
+            if (imgUrl != null) {
+                backgroundImageTelaClasse = new ImageIcon(imgUrl).getImage();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,10 +54,10 @@ public class TelaClasse extends JPanel {
         setPreferredSize(new Dimension(800, 600));
         setLayout(null);
 
-        descricoesClasses.put(RASTREADOR, "Mestre em seguir trilhas e identificar perigos na natureza. Encontra recursos com mais facilidade.");
-        descricoesClasses.put(MECANICO, "Engenhoso com ferramentas e sucata. Consegue consertar e criar dispositivos úteis para sobrevivência.");
-        descricoesClasses.put(MEDICO, "Especialista em primeiros socorros e tratamento de ferimentos. Consegue usar ervas para criar remédios.");
-        descricoesClasses.put(SOBREVIVENTE_NATO, "Resistente e adaptável. Possui habilidades instintivas para montar abrigos e fabricar itens básicos.");
+        descricoesClasses.put(RASTREADOR, "Mestre em seguir trilhas e identificar perigos na natureza. Encontra recursos com mais facilidade.");
+        descricoesClasses.put(MECANICO, "Engenhoso com ferramentas e sucata. Consegue consertar e criar dispositivos úteis para sobrevivência.");
+        descricoesClasses.put(MEDICO, "Especialista em primeiros socorros e tratamento de ferimentos. Consegue usar ervas para criar remédios.");
+        descricoesClasses.put(SOBREVIVENTE_NATO, "Resistente e adaptável. Possui habilidades instintivas para montar abrigos e fabricar itens básicos.");
         descricoesClasses.put("", "Selecione uma classe ao lado para ver sua descrição detalhada.");
 
         criarBotaoClasse(RASTREADOR, 160, 160, 170, 170);
@@ -103,18 +108,31 @@ public class TelaClasse extends JPanel {
                 JOptionPane.showMessageDialog(this, "Por favor, selecione uma classe.");
                 return;
             }
+
             String nome = controlador.getNomePersonagemAtual();
             if (nome == null || nome.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nome do personagem não definido.");
                 controlador.irParaTelaNome();
                 return;
             }
-            if (meuJogo == null || !meuJogo.iniciarNovaPartida(nome, classeSelecionadaAtual)) {
+
+            // ✅ Garante que o idVisualSelecionado esteja atualizado corretamente
+            this.idVisualSelecionado = controlador.getIdVisualEscolhido();
+            if (idVisualSelecionado < 1 || idVisualSelecionado > 6) {
+                JOptionPane.showMessageDialog(this, "Erro: ID visual inválido.");
+                return;
+            }
+
+            // ✅ Inicia o jogo com o valor certo de visual
+            if (meuJogo == null || !meuJogo.iniciarNovaPartida(nome, classeSelecionadaAtual, idVisualSelecionado)) {
                 JOptionPane.showMessageDialog(this, "Erro ao iniciar o jogo.");
                 return;
             }
+
             controlador.irParaTelaNarrativa();
         });
+
+
 
         botaoVoltar.addActionListener(e -> {
             if (controlador != null && controlador.getIdPersonagemSelecionado() != -1) {
@@ -133,8 +151,9 @@ public class TelaClasse extends JPanel {
             }
         });
 
-        prepararTela();
+        prepararTela(controlador.getIdVisualEscolhido());
     }
+
 
     private void criarBotaoClasse(final String nomeClasse, int x, int y, int largura, int altura) {
         JButton botao = new JButton();
@@ -152,7 +171,8 @@ public class TelaClasse extends JPanel {
         add(botao);
     }
 
-    public void prepararTela() {
+    public void prepararTela(int idVisual) {
+        this.idVisualSelecionado = idVisual;
         classeSelecionadaAtual = null;
         areaDescricaoClasse.setText(descricoesClasses.get(""));
         areaDescricaoClasse.setCaretPosition(0);

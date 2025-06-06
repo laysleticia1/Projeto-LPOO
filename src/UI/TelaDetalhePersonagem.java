@@ -34,12 +34,15 @@ public class TelaDetalhePersonagem extends JPanel {
         botaoSelecionar.setFocusPainted(false);
         botaoSelecionar.setOpaque(false);
         botaoSelecionar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        botaoSelecionar.addActionListener(e -> controlador.personagemConfirmado(personagemIdAtual));
+        botaoSelecionar.addActionListener(e -> {
+            // Confirma o personagem com idVisual (de 1 a 6)
+            controlador.personagemConfirmado(personagemIdAtual);
+        });
         add(botaoSelecionar);
 
-        // Botão "Voltar" com texto visível, mas fundo e borda invisíveis
+        // Botão "Voltar"
         JButton botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setBounds(155, 700, 100, 40); // Inferior direito
+        botaoVoltar.setBounds(155, 700, 100, 40);
         botaoVoltar.setContentAreaFilled(false);
         botaoVoltar.setBorderPainted(false);
         botaoVoltar.setFocusPainted(false);
@@ -54,8 +57,9 @@ public class TelaDetalhePersonagem extends JPanel {
     public void mostrarDetalhes(int personagemId) {
         this.personagemIdAtual = personagemId;
 
-        if (personagemId >= 0 && personagemId < arquivosImagens.length) {
-            String nomeArquivo = arquivosImagens[personagemId];
+        // Corrigido: índice do array vai de 0 a 5 (então subtrai 1)
+        if (personagemId >= 1 && personagemId <= arquivosImagens.length) {
+            String nomeArquivo = arquivosImagens[personagemId - 1];
             try {
                 URL imgUrl = getClass().getResource("/Resources/" + nomeArquivo);
                 if (imgUrl == null) imgUrl = getClass().getResource(nomeArquivo);
@@ -67,13 +71,16 @@ public class TelaDetalhePersonagem extends JPanel {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                e.printStackTrace();
                 imagemCompleta = null;
             }
         } else {
             imagemCompleta = null;
         }
+
         repaint();
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {

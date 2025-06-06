@@ -30,6 +30,8 @@ public class GerenciadorUI {
     private TelaNarrativa telaNarrativa;
     private TelaMapa telaMapa;
     private PainelJogo painelJogo;
+    private String nomePersonagemEscolhido;
+    private int idVisualEscolhido;
 
     public GerenciadorUI() {
         this.meuJogo = new Jogo();
@@ -90,18 +92,21 @@ public class GerenciadorUI {
     public void personagemSelecionadoParaDetalhes(int personagemId) {
         this.idPersonagemSelecionado = personagemId;
         if (telaDetalhePersonagem != null) {
-            telaDetalhePersonagem.mostrarDetalhes(personagemId);
+            telaDetalhePersonagem.mostrarDetalhes(personagemId); // Aqui está certo porque agora `mostrarDetalhes` faz o ajuste internamente.
             mostrarTela("TELA_DETALHE_PERSONAGEM");
         }
     }
 
     public void personagemConfirmado(int personagemId) {
         this.idPersonagemSelecionado = personagemId;
+        this.setIdVisualEscolhido(personagemId); // 👈 ESSENCIAL
         if (telaClasse != null) {
-            telaClasse.prepararTela();
+            telaClasse.prepararTela(idPersonagemSelecionado);
             mostrarTela("TELA_CLASSE");
         }
     }
+
+
 
     public void irParaTelaNarrativa() {
         mostrarTela("TELA_NARRATIVA");
@@ -116,7 +121,7 @@ public class GerenciadorUI {
 
     public void irParaTelaClasse() {
         if (telaClasse != null) {
-            telaClasse.prepararTela();
+            telaClasse.prepararTela(idPersonagemSelecionado);
             mostrarTela("TELA_CLASSE");
         }
     }
@@ -157,4 +162,26 @@ public class GerenciadorUI {
                     "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    public void setNomePersonagemEscolhido(String nome) {
+        this.nomePersonagemEscolhido = nome;
+    }
+
+    public void setIdVisualEscolhido(int id) {
+        this.idVisualEscolhido = id;
+    }
+
+    public String getNomePersonagemEscolhido() {
+        return nomePersonagemEscolhido;
+    }
+
+    public int getIdVisualEscolhido() {
+        return idVisualEscolhido;
+    }
+    public void mudarTela(String nomeTela) {
+        CardLayout layout = (CardLayout) painelPrincipalCardLayout.getLayout();
+        layout.show(painelPrincipalCardLayout, nomeTela);
+    }
+
+
 }
